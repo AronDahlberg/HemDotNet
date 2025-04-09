@@ -8,10 +8,11 @@ namespace HemDotNetWebApi.Models
         [Key]
         public int MarketPropertyId { get; set; }
 
+        [Required]
         [ForeignKey("MunicipalityId")]
-        public int MunicipalityId { get; set; }
         public Municipality Municipality { get; set; }
 
+        [Required]
         public PropertyCategory Category { get; set; }
 
         [Required]
@@ -36,14 +37,16 @@ namespace HemDotNetWebApi.Models
         [Required]
         public int AmountOfRooms { get; set; }
 
+        [Required]
         public decimal? MonthlyFee { get; set; }
+        [Required]
         public decimal? YearlyMaintenanceCost { get; set; }
 
         [Required]
         public int ContructionYear { get; set; }
 
+        [Required]
         [ForeignKey("RealEstateAgentId")]
-        public string RealEstateAgentId { get; set; }
         public RealEstateAgent RealEstateAgent { get; set; }
 
         [NotMapped]
