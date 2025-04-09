@@ -5,6 +5,6 @@
         Villa,
         CondominiumApartment,
         CondominiumTownhouse,
-        VactationHome
+        VacationHome
     }
 }
