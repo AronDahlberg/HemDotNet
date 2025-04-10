@@ -1,4 +1,7 @@
 
+using HemDotNetWebApi.Data;
+using Microsoft.EntityFrameworkCore;
+
 namespace HemDotNetWebApi
 {
     public class Program
@@ -10,6 +13,12 @@ namespace HemDotNetWebApi
             // Add services to the container.
 
             builder.Services.AddControllers();
+
+            builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(new ConfigurationBuilder()
+                                                                                                    .AddJsonFile("appsettings.Development.json")
+                                                                                                    .Build()
+                                                                                                    .GetSection("ConnectionStrings")["HemDotNetDb"]));
+
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
