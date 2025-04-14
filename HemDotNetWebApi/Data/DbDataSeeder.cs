@@ -57,7 +57,7 @@ namespace HemDotNetWebApi.Data
                     new RealEstateAgency
                     {
                         RealEstateAgencyName = "Nordic Homes",
-                        RealEstateAgencyPresentation = "We bring Scandinavian design to real estate.",
+                        RealEstateAgencyPresentation = "Vi tar skandinavisk design till fastighetsbranschen.",
                         RealEstateAgencyLogoUrl = "/images/PlaceholderLogo.png"
                     },
                     new RealEstateAgency
@@ -80,7 +80,6 @@ namespace HemDotNetWebApi.Data
         {
             if (context != null && !context.RealEstateAgents.Any())
             {
-                // Get agencies by ID to ensure we're getting the correct ones
                 var agencies = await context.RealEstateAgencies.ToListAsync();
                 var nordicHomes = agencies.First(a => a.RealEstateAgencyName == "Nordic Homes");
                 var nordhsMaklarbyra = agencies.First(a => a.RealEstateAgencyName == "Nordhs Mäklarbyrå");
@@ -162,7 +161,6 @@ namespace HemDotNetWebApi.Data
         {
             if (context != null && !context.MarketProperties.Any())
             {
-                // Get municipalities
                 var municipalities = await context.Municipalities.ToListAsync();
                 var stockholm = municipalities.First(m => m.MunicipalityName == "Stockholm");
                 var goteborg = municipalities.First(m => m.MunicipalityName == "Göteborg");
@@ -171,7 +169,6 @@ namespace HemDotNetWebApi.Data
                 var uppsala = municipalities.First(m => m.MunicipalityName == "Uppsala");
                 var umea = municipalities.First(m => m.MunicipalityName == "Umeå");
 
-                // Get agents
                 var agents = await context.RealEstateAgents.Include(a => a.RealEstateAgentAgency).ToListAsync();
                 var agent1 = agents[0]; // Anna Svensson
                 var agent2 = agents[1]; // Mikael Strand
@@ -182,7 +179,6 @@ namespace HemDotNetWebApi.Data
 
                 var properties = new List<MarketProperty>
                 {
-                    // Original property (now with Swedish description)
                     new MarketProperty
                     {
                         Municipality = stockholm,
@@ -200,7 +196,6 @@ namespace HemDotNetWebApi.Data
                         RealEstateAgent = agent1
                     },
                     
-                    // Additional properties
                     new MarketProperty
                     {
                         Municipality = goteborg,
