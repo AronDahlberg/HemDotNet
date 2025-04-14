@@ -56,15 +56,15 @@ namespace HemDotNetWebApi.Data
                 context.RealEstateAgencies.Add(new RealEstateAgency
                 {
                     RealEstateAgencyName = "Nordic Homes",
-                    RealEstateAgencyPresentation = "We bring Scandinavian design to life.",
-                    RealEstateAgencyLogoUrl = "https://example.com/logos/nordic.png"
+                    RealEstateAgencyPresentation = "We bring Scandinavian design to real estate.",
+                    RealEstateAgencyLogoUrl = "/images/PlaceholderLogo.png"
                 });
 
                 context.RealEstateAgencies.Add(new RealEstateAgency
                 {
                     RealEstateAgencyName = "Nordhs Mäklarbyrå",
                     RealEstateAgencyPresentation = "Letar du efter en pålitlig fastighetsmäklare? Våra mäklare levererar expertis och resultat för ditt bostadsköp eller -försäljning.",
-                    RealEstateAgencyLogoUrl = "https://example.com/logos/nordic.png"
+                    RealEstateAgencyLogoUrl = "/images/PlaceholderLogo.png"
                 });
 
                 await context.SaveChangesAsync();
@@ -81,7 +81,7 @@ namespace HemDotNetWebApi.Data
                     RealEstateAgentLastName = "Svensson",
                     RealEstateAgentEmail = "anna@nordichomes.com",
                     RealEstateAgentPhoneNumber = "+46 70 123 45 67",
-                    RealEstateAgentImageUrl = "https://example.com/agents/anna.jpg",
+                    RealEstateAgentImageUrl = "/images/RealEstateAgentWoman.jpg",
                     RealEstateAgentAgency = agency
                 });
 
@@ -91,7 +91,7 @@ namespace HemDotNetWebApi.Data
                     RealEstateAgentLastName = "Strand",
                     RealEstateAgentEmail = "mikael@nordichomes.com",
                     RealEstateAgentPhoneNumber = "+46 70 123 45 67",
-                    RealEstateAgentImageUrl = "https://example.com/agents/anna.jpg",
+                    RealEstateAgentImageUrl = "/images/RealEstateAgentMan.jpg",
                     RealEstateAgentAgency = agency
                 });
 
@@ -101,7 +101,7 @@ namespace HemDotNetWebApi.Data
                     RealEstateAgentLastName = "Olsson",
                     RealEstateAgentEmail = "maria@nordichomes.com",
                     RealEstateAgentPhoneNumber = "+46 70 123 45 67",
-                    RealEstateAgentImageUrl = "https://example.com/agents/anna.jpg",
+                    RealEstateAgentImageUrl = "/images/RealEstateAgentWoman.jpg",
                     RealEstateAgentAgency = agency
                 });
 
