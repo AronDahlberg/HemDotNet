@@ -26,6 +26,10 @@ namespace HemDotNetWebApi
 
             var app = builder.Build();
 
+            // Populates the database when the program is ran, and checks that the
+            // tables are empty beforehand. To repopulate the database with clean data,
+            // empty your tables.
+            // Allan
             await DbDataSeeder.SeedAsync(app.Services);
 
             // Configure the HTTP request pipeline.
