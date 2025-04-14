@@ -15,8 +15,18 @@ namespace HemDotNetWebApi.Data
 
             //await context.Database.MigrateAsync();
 
-            // --- Municipality ---
-            if (!context.Municipalities.Any())
+            await PopulateMunicipalities(context);
+            await PopulateRealEstateAgencies(context);
+            await PopulateRealEstateAgents(context);
+            await PopulateMarketProperties(context);
+            await PopulatePropertyImages(context);
+
+        }
+
+
+        public static async Task PopulateMunicipalities(ApplicationDbContext? context)
+        {
+            if (context != null && !context.Municipalities.Any())
             {
                 context.Municipalities.Add(new Municipality
                 {
@@ -49,9 +59,11 @@ namespace HemDotNetWebApi.Data
 
                 await context.SaveChangesAsync();
             }
+        }
 
-            // --- RealEstateAgency ---
-            if (!context.RealEstateAgencies.Any())
+        public static async Task PopulateRealEstateAgencies(ApplicationDbContext? context)
+        {
+            if (context != null && !context.RealEstateAgencies.Any())
             {
                 context.RealEstateAgencies.Add(new RealEstateAgency
                 {
@@ -69,9 +81,12 @@ namespace HemDotNetWebApi.Data
 
                 await context.SaveChangesAsync();
             }
+        }
 
+        public static async Task PopulateRealEstateAgents(ApplicationDbContext? context)
+        {
             // --- RealEstateAgent ---
-            if (!context.RealEstateAgents.Any())
+            if (context!= null && !context.RealEstateAgents.Any())
             {
                 var agency = await context.RealEstateAgencies.FirstAsync();
 
@@ -105,13 +120,56 @@ namespace HemDotNetWebApi.Data
                     RealEstateAgentAgency = agency
                 });
 
-                agency = await context.RealEstateAgencies.Skip(1).FirstAsync();
+                var agency2 = await context.RealEstateAgencies.Skip(1).FirstAsync();
+
+                context.RealEstateAgents.Add(new RealEstateAgent
+                {
+                    RealEstateAgentFirstName = "Lars",
+                    RealEstateAgentLastName = "Olofsson",
+                    RealEstateAgentEmail = "lars@nordhsmaklarbyra.com",
+                    RealEstateAgentPhoneNumber = "+46 70 123 45 67",
+                    RealEstateAgentImageUrl = "/images/RealEstateAgentMan.jpg",
+                    RealEstateAgentAgency = agency2
+                });
+
+                context.RealEstateAgents.Add(new RealEstateAgent
+                {
+                    RealEstateAgentFirstName = "Vendela",
+                    RealEstateAgentLastName = "Nordh",
+                    RealEstateAgentEmail = "vendela@nordhsmaklarbyra.com",
+                    RealEstateAgentPhoneNumber = "+46 70 123 45 67",
+                    RealEstateAgentImageUrl = "/images/RealEstateAgentWoman.jpg",
+                    RealEstateAgentAgency = agency2
+                });
+
+                context.RealEstateAgents.Add(new RealEstateAgent
+                {
+                    RealEstateAgentFirstName = "Erik",
+                    RealEstateAgentLastName = "Åberg",
+                    RealEstateAgentEmail = "erik@nordhsmaklarbyra.com",
+                    RealEstateAgentPhoneNumber = "+46 70 123 45 67",
+                    RealEstateAgentImageUrl = "/images/RealEstateAgentMan.jpg",
+                    RealEstateAgentAgency = agency2
+                });
+
+                context.RealEstateAgents.Add(new RealEstateAgent
+                {
+                    RealEstateAgentFirstName = "Lisa",
+                    RealEstateAgentLastName = "Karlsson",
+                    RealEstateAgentEmail = "lisa@nordhsmaklarbyra.com",
+                    RealEstateAgentPhoneNumber = "+46 70 123 45 67",
+                    RealEstateAgentImageUrl = "/images/RealEstateAgentWoman.jpg",
+                    RealEstateAgentAgency = agency2
+                });
 
                 await context.SaveChangesAsync();
             }
+        }
 
+        public static async Task PopulateMarketProperties(ApplicationDbContext? context)
+        {
             // --- MarketProperty ---
-            if (!context.MarketProperties.Any())
+            if (context != null && !context.MarketProperties.Any())
             {
                 var municipality = await context.Municipalities.FirstAsync();
                 var agent = await context.RealEstateAgents
@@ -137,9 +195,12 @@ namespace HemDotNetWebApi.Data
 
                 await context.SaveChangesAsync();
             }
+        }
 
+        public static async Task PopulatePropertyImages(ApplicationDbContext? context)
+        {
             // --- PropertyImage ---
-            if (!context.PropertyImages.Any())
+            if (context != null && !context.PropertyImages.Any())
             {
                 var property = await context.MarketProperties.FirstAsync();
 
@@ -152,5 +213,6 @@ namespace HemDotNetWebApi.Data
                 await context.SaveChangesAsync();
             }
         }
+
     }
 }
