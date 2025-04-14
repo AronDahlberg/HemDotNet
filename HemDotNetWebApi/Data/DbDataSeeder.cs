@@ -1,13 +1,16 @@
 ﻿using HemDotNetWebApi.Common;
 using HemDotNetWebApi.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace HemDotNetWebApi.Data
 {
-    // Allan
     public static class DbDataSeeder
     {
-        // Allan
         public static async Task SeedAsync(IServiceProvider serviceProvider)
         {
             using var scope = serviceProvider.CreateScope();
@@ -15,204 +18,298 @@ namespace HemDotNetWebApi.Data
 
             //await context.Database.MigrateAsync();
 
+            // Execute seeding methods in order
             await PopulateMunicipalities(context);
             await PopulateRealEstateAgencies(context);
             await PopulateRealEstateAgents(context);
             await PopulateMarketProperties(context);
             await PopulatePropertyImages(context);
-
         }
 
-
+        // Allan
         public static async Task PopulateMunicipalities(ApplicationDbContext? context)
         {
             if (context != null && !context.Municipalities.Any())
             {
-                context.Municipalities.Add(new Municipality
+                var municipalities = new List<Municipality>
                 {
-                    MunicipalityName = "Stockholm"
-                });
-                context.Municipalities.Add(new Municipality
-                {
-                    MunicipalityName = "Örebro"
-                });
-                context.Municipalities.Add(new Municipality
-                {
-                    MunicipalityName = "Göteborg"
-                });
-                context.Municipalities.Add(new Municipality
-                {
-                    MunicipalityName = "Västerås"
-                });
-                context.Municipalities.Add(new Municipality
-                {
-                    MunicipalityName = "Umeå"
-                });
-                context.Municipalities.Add(new Municipality
-                {
-                    MunicipalityName = "Lund"
-                });
-                context.Municipalities.Add(new Municipality
-                {
-                    MunicipalityName = "Uppsala"
-                });
+                    new Municipality { MunicipalityName = "Stockholm" },
+                    new Municipality { MunicipalityName = "Örebro" },
+                    new Municipality { MunicipalityName = "Göteborg" },
+                    new Municipality { MunicipalityName = "Västerås" },
+                    new Municipality { MunicipalityName = "Umeå" },
+                    new Municipality { MunicipalityName = "Lund" },
+                    new Municipality { MunicipalityName = "Uppsala" }
+                };
 
+                context.Municipalities.AddRange(municipalities);
                 await context.SaveChangesAsync();
             }
         }
 
+        // Allan
         public static async Task PopulateRealEstateAgencies(ApplicationDbContext? context)
         {
             if (context != null && !context.RealEstateAgencies.Any())
             {
-                context.RealEstateAgencies.Add(new RealEstateAgency
+                var agencies = new List<RealEstateAgency>
                 {
-                    RealEstateAgencyName = "Nordic Homes",
-                    RealEstateAgencyPresentation = "We bring Scandinavian design to real estate.",
-                    RealEstateAgencyLogoUrl = "/images/PlaceholderLogo.png"
-                });
+                    new RealEstateAgency
+                    {
+                        RealEstateAgencyName = "Nordic Homes",
+                        RealEstateAgencyPresentation = "We bring Scandinavian design to real estate.",
+                        RealEstateAgencyLogoUrl = "/images/PlaceholderLogo.png"
+                    },
+                    new RealEstateAgency
+                    {
+                        RealEstateAgencyName = "Nordhs Mäklarbyrå",
+                        RealEstateAgencyPresentation = "Letar du efter en pålitlig fastighetsmäklare? Våra mäklare levererar expertis och resultat för ditt bostadsköp eller -försäljning.",
+                        RealEstateAgencyLogoUrl = "/images/PlaceholderLogo.png"
+                    }
+                };
 
-                context.RealEstateAgencies.Add(new RealEstateAgency
-                {
-                    RealEstateAgencyName = "Nordhs Mäklarbyrå",
-                    RealEstateAgencyPresentation = "Letar du efter en pålitlig fastighetsmäklare? Våra mäklare levererar expertis och resultat för ditt bostadsköp eller -försäljning.",
-                    RealEstateAgencyLogoUrl = "/images/PlaceholderLogo.png"
-                });
-
+                context.RealEstateAgencies.AddRange(agencies);
                 await context.SaveChangesAsync();
             }
         }
 
+
+
+        // Allan
         public static async Task PopulateRealEstateAgents(ApplicationDbContext? context)
         {
-            // --- RealEstateAgent ---
-            if (context!= null && !context.RealEstateAgents.Any())
+            if (context != null && !context.RealEstateAgents.Any())
             {
-                var agency = await context.RealEstateAgencies.FirstAsync();
+                // Get agencies by ID to ensure we're getting the correct ones
+                var agencies = await context.RealEstateAgencies.ToListAsync();
+                var nordicHomes = agencies.First(a => a.RealEstateAgencyName == "Nordic Homes");
+                var nordhsMaklarbyra = agencies.First(a => a.RealEstateAgencyName == "Nordhs Mäklarbyrå");
 
-                context.RealEstateAgents.Add(new RealEstateAgent
+                var agents = new List<RealEstateAgent>
                 {
-                    RealEstateAgentFirstName = "Anna",
-                    RealEstateAgentLastName = "Svensson",
-                    RealEstateAgentEmail = "anna@nordichomes.com",
-                    RealEstateAgentPhoneNumber = "+46 70 123 45 67",
-                    RealEstateAgentImageUrl = "/images/RealEstateAgentWoman.jpg",
-                    RealEstateAgentAgency = agency
-                });
+                    new RealEstateAgent
+                    {
+                        RealEstateAgentFirstName = "Anna",
+                        RealEstateAgentLastName = "Svensson",
+                        RealEstateAgentEmail = "anna@nordichomes.com",
+                        RealEstateAgentPhoneNumber = "+46 70 123 45 67",
+                        RealEstateAgentImageUrl = "/images/RealEstateAgentWoman.jpg",
+                        RealEstateAgentAgency = nordicHomes
+                    },
+                    new RealEstateAgent
+                    {
+                        RealEstateAgentFirstName = "Mikael",
+                        RealEstateAgentLastName = "Strand",
+                        RealEstateAgentEmail = "mikael@nordichomes.com",
+                        RealEstateAgentPhoneNumber = "+46 70 123 45 67",
+                        RealEstateAgentImageUrl = "/images/RealEstateAgentMan.jpg",
+                        RealEstateAgentAgency = nordicHomes
+                    },
+                    new RealEstateAgent
+                    {
+                        RealEstateAgentFirstName = "Maria",
+                        RealEstateAgentLastName = "Olsson",
+                        RealEstateAgentEmail = "maria@nordichomes.com",
+                        RealEstateAgentPhoneNumber = "+46 70 123 45 67",
+                        RealEstateAgentImageUrl = "/images/RealEstateAgentWoman.jpg",
+                        RealEstateAgentAgency = nordicHomes
+                    },
+                    new RealEstateAgent
+                    {
+                        RealEstateAgentFirstName = "Lars",
+                        RealEstateAgentLastName = "Olofsson",
+                        RealEstateAgentEmail = "lars@nordhsmaklarbyra.com",
+                        RealEstateAgentPhoneNumber = "+46 70 123 45 67",
+                        RealEstateAgentImageUrl = "/images/RealEstateAgentMan.jpg",
+                        RealEstateAgentAgency = nordhsMaklarbyra
+                    },
+                    new RealEstateAgent
+                    {
+                        RealEstateAgentFirstName = "Vendela",
+                        RealEstateAgentLastName = "Nordh",
+                        RealEstateAgentEmail = "vendela@nordhsmaklarbyra.com",
+                        RealEstateAgentPhoneNumber = "+46 70 123 45 67",
+                        RealEstateAgentImageUrl = "/images/RealEstateAgentWoman.jpg",
+                        RealEstateAgentAgency = nordhsMaklarbyra
+                    },
+                    new RealEstateAgent
+                    {
+                        RealEstateAgentFirstName = "Erik",
+                        RealEstateAgentLastName = "Åberg",
+                        RealEstateAgentEmail = "erik@nordhsmaklarbyra.com",
+                        RealEstateAgentPhoneNumber = "+46 70 123 45 67",
+                        RealEstateAgentImageUrl = "/images/RealEstateAgentMan.jpg",
+                        RealEstateAgentAgency = nordhsMaklarbyra
+                    },
+                    new RealEstateAgent
+                    {
+                        RealEstateAgentFirstName = "Lisa",
+                        RealEstateAgentLastName = "Karlsson",
+                        RealEstateAgentEmail = "lisa@nordhsmaklarbyra.com",
+                        RealEstateAgentPhoneNumber = "+46 70 123 45 67",
+                        RealEstateAgentImageUrl = "/images/RealEstateAgentWoman.jpg",
+                        RealEstateAgentAgency = nordhsMaklarbyra
+                    }
+                };
 
-                context.RealEstateAgents.Add(new RealEstateAgent
-                {
-                    RealEstateAgentFirstName = "Mikael",
-                    RealEstateAgentLastName = "Strand",
-                    RealEstateAgentEmail = "mikael@nordichomes.com",
-                    RealEstateAgentPhoneNumber = "+46 70 123 45 67",
-                    RealEstateAgentImageUrl = "/images/RealEstateAgentMan.jpg",
-                    RealEstateAgentAgency = agency
-                });
-
-                context.RealEstateAgents.Add(new RealEstateAgent
-                {
-                    RealEstateAgentFirstName = "Maria",
-                    RealEstateAgentLastName = "Olsson",
-                    RealEstateAgentEmail = "maria@nordichomes.com",
-                    RealEstateAgentPhoneNumber = "+46 70 123 45 67",
-                    RealEstateAgentImageUrl = "/images/RealEstateAgentWoman.jpg",
-                    RealEstateAgentAgency = agency
-                });
-
-                var agency2 = await context.RealEstateAgencies.Skip(1).FirstAsync();
-
-                context.RealEstateAgents.Add(new RealEstateAgent
-                {
-                    RealEstateAgentFirstName = "Lars",
-                    RealEstateAgentLastName = "Olofsson",
-                    RealEstateAgentEmail = "lars@nordhsmaklarbyra.com",
-                    RealEstateAgentPhoneNumber = "+46 70 123 45 67",
-                    RealEstateAgentImageUrl = "/images/RealEstateAgentMan.jpg",
-                    RealEstateAgentAgency = agency2
-                });
-
-                context.RealEstateAgents.Add(new RealEstateAgent
-                {
-                    RealEstateAgentFirstName = "Vendela",
-                    RealEstateAgentLastName = "Nordh",
-                    RealEstateAgentEmail = "vendela@nordhsmaklarbyra.com",
-                    RealEstateAgentPhoneNumber = "+46 70 123 45 67",
-                    RealEstateAgentImageUrl = "/images/RealEstateAgentWoman.jpg",
-                    RealEstateAgentAgency = agency2
-                });
-
-                context.RealEstateAgents.Add(new RealEstateAgent
-                {
-                    RealEstateAgentFirstName = "Erik",
-                    RealEstateAgentLastName = "Åberg",
-                    RealEstateAgentEmail = "erik@nordhsmaklarbyra.com",
-                    RealEstateAgentPhoneNumber = "+46 70 123 45 67",
-                    RealEstateAgentImageUrl = "/images/RealEstateAgentMan.jpg",
-                    RealEstateAgentAgency = agency2
-                });
-
-                context.RealEstateAgents.Add(new RealEstateAgent
-                {
-                    RealEstateAgentFirstName = "Lisa",
-                    RealEstateAgentLastName = "Karlsson",
-                    RealEstateAgentEmail = "lisa@nordhsmaklarbyra.com",
-                    RealEstateAgentPhoneNumber = "+46 70 123 45 67",
-                    RealEstateAgentImageUrl = "/images/RealEstateAgentWoman.jpg",
-                    RealEstateAgentAgency = agency2
-                });
-
+                context.RealEstateAgents.AddRange(agents);
                 await context.SaveChangesAsync();
             }
         }
 
+        // Allan
         public static async Task PopulateMarketProperties(ApplicationDbContext? context)
         {
-            // --- MarketProperty ---
             if (context != null && !context.MarketProperties.Any())
             {
-                var municipality = await context.Municipalities.FirstAsync();
-                var agent = await context.RealEstateAgents
-                    .Include(a => a.RealEstateAgentAgency)
-                    .FirstAsync();
+                // Get municipalities
+                var municipalities = await context.Municipalities.ToListAsync();
+                var stockholm = municipalities.First(m => m.MunicipalityName == "Stockholm");
+                var goteborg = municipalities.First(m => m.MunicipalityName == "Göteborg");
+                var orebro = municipalities.First(m => m.MunicipalityName == "Örebro");
+                var vasteras = municipalities.First(m => m.MunicipalityName == "Västerås");
+                var uppsala = municipalities.First(m => m.MunicipalityName == "Uppsala");
+                var umea = municipalities.First(m => m.MunicipalityName == "Umeå");
 
-                context.MarketProperties.Add(new MarketProperty
+                // Get agents
+                var agents = await context.RealEstateAgents.Include(a => a.RealEstateAgentAgency).ToListAsync();
+                var agent1 = agents[0]; // Anna Svensson
+                var agent2 = agents[1]; // Mikael Strand
+                var agent3 = agents[2]; // Maria Olsson
+                var agent4 = agents[3]; // Lars Olofsson
+                var agent5 = agents[4]; // Vendela Nordh
+                var agent6 = agents[5]; // Erik Åberg
+
+                var properties = new List<MarketProperty>
                 {
-                    Municipality = municipality,
-                    Category = PropertyCategory.Villa, // Use your enum here
-                    Price = 4500000,
-                    LivingArea = 120.5,
-                    AncillaryArea = 20.0,
-                    LotArea = 600.0,
-                    PropertyAddress = "Vasagatan 10",
-                    Description = "A cozy villa with modern interior in the heart of the city.",
-                    AmountOfRooms = 5,
-                    MonthlyFee = 1500,
-                    YearlyMaintenanceCost = 18000,
-                    ContructionYear = 1995,
-                    RealEstateAgent = agent
-                });
+                    // Original property (now with Swedish description)
+                    new MarketProperty
+                    {
+                        Municipality = stockholm,
+                        Category = PropertyCategory.Villa,
+                        Price = 4500000,
+                        LivingArea = 120.5,
+                        AncillaryArea = 20.0,
+                        LotArea = 600.0,
+                        PropertyAddress = "Vasagatan 10",
+                        Description = "En mysig villa med modern inredning i hjärtat av staden.",
+                        AmountOfRooms = 5,
+                        MonthlyFee = 1500,
+                        YearlyMaintenanceCost = 18000,
+                        ContructionYear = 1995,
+                        RealEstateAgent = agent1
+                    },
+                    
+                    // Additional properties
+                    new MarketProperty
+                    {
+                        Municipality = goteborg,
+                        Category = PropertyCategory.CondominiumApartment,
+                        Price = 2850000,
+                        LivingArea = 85.0,
+                        AncillaryArea = 5.0,
+                        LotArea = 0,
+                        PropertyAddress = "Bredgatan 15",
+                        Description = "Ljus och luftig lägenhet med balkong och underbar utsikt över hamnen.",
+                        AmountOfRooms = 3,
+                        MonthlyFee = 3900,
+                        YearlyMaintenanceCost = 8500,
+                        ContructionYear = 2010,
+                        RealEstateAgent = agent2
+                    },
 
+                    new MarketProperty
+                    {
+                        Municipality = orebro,
+                        Category = PropertyCategory.CondominiumApartment,
+                        Price = 3250000,
+                        LivingArea = 110.0,
+                        AncillaryArea = 15.0,
+                        LotArea = 300.0,
+                        PropertyAddress = "Tallvägen 8",
+                        Description = "Välplanerat radhus i två plan med egen trädgård och uteplatser i både fram- och baksida.",
+                        AmountOfRooms = 4,
+                        MonthlyFee = 2700,
+                        YearlyMaintenanceCost = 15000,
+                        ContructionYear = 2005,
+                        RealEstateAgent = agent3
+                    },
+
+                    new MarketProperty
+                    {
+                        Municipality = vasteras,
+                        Category = PropertyCategory.Villa,
+                        Price = 5100000,
+                        LivingArea = 155.0,
+                        AncillaryArea = 30.0,
+                        LotArea = 850.0,
+                        PropertyAddress = "Sjövägen 22",
+                        Description = "Exklusiv villa med sjöutsikt och stort trädäck. Genomgående hög standard med moderna material.",
+                        AmountOfRooms = 6,
+                        MonthlyFee = 0,
+                        YearlyMaintenanceCost = 22000,
+                        ContructionYear = 2018,
+                        RealEstateAgent = agent4
+                    },
+
+                    new MarketProperty
+                    {
+                        Municipality = uppsala,
+                        Category = PropertyCategory.CondominiumApartment,
+                        Price = 1950000,
+                        LivingArea = 65.0,
+                        AncillaryArea = 3.0,
+                        LotArea = 0,
+                        PropertyAddress = "Kyrkogatan 7B",
+                        Description = "Charmig lägenhet med bevarade originaldetaljer från sekelskiftet i centrala Uppsala.",
+                        AmountOfRooms = 2,
+                        MonthlyFee = 3200,
+                        YearlyMaintenanceCost = 5000,
+                        ContructionYear = 1905,
+                        RealEstateAgent = agent5
+                    },
+
+                    new MarketProperty
+                    {
+                        Municipality = umea,
+                        Category = PropertyCategory.VacationHome,
+                        Price = 1750000,
+                        LivingArea = 78.0,
+                        AncillaryArea = 12.0,
+                        LotArea = 1200.0,
+                        PropertyAddress = "Skogsvägen 103",
+                        Description = "Mysigt fritidshus med bastu och närhet till sjö. Perfekt för familjen som vill komma nära naturen.",
+                        AmountOfRooms = 3,
+                        MonthlyFee = 0,
+                        YearlyMaintenanceCost = 10000,
+                        ContructionYear = 1985,
+                        RealEstateAgent = agent6
+                    }
+                };
+
+                context.MarketProperties.AddRange(properties);
                 await context.SaveChangesAsync();
             }
         }
 
+
+
+        // Allan
         public static async Task PopulatePropertyImages(ApplicationDbContext? context)
         {
-            // --- PropertyImage ---
             if (context != null && !context.PropertyImages.Any())
             {
-                var property = await context.MarketProperties.FirstAsync();
+                var properties = await context.MarketProperties.ToListAsync();
 
-                context.PropertyImages.Add(new PropertyImage
+                var images = properties.Select(property => new PropertyImage
                 {
                     PropertyImageMarketProperty = property,
-                    PropertyImageUrl = "https://example.com/images/villa_front.jpg"
-                });
+                    PropertyImageUrl = "images/BasePropertyImage.jpg"
+                }).ToList();
 
+                context.PropertyImages.AddRange(images);
                 await context.SaveChangesAsync();
             }
         }
-
     }
 }
