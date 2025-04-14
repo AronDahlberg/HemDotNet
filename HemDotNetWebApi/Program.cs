@@ -13,6 +13,7 @@ namespace HemDotNetWebApi
             // Add services to the container.
 
             builder.Services.AddControllers();
+            builder.Services.AddAutoMapper(typeof(Program));
 
             builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(new ConfigurationBuilder()
                                                                                                     .AddJsonFile("appsettings.Development.json")
