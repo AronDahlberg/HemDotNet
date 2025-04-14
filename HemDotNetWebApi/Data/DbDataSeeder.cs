@@ -9,16 +9,16 @@ using System.Threading.Tasks;
 
 namespace HemDotNetWebApi.Data
 {
+    // Allan
     public static class DbDataSeeder
     {
+        // Allan
         public static async Task SeedAsync(IServiceProvider serviceProvider)
         {
             using var scope = serviceProvider.CreateScope();
             var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
-            //await context.Database.MigrateAsync();
-
-            // Execute seeding methods in order
+            // These should be called in exactly this order
             await PopulateMunicipalities(context);
             await PopulateRealEstateAgencies(context);
             await PopulateRealEstateAgents(context);
