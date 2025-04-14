@@ -14,7 +14,7 @@ namespace HemDotNetWebApi.Controllers
         {
             _marketPropertyRepository = marketPropertyRepository;
         }
-        //Author Johan Ek
+        //Author: Johan Ek
         [HttpGet]
         public async Task<IActionResult> GetAllMarketProperties()
         {
