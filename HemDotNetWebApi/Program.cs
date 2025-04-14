@@ -20,6 +20,8 @@ namespace HemDotNetWebApi
                                                                                                     .Build()
                                                                                                     .GetSection("ConnectionStrings")["HemDotNetDb"]));
 
+            builder.Services.AddScoped<IMarketPropertyRepository, MarketPropertyRepository>();
+
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
