@@ -6,6 +6,7 @@ namespace HemDotNetWebApi.DTO
     // Allan
     public class MarketPropertyListingDto
     {
+        public int MarketPropertyId { get; set; }
         public string PropertyAddress { get; set; }
         public string MunicipalityName { get; set; }
         public decimal Price { get; set; }

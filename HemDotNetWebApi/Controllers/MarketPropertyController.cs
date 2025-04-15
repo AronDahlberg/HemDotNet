@@ -21,10 +21,16 @@ namespace HemDotNetWebApi.Controllers
 
         // Allan
         [HttpGet("byMunicipality/{municipality}")]
-        public async Task<IEnumerable<MarketPropertyListingDto>> GetMarketPropertyByMunicipality(string municipality)
+        public async Task<ActionResult<IEnumerable<MarketPropertyListingDto>>> GetMarketPropertyByMunicipality(string municipality)
         {
             var properties = await _marketPropertyRepository.GetAllByMunicipality(municipality);
-            return _mapper.Map<IEnumerable<MarketPropertyListingDto>>(properties);
+
+            if (properties == null || !properties.Any())
+            {
+                return NotFound($"No properties were found for: {municipality}");
+            }
+
+            return Ok(_mapper.Map<IEnumerable<MarketPropertyListingDto>>(properties));
         }
     }
 }
