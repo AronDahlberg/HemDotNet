@@ -8,9 +8,13 @@ namespace HemDotNetWebApi.Models
         [Key]
         public int PropertyImageId { get; set; }
 
+        //Co-Author: Johan Ek.
+        //Updated the foreign key relationship to be more explicit.
         [Required]
-        [ForeignKey("MarketProperty")]
-        public MarketProperty PropertyImageMarketProperty { get; set; }
+        public int MarketPropertyId { get; set; }
+
+        [ForeignKey("MarketPropertyId")]
+        public MarketProperty MarketProperty { get; set; }
 
         [Required]
         public string PropertyImageUrl { get; set; }

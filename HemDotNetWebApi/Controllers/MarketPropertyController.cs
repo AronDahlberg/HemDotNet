@@ -3,6 +3,7 @@ using HemDotNetWebApi.Data;
 using HemDotNetWebApi.DTO;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace HemDotNetWebApi.Controllers
 {
@@ -18,17 +19,16 @@ namespace HemDotNetWebApi.Controllers
             _marketPropertyRepository = marketPropertyRepository;
             _autoMapper = autoMapper;
         }
-        //Author: Johan Ek
         [HttpGet]
-        public async Task<IActionResult> GetAllMarketProperties()
+        public async Task<IActionResult> GetAllMarketPropertiesPartial()
         {
-            var marketProperties = await _marketPropertyRepository.GetAllMarketProperties();
-            if (marketProperties == null || !marketProperties.Any())
+            //Author: Johan Ek
+            var partialMarketPropertiesDTO = await _marketPropertyRepository.GetAllMarketPropertiesPartial();
+            if (partialMarketPropertiesDTO == null || !partialMarketPropertiesDTO.Any())
             {
                 return NotFound("No market properties found.");
             }
-            // Map the MarketProperty entities to DTO, including only the desired sections.
-            var partialMarketPropertiesDTO = _autoMapper.Map<IEnumerable<PartialMarketPropertyDTO>>(marketProperties);
+
             return Ok(partialMarketPropertiesDTO);
         }
 

@@ -10,7 +10,7 @@ namespace HemDotNetWebApi.DTO
         public Municipality Municipality { get; set; }
         public decimal Price { get; set; }
         public string PropertyAddress { get; set; }
-        public List<PropertyImage> Images { get; set; }
+        public virtual IEnumerable<PartialPropertyImageDTO> Images { get; set; }
 
     }
 }
