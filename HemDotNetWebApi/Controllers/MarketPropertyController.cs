@@ -27,6 +27,7 @@ namespace HemDotNetWebApi.Controllers
             var activeListingDtos = _mapper.Map<IEnumerable<ActiveMarketListingDTO>>(activeListings);
             return activeListingDtos;
             */
+
         }
     }
 }
