@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using HemDotNetWebApi.Data;
+using HemDotNetWebApi.DTO;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -18,6 +19,14 @@ namespace HemDotNetWebApi.Controllers
             _marketPropertyRepository = marketPropertyRepository;
         }
 
-
+        [HttpGet("ByAgent/{agentId}")]
+        public async Task<IEnumerable<MarketPropertyListingDto>> GetByAgent(int agentId)
+        {
+            /*
+            var activeListings = await _marketPropertyRepository.GetAllActiveByAgent(agentId);
+            var activeListingDtos = _mapper.Map<IEnumerable<ActiveMarketListingDTO>>(activeListings);
+            return activeListingDtos;
+            */
+        }
     }
 }
