@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using HemDotNetWebApi.DTO;
+using HemDotNetWebApi.Models;
 
 namespace HemDotNetWebApi.Mapping
 {
@@ -7,7 +9,8 @@ namespace HemDotNetWebApi.Mapping
 
         public AutomapperProfile()
         {
-            
+            //Author: Johan Ek
+            CreateMap<MarketProperty, PartialMarketPropertyDTO>();
         }
     }
 }
