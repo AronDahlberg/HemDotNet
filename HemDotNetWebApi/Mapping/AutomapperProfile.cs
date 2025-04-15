@@ -8,10 +8,7 @@ namespace HemDotNetWebApi.Mapping
     {
         public AutomapperProfile()
         {
-
-            CreateMap<MarketProperty, ActiveMarketListingDTO>()
-                .ForMember(dest => dest.MarketPropertyId, opt => opt.MapFrom(src => src.MarketPropertyId))
-                .ForMember(dest => dest.PropertyAddress, opt => opt.MapFrom(src => src.PropertyAddress));
+            CreateMap<MarketProperty, ActiveMarketListingDTO>();
         }
     }
 }
