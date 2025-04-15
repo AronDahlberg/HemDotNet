@@ -19,15 +19,12 @@ namespace HemDotNetWebApi.Controllers
             _marketPropertyRepository = marketPropertyRepository;
         }
 
-        [HttpGet("ByAgent/{agentId}")]
-        public async Task<IEnumerable<MarketPropertyListingDto>> GetByAgent(int agentId)
+        // Allan
+        [HttpGet("byMunicipality/{municipality}")]
+        public async Task<IEnumerable<MarketPropertyListingDto>> GetMarketPropertyByMunicipality(string municipality)
         {
-            /*
-            var activeListings = await _marketPropertyRepository.GetAllActiveByAgent(agentId);
-            var activeListingDtos = _mapper.Map<IEnumerable<ActiveMarketListingDTO>>(activeListings);
-            return activeListingDtos;
-            */
-
+            var properties = await _marketPropertyRepository.GetAllByMunicipality(municipality);
+            return _mapper.Map<IEnumerable<MarketPropertyListingDto>>(properties);
         }
     }
 }

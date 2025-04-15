@@ -50,7 +50,6 @@ namespace HemDotNetWebApi.Models
         [ForeignKey("RealEstateAgentId")]
         public RealEstateAgent RealEstateAgent { get; set; }
 
-        [NotMapped]
         public virtual List<PropertyImage> Images { get; set; }
     }
 }

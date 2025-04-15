@@ -1,6 +1,10 @@
-﻿namespace HemDotNetWebApi.Data
+﻿using HemDotNetWebApi.Models;
+
+namespace HemDotNetWebApi.Data
 {
-    public class IMarketPropertyRepository
+    public interface IMarketPropertyRepository
     {
+        // Allan
+        Task<IEnumerable<MarketProperty>> GetAllByMunicipality(string municipality);
     }
 }

@@ -1,6 +1,7 @@
 
 using HemDotNetWebApi.Data;
 using Microsoft.EntityFrameworkCore;
+using System.Text.Json.Serialization;
 
 namespace HemDotNetWebApi
 {
@@ -12,7 +13,11 @@ namespace HemDotNetWebApi
 
             // Add services to the container.
 
-            builder.Services.AddControllers();
+            builder.Services.AddControllers()
+                .AddJsonOptions(options =>
+                {
+                    options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+                }); ;
 
             builder.Services.AddTransient<IMarketPropertyRepository, MarketPropertyRepository>();
 
