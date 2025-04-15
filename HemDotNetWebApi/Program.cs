@@ -13,6 +13,9 @@ namespace HemDotNetWebApi
             // Add services to the container.
 
             builder.Services.AddControllers();
+
+            builder.Services.AddTransient<IMarketPropertyRepository, MarketPropertyRepository>();
+
             builder.Services.AddAutoMapper(typeof(Program));
 
             builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(new ConfigurationBuilder()
