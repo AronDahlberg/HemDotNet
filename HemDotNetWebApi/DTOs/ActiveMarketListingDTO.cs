@@ -7,7 +7,7 @@ namespace HemDotNetWebApi.DTOs
     public class ActiveMarketListingDTO
     {
         public int MarketPropertyId { get; set; }
-        public Municipality Municipality { get; set; }
+        public string MunicipalityName { get; set; }
         public PropertyCategory Category { get; set; }
         public virtual List<PropertyImage> Images { get; set; }
         public string PropertyAddress { get; set; }
