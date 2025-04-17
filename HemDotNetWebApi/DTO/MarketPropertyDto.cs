@@ -2,6 +2,7 @@
 
 namespace HemDotNetWebApi.DTO
 {
+    // Allan
     public class MarketPropertyDto
     {
         public int MarketPropertyId { get; set; }

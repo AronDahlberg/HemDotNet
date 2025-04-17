@@ -1,5 +1,6 @@
 ﻿namespace HemDotNetWebApi.DTO
 {
+    // Allan
     public class PropertyImageDto
     {
         public int? PropertyImageId { get; set; }
