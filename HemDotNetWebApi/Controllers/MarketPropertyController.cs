@@ -31,10 +31,8 @@ namespace HemDotNetWebApi.Controllers
         {
             try
             {
-                // Map the DTO to the entity
                 var marketPropertyToUpdate = _mapper.Map<MarketProperty>(updateDto);
 
-                // Call repository to update
                 var updatedProperty = await _marketPropertyRepository.UpdateMarketProperty(marketPropertyToUpdate);
 
                 if (updatedProperty == null)
@@ -42,7 +40,6 @@ namespace HemDotNetWebApi.Controllers
                     return NotFound($"Market property with ID {updateDto.MarketPropertyId} not found.");
                 }
 
-                // Map the updated entity back to a DTO for the response
                 var resultDto = _mapper.Map<MarketPropertyDto>(updatedProperty);
 
 

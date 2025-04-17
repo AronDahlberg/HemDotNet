@@ -33,13 +33,15 @@ namespace HemDotNetWebApi.Data
             // We don't allow changing id
             marketProperty.MarketPropertyId = existingProperty.MarketPropertyId;
 
-            // Detach existing entity to avoid tracking conflicts
+            // we say to EF: "forget about this object"
             _context.Entry(existingProperty).State = EntityState.Detached;
 
-            // Mark as modified and save changes
+            // this tells EF: here's a new object representing a row in the database. Treat all its properties as changed,
+            // and update them in the database. Generated SQL Update query for this row
             _context.Entry(marketProperty).State = EntityState.Modified;
 
             await _context.SaveChangesAsync();
+
 
             return marketProperty;
         }
