@@ -14,12 +14,14 @@ namespace HemDotNetWebApi.Controllers
         private readonly IPropertyImageRepository _repository;
         private readonly IMapper _mapper;
 
+        // Allan
         public PropertyImageController(IPropertyImageRepository repository, IMapper mapper)
         {
             _repository = repository;
             _mapper = mapper;
         }
 
+        // Allan
         [HttpGet("getByProperty/{marketPropertyId}")]
         public async Task<ActionResult<IEnumerable<PropertyImageDto>>> GetPropertyImages(int marketPropertyId)
         {
@@ -32,6 +34,7 @@ namespace HemDotNetWebApi.Controllers
             return Ok(_mapper.Map<IEnumerable<PropertyImageDto>>(images));
         }
 
+        // Allan
         [HttpPost("add/")]
         [Consumes("multipart/form-data")]
         public async Task<ActionResult<PropertyImageDto>> AddPropertyImage([FromForm] AddPropertyImageDto dto, IFormFile imageFile)
@@ -64,7 +67,7 @@ namespace HemDotNetWebApi.Controllers
             {
                 var newImage = new PropertyImage
                 {
-                    MarketProperty = new MarketProperty { MarketPropertyId = dto.MarketPropertyId }
+                    MarketPropertyId = dto.MarketPropertyId
                 };
 
                 var addedImage = await _repository.AddImageAsync(newImage, imageFile);
@@ -78,6 +81,7 @@ namespace HemDotNetWebApi.Controllers
             }
         }
 
+        // Allan
         [HttpDelete("delete/{imageId}")]
         public async Task<ActionResult> DeletePropertyImage(int imageId)
         {

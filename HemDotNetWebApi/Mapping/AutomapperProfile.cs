@@ -28,8 +28,9 @@ namespace HemDotNetWebApi.Mapping
             // Allan
             // PropertyImage mappings
             CreateMap<PropertyImage, PropertyImageDto>()
-            .ForMember(dest => dest.MarketPropertyId, opt =>
-                opt.MapFrom(src => src.MarketProperty.MarketPropertyId));
+                .ForMember(dest => dest.ImageUrl, opt => opt.MapFrom(src => src.PropertyImageUrl))
+                .ForMember(dest => dest.MarketPropertyId, opt =>
+                    opt.MapFrom(src => src.MarketProperty.MarketPropertyId));
 
             CreateMap<PropertyImageDto, PropertyImage>()
                 .ForMember(dest => dest.MarketProperty, opt =>
