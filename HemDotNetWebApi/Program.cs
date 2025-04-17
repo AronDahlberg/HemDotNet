@@ -18,7 +18,7 @@ namespace HemDotNetWebApi
                 .AddJsonOptions(opt =>
                 {
                     //Author: Johan Ek
-                    opt.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles,
+                    opt.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
                     //Author: Allan Crépin
                     opt.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
                 });
