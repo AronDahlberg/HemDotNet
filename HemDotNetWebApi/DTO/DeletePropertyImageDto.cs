@@ -2,6 +2,7 @@
 
 namespace HemDotNetWebApi.DTO
 {
+    // Allan
     public class DeletePropertyImageDto
     {
         [Required]

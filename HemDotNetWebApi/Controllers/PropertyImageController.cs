@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace HemDotNetWebApi.Controllers
 {
+    // Allan
     [Route("api/[controller]")]
     [ApiController]
     public class PropertyImageController : ControllerBase

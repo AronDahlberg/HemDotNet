@@ -2,6 +2,7 @@
 
 namespace HemDotNetWebApi.Data
 {
+    // Allan
     public interface IPropertyImageRepository
     {
         Task<List<PropertyImage>> GetImagesByPropertyIdAsync(int marketPropertyId);
