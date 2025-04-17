@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using HemDotNetWebApi.Common;
 
@@ -50,6 +50,8 @@ namespace HemDotNetWebApi.Models
         [ForeignKey("RealEstateAgentId")]
         public RealEstateAgent RealEstateAgent { get; set; }
 
-        public virtual List<PropertyImage> Images { get; set; }
+        [Required]
+        public virtual List<PropertyImage> Images { get; set; } = new();
+
     }
 }
