@@ -35,7 +35,7 @@ namespace HemDotNetWebApi.Controllers
                 var marketPropertyToUpdate = _mapper.Map<MarketProperty>(updateDto);
 
                 // Call repository to update
-                var updatedProperty = await _repository.UpdateMarketPropertyAsync(marketPropertyToUpdate);
+                var updatedProperty = await _marketPropertyRepository.UpdateMarketProperty(marketPropertyToUpdate);
 
                 if (updatedProperty == null)
                 {

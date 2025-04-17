@@ -9,6 +9,14 @@ namespace HemDotNetWebApi.Mapping
     {
         public AutomapperProfile()
         {
+            // Allan
+            CreateMap<MarketPropertyUpdateDto, MarketProperty>()
+            .ForMember(dest => dest.Municipality, opt => opt.MapFrom(src =>
+                new Municipality { MunicipalityId = src.MunicipalityId }))
+            .ForMember(dest => dest.RealEstateAgent, opt => opt.MapFrom(src =>
+                new RealEstateAgent { RealEstateAgentId = src.RealEstateAgentId }))
+            .ForMember(dest => dest.Images, opt => opt.Ignore());
+
             //Author: Johan Ek
             CreateMap<MarketProperty, PartialMarketPropertyDTO>()
                 .ForMember(dest => dest.Images,
