@@ -14,6 +14,16 @@ namespace HemDotNetWebApi.Data
             _context = context;
         }
 
+
+        // Allan
+        public async Task<IEnumerable<MarketProperty>> GetAllByMunicipality(string municipality)
+        {
+            return await _context.MarketProperties
+                .Include(p => p.Municipality)
+                .Include(p => p.Images)
+                .Where(p => p.Municipality.MunicipalityName == municipality).ToListAsync();
+        }
+        
         // CHRIS (TODO: only get active ones)
         public async Task<IEnumerable<MarketProperty>> GetAllActiveByAgent(int agentId)
         {

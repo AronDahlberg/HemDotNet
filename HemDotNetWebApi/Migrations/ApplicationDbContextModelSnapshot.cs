@@ -211,7 +211,7 @@ namespace HemDotNetWebApi.Migrations
             modelBuilder.Entity("HemDotNetWebApi.Models.PropertyImage", b =>
                 {
                     b.HasOne("HemDotNetWebApi.Models.MarketProperty", "PropertyImageMarketProperty")
-                        .WithMany()
+                        .WithMany("Images")
                         .HasForeignKey("MarketProperty")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -228,6 +228,11 @@ namespace HemDotNetWebApi.Migrations
                         .IsRequired();
 
                     b.Navigation("RealEstateAgentAgency");
+                });
+
+            modelBuilder.Entity("HemDotNetWebApi.Models.MarketProperty", b =>
+                {
+                    b.Navigation("Images");
                 });
 #pragma warning restore 612, 618
         }
