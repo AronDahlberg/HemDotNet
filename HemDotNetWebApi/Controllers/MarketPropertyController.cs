@@ -23,6 +23,7 @@ namespace HemDotNetWebApi.Controllers
             _marketPropertyRepository = marketPropertyRepository;
         }
 
+        // Allan
         [HttpPut("update/")]
         public async Task<ActionResult<MarketPropertyDto>> UpdateMarketProperty(MarketPropertyUpdateDto updateDto)
         {

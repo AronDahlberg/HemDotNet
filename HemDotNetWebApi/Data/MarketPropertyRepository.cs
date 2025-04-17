@@ -42,7 +42,6 @@ namespace HemDotNetWebApi.Data
 
             await _context.SaveChangesAsync();
 
-
             return marketProperty;
         }
 
