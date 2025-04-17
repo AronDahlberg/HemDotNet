@@ -31,6 +31,7 @@ namespace HemDotNetWebApi
                                                                                                     .GetSection("ConnectionStrings")["HemDotNetDb"]));
 
             builder.Services.AddTransient<IMarketPropertyRepository, MarketPropertyRepository>();
+            builder.Services.AddTransient<IPropertyImageRepository, PropertyImageRepository>();
 
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
