@@ -18,7 +18,7 @@ namespace HemDotNetWebApi.Data
         }
 
         // Allan
-        public async Task<MarketProperty> UpdateMarketPropertyAsync(MarketProperty marketProperty)
+        public async Task<MarketProperty> UpdateMarketProperty(MarketProperty marketProperty)
         {
             var existingProperty = await _context.MarketProperties
                 .Include(mp => mp.Municipality)
@@ -27,7 +27,7 @@ namespace HemDotNetWebApi.Data
 
             if (existingProperty == null)
             {
-                return null; // Property not found method?
+                return null;
             }
 
             // We don't allow changing id
