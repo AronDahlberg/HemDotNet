@@ -45,6 +45,7 @@ namespace HemDotNetWebApi.Controllers
                 // Map the updated entity back to a DTO for the response
                 var resultDto = _mapper.Map<MarketPropertyDto>(updatedProperty);
 
+
                 return Ok(resultDto);
             }
             catch (Exception ex)

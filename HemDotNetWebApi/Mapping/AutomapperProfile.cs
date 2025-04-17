@@ -17,6 +17,19 @@ namespace HemDotNetWebApi.Mapping
                 new RealEstateAgent { RealEstateAgentId = src.RealEstateAgentId }))
             .ForMember(dest => dest.Images, opt => opt.Ignore());
 
+            //Allan
+            CreateMap<MarketProperty, MarketPropertyDto>()
+            .ForMember(dest => dest.MunicipalityId, opt =>
+                opt.MapFrom(src => src.Municipality.MunicipalityId))
+            .ForMember(dest => dest.MunicipalityName, opt =>
+                opt.MapFrom(src => src.Municipality.MunicipalityName))
+            .ForMember(dest => dest.RealEstateAgentId, opt =>
+                opt.MapFrom(src => src.RealEstateAgent.RealEstateAgentId))
+            .ForMember(dest => dest.RealEstateAgentName, opt =>
+                opt.MapFrom(src => src.RealEstateAgent.RealEstateAgentFirstName))
+            .ForMember(dest => dest.Images, opt =>
+                opt.MapFrom(src => src.Images));
+
             //Author: Johan Ek
             CreateMap<MarketProperty, PartialMarketPropertyDTO>()
                 .ForMember(dest => dest.Images,
