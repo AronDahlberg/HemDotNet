@@ -8,22 +8,22 @@ namespace HemDotNetWebApi.Data
 {
     public class MarketPropertyRepository : IMarketPropertyRepository
     {
-        private readonly ApplicationDbContext _applicationDbContext;
-        private readonly IMapper _autoMapper;
+        private readonly ApplicationDbContext _context;
+        private readonly IMapper _mapper;
 
-        public MarketPropertyRepository(ApplicationDbContext applicationDbContext, IMapper autoMapper)
+        public MarketPropertyRepository(ApplicationDbContext context, IMapper mapper)
         {
-            _applicationDbContext = applicationDbContext;
-            _autoMapper = autoMapper;
+            _context = context;
+            _mapper = mapper;
         }
         public async Task<IEnumerable<PartialMarketPropertyDTO>> GetAllMarketPropertiesPartial()
         {
             //Author: Johan Ek
             //Gets all MarketProperties, eagerly loads Municipality and Images, then projects to a DTO.
-            return await _applicationDbContext.MarketProperties
+            return await _context.MarketProperties
                 .Include(mp => mp.Municipality)
                 .Include(mp => mp.Images)
-                .ProjectTo<PartialMarketPropertyDTO>(_autoMapper.ConfigurationProvider)
+                .ProjectTo<PartialMarketPropertyDTO>(_mapper.ConfigurationProvider)
                 .ToListAsync();
         }
     }

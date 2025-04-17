@@ -13,7 +13,10 @@ namespace HemDotNetWebApi.Mapping
             CreateMap<MarketProperty, PartialMarketPropertyDTO>()
                 .ForMember(dest => dest.Images,
                 opt => opt.MapFrom(
-                    src => src.Images));
+                    src => src.Images))
+                .ForMember(dest => dest.MunicipalityName,
+                opt => opt.MapFrom(
+                    src => src.Municipality.MunicipalityName));
             //Author: Johan Ek
             CreateMap<PropertyImage, PartialPropertyImageDTO>()
                 .ForMember(dest => dest.PropertyImageUrl,

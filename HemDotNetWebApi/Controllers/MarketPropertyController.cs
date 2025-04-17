@@ -11,13 +11,13 @@ namespace HemDotNetWebApi.Controllers
     [ApiController]
     public class MarketPropertyController : ControllerBase
     {
+        private readonly IMapper _mapper;
         private readonly IMarketPropertyRepository _marketPropertyRepository;
-        private readonly IMapper _autoMapper;
 
-        public MarketPropertyController(IMarketPropertyRepository marketPropertyRepository, IMapper autoMapper)
+        public MarketPropertyController(IMapper mapper, IMarketPropertyRepository marketPropertyRepository)
         {
+            _mapper = mapper;
             _marketPropertyRepository = marketPropertyRepository;
-            _autoMapper = autoMapper;
         }
         [HttpGet]
         public async Task<IActionResult> GetAllMarketPropertiesPartial()
