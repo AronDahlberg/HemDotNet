@@ -46,22 +46,21 @@ namespace HemDotNetWebApi.Controllers
             }
 
             // Validate file type
-            string[] allowedExtensions = { ".jpg", ".jpeg", ".png", ".gif" };
+            string[] allowedExtensions = { ".jpg", ".jpeg", ".png"};
             string fileExtension = Path.GetExtension(imageFile.FileName).ToLowerInvariant();
             if (!allowedExtensions.Contains(fileExtension))
             {
-                return BadRequest("Invalid file type. Only jpg, jpeg, png, and gif files are allowed");
+                return BadRequest("Invalid file type. Only jpg, jpeg and png are allowed");
             }
 
-            // Validate file size (5MB max)
             if (imageFile.Length > 5 * 1024 * 1024)
             {
-                return BadRequest("File size exceeds the limit of 5MB");
+                return BadRequest("File size is larger than limit of 5MB");
             }
 
             if (!await _repository.PropertyExistsAsync(dto.MarketPropertyId))
             {
-                return NotFound($"Market property with ID {dto.MarketPropertyId} not found");
+                return NotFound($"Market property with ID {dto.MarketPropertyId} was not found");
             }
 
             try
@@ -78,7 +77,7 @@ namespace HemDotNetWebApi.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, "An error occurred while processing your request");
+                return StatusCode(500, "An error occurred while adding the picture");
             }
         }
 
