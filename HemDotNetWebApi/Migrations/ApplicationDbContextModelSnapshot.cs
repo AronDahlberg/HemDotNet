@@ -213,6 +213,9 @@ namespace HemDotNetWebApi.Migrations
                     b.HasOne("HemDotNetWebApi.Models.MarketProperty", "MarketProperty")
                         .WithMany("Images")
                         .HasForeignKey("MarketPropertyId")
+                    b.HasOne("HemDotNetWebApi.Models.MarketProperty", "PropertyImageMarketProperty")
+                        .WithMany("Images")
+                        .HasForeignKey("MarketProperty")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

@@ -1,5 +1,6 @@
 
 using HemDotNetWebApi.Data;
+using HemDotNetWebApi.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
 
@@ -14,13 +15,14 @@ namespace HemDotNetWebApi
             // Add services to the container.
 
             builder.Services.AddControllers()
-                //Author: Johan Ek
-                //Added JsonOptions to ignore circular references.
                 .AddJsonOptions(opt =>
                 {
-                    opt.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+                    //Author: Johan Ek
+                    opt.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles,
+                    //Author: Allan Crépin
+                    opt.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
                 });
-
+          
             builder.Services.AddAutoMapper(typeof(Program));
 
             builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(new ConfigurationBuilder()

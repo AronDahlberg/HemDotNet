@@ -1,4 +1,4 @@
-﻿using HemDotNetWebApi.DTO;
+using HemDotNetWebApi.DTO;
 using HemDotNetWebApi.Models;
 
 namespace HemDotNetWebApi.Data
@@ -7,5 +7,11 @@ namespace HemDotNetWebApi.Data
     {
         //Author: Johan Ek
         Task<IEnumerable<PartialMarketPropertyDTO>> GetAllMarketPropertiesPartial();
+
+        // Allan
+        Task<IEnumerable<MarketProperty>> GetAllByMunicipality(string municipality);
+
+        // CHRIS
+        Task<IEnumerable<MarketProperty>> GetAllActiveByAgent(int agentId);
     }
 }
