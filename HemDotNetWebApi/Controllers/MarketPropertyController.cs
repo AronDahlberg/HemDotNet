@@ -23,10 +23,7 @@ namespace HemDotNetWebApi.Controllers
             _marketPropertyRepository = marketPropertyRepository;
         }
 
-        [HttpPut]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [HttpPut("update/")]
         public async Task<ActionResult<MarketPropertyDto>> UpdateMarketProperty(MarketPropertyUpdateDto updateDto)
         {
             try
@@ -41,7 +38,6 @@ namespace HemDotNetWebApi.Controllers
                 }
 
                 var resultDto = _mapper.Map<MarketPropertyDto>(updatedProperty);
-
 
                 return Ok(resultDto);
             }
