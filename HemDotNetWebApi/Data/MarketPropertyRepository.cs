@@ -16,7 +16,34 @@ namespace HemDotNetWebApi.Data
             _context = context;
             _mapper = mapper;
         }
-        
+
+        // Allan
+        public async Task<MarketProperty> UpdateMarketPropertyAsync(MarketProperty marketProperty)
+        {
+            var existingProperty = await _context.MarketProperties
+                .Include(mp => mp.Municipality)
+                .Include(mp => mp.RealEstateAgent)
+                .FirstOrDefaultAsync(mp => mp.MarketPropertyId == marketProperty.MarketPropertyId);
+
+            if (existingProperty == null)
+            {
+                return null; // Property not found method?
+            }
+
+            // We don't allow changing id
+            marketProperty.MarketPropertyId = existingProperty.MarketPropertyId;
+
+            // Detach existing entity to avoid tracking conflicts
+            _context.Entry(existingProperty).State = EntityState.Detached;
+
+            // Mark as modified and save changes
+            _context.Entry(marketProperty).State = EntityState.Modified;
+
+            await _context.SaveChangesAsync();
+
+            return marketProperty;
+        }
+
         //Author: Johan Ek
         public async Task<IEnumerable<PartialMarketPropertyDTO>> GetAllMarketPropertiesPartial()
         {
