@@ -63,6 +63,16 @@ namespace HemDotNetWebApi.Controllers
                 return NotFound($"Market property with ID {dto.MarketPropertyId} was not found");
             }
 
+
+            /*
+            placeholder; in future, check ownership
+            later: Get userId from JWT or claims
+            if(await _repo.IsPropertyOwnedByAgency(marketPropertyId, AgencyId)!=true)
+            {
+                return Forbid(); // or Unauthorized()
+            }
+            */
+
             try
             {
                 var newImage = new PropertyImage

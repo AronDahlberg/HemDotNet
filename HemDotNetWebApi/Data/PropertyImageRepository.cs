@@ -67,7 +67,7 @@ namespace HemDotNetWebApi.Data
                 return false;
             }
 
-            string filePath = Path.Combine(_environment.WebRootPath, image.PropertyImageUrl.TrimStart('/'));
+            string filePath = Path.Combine(_environment.ContentRootPath, image.PropertyImageUrl.TrimStart('/'));
             if (File.Exists(filePath))
             {
                 File.Delete(filePath);
