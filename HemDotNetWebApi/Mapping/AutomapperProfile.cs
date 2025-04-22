@@ -21,8 +21,21 @@ namespace HemDotNetWebApi.Mapping
             CreateMap<MarketProperty, MarketPropertyDto>()
             .ForMember(dest => dest.MunicipalityId, opt =>
                 opt.MapFrom(src => src.Municipality.MunicipalityId))
+            .ForMember(dest => dest.MunicipalityName, opt =>
+                opt.MapFrom(src => src.Municipality.MunicipalityName))
+            .ForMember(dest => dest.RealEstateAgentFullName, opt =>
+                opt.MapFrom(src => $"{src.RealEstateAgent.RealEstateAgentFirstName} {src.RealEstateAgent.RealEstateAgentLastName}"))
+            .ForMember(dest => dest.LotArea, opt =>
+                opt.MapFrom(src => src.LotArea))
+            .ForMember(dest => dest.AncillaryArea, opt =>
+                 opt.MapFrom(src => src.AncillaryArea))
             .ForMember(dest => dest.RealEstateAgentId, opt =>
-                opt.MapFrom(src => src.RealEstateAgent.RealEstateAgentId));
+                opt.MapFrom(src => src.RealEstateAgent.RealEstateAgentId))
+            .ForMember(dest => dest.Images, opt =>
+                opt.MapFrom(src => src.Images.Select(img => img.PropertyImageUrl).ToList())); 
+
+
+
 
 
             // Allan
