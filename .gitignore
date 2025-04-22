@@ -364,3 +364,6 @@ FodyWeavers.xsd
 
 # Enviroment for Db connection string
 appsettings.Development.json
+
+# Folder where PropertyImages are added
+Images/PropertyImages/
