@@ -42,10 +42,19 @@ namespace HemDotNetWebApi.Migrations
                     b.Property<int>("ContructionYear")
                         .HasColumnType("int");
 
+                    b.Property<DateTime>("CreationDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsSold")
+                        .HasColumnType("bit");
 
                     b.Property<double>("LivingArea")
                         .HasColumnType("float");
@@ -212,10 +221,7 @@ namespace HemDotNetWebApi.Migrations
                 {
                     b.HasOne("HemDotNetWebApi.Models.MarketProperty", "MarketProperty")
                         .WithMany("Images")
-                        .HasForeignKey("MarketPropertyId");
-                    b.HasOne("HemDotNetWebApi.Models.MarketProperty", "PropertyImageMarketProperty")
-                        .WithMany("Images")
-                        .HasForeignKey("MarketProperty")
+                        .HasForeignKey("MarketPropertyId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

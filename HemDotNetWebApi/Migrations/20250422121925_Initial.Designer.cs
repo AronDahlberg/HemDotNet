@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HemDotNetWebApi.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250410094258_initial")]
-    partial class initial
+    [Migration("20250422121925_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -45,10 +45,19 @@ namespace HemDotNetWebApi.Migrations
                     b.Property<int>("ContructionYear")
                         .HasColumnType("int");
 
+                    b.Property<DateTime>("CreationDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsSold")
+                        .HasColumnType("bit");
 
                     b.Property<double>("LivingArea")
                         .HasColumnType("float");
@@ -112,7 +121,7 @@ namespace HemDotNetWebApi.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PropertyImageId"));
 
-                    b.Property<int>("MarketProperty")
+                    b.Property<int>("MarketPropertyId")
                         .HasColumnType("int");
 
                     b.Property<string>("PropertyImageUrl")
@@ -121,7 +130,7 @@ namespace HemDotNetWebApi.Migrations
 
                     b.HasKey("PropertyImageId");
 
-                    b.HasIndex("MarketProperty");
+                    b.HasIndex("MarketPropertyId");
 
                     b.ToTable("PropertyImages");
                 });
@@ -213,13 +222,13 @@ namespace HemDotNetWebApi.Migrations
 
             modelBuilder.Entity("HemDotNetWebApi.Models.PropertyImage", b =>
                 {
-                    b.HasOne("HemDotNetWebApi.Models.MarketProperty", "PropertyImageMarketProperty")
-                        .WithMany()
-                        .HasForeignKey("MarketProperty")
+                    b.HasOne("HemDotNetWebApi.Models.MarketProperty", "MarketProperty")
+                        .WithMany("Images")
+                        .HasForeignKey("MarketPropertyId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("PropertyImageMarketProperty");
+                    b.Navigation("MarketProperty");
                 });
 
             modelBuilder.Entity("HemDotNetWebApi.Models.RealEstateAgent", b =>
@@ -231,6 +240,11 @@ namespace HemDotNetWebApi.Migrations
                         .IsRequired();
 
                     b.Navigation("RealEstateAgentAgency");
+                });
+
+            modelBuilder.Entity("HemDotNetWebApi.Models.MarketProperty", b =>
+                {
+                    b.Navigation("Images");
                 });
 #pragma warning restore 612, 618
         }
