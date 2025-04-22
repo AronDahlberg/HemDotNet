@@ -6,6 +6,7 @@ using HemDotNetWebApi.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace HemDotNetWebApi.Controllers
 {
@@ -81,6 +82,21 @@ namespace HemDotNetWebApi.Controllers
             var activeListings = await _marketPropertyRepository.GetAllActiveByAgent(agentId);
             var activeListingDtos = _mapper.Map<IEnumerable<ActiveMarketListingDTO>>(activeListings);
             return activeListingDtos;
+        }
+
+        // Katarina
+        [HttpGet("ById/{MarketPropertyId}")]
+        public async Task<IActionResult> GetMarketPropertyById(int MarketPropertyId)
+        {
+            var marketProperty = await _marketPropertyRepository.GetMarketPropertyById(MarketPropertyId);
+
+            if (marketProperty == null)
+            {
+                return NotFound($"No market property found with ID {MarketPropertyId}.");
+            }
+
+            var dto = _mapper.Map<MarketPropertyDto>(marketProperty);
+            return Ok(dto);
         }
     }
 }
