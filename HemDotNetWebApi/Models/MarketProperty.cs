@@ -34,7 +34,7 @@ namespace HemDotNetWebApi.Models
         [Required]
         [MaxLength(200)]
         public string Description { get; set; }
-        
+
         [Required]
         public int AmountOfRooms { get; set; }
 
@@ -52,6 +52,15 @@ namespace HemDotNetWebApi.Models
 
         [Required]
         public virtual List<PropertyImage> Images { get; set; } = new();
+
+        [Required]
+        public DateTime CreationDate { get; set; } = DateTime.UtcNow;
+
+        [Required]
+        public bool IsActive { get; set; } = true;
+
+        [Required]
+        public bool IsSold { get; set; } = false;
 
     }
 }
