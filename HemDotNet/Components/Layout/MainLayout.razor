@@ -1,6 +1,10 @@
 ﻿@inherits LayoutComponentBase
 
-<!-- Author: Allan -->
+<!--
+
+Author: Allan 
+
+-->
 
 @code {
     // placeholder!
@@ -8,8 +12,11 @@
 }
 
 
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary w-100 px-4 shadow-sm">
-    <a class="navbar-brand fw-bold text-white" href="#">Logga</a>
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary w-100 shadow-sm align-text-baseline">
+    <a class="navbar-brand d-flex align-items-baseline" href="#">
+        <img src="logo.svg" alt="Logo" style="height: 36px; padding-bottom: 3px;" />
+        <!--Can't get it to align properly without padding-botton!-->
+    </a>
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain"
             aria-controls="navbarMain" aria-expanded="false" aria-label="Toggle navigation">
