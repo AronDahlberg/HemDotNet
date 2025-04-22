@@ -366,4 +366,4 @@ FodyWeavers.xsd
 appsettings.Development.json
 
 # Folder where PropertyImages are added
-Images/PropertyImages/
+HemDotNetWebApi/Images/PropertyImages/
