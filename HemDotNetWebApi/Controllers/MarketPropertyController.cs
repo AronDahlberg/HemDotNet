@@ -22,6 +22,31 @@ namespace HemDotNetWebApi.Controllers
             _mapper = mapper;
             _marketPropertyRepository = marketPropertyRepository;
         }
+
+        // Allan
+        [HttpPut("update/")]
+        public async Task<ActionResult<MarketPropertyDto>> UpdateMarketProperty(MarketPropertyUpdateDto updateDto)
+        {
+            try
+            {
+                var marketPropertyToUpdate = _mapper.Map<MarketProperty>(updateDto);
+
+                var updatedProperty = await _marketPropertyRepository.UpdateMarketProperty(marketPropertyToUpdate);
+
+                if (updatedProperty == null)
+                {
+                    return NotFound($"Market property with ID {updateDto.MarketPropertyId} not found.");
+                }
+
+                var resultDto = _mapper.Map<MarketPropertyDto>(updatedProperty);
+
+                return Ok(resultDto);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest("Could not update the market property. Please try again.");
+            }
+        }
         //Author: Johan Ek
         [HttpGet]
         public async Task<IActionResult> GetAllMarketPropertiesPartial()
