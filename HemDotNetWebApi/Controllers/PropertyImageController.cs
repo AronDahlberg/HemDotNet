@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Mvc;
 namespace HemDotNetWebApi.Controllers
 {
     // Allan
-    [Route("api/[controller]")]
     [ApiController]
     public class PropertyImageController : ControllerBase
     {
@@ -28,7 +27,7 @@ namespace HemDotNetWebApi.Controllers
         {
             if (!await _repository.PropertyExistsAsync(marketPropertyId))
             {
-                return NotFound($"Market property with ID {marketPropertyId} not found");
+                return NotFound($"Market property with ID {marketPropertyId} was not found");
             }
 
             var images = await _repository.GetImagesByPropertyIdAsync(marketPropertyId);
@@ -45,7 +44,7 @@ namespace HemDotNetWebApi.Controllers
                 return BadRequest("No image file provided");
             }
 
-            // Validate file type
+            // Validate file type - which files types are allowed?
             string[] allowedExtensions = { ".jpg", ".jpeg", ".png"};
             string fileExtension = Path.GetExtension(imageFile.FileName).ToLowerInvariant();
             if (!allowedExtensions.Contains(fileExtension))

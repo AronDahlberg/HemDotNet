@@ -14,12 +14,10 @@ namespace HemDotNetWebApi.Data
         {
             _context = context;
             _environment = environment;
-            //_imageDirectory = Path.Combine(_environment.WebRootPath, "images", "properties");
-            //_imageDirectory = Path.Combine(_environment.WebRootPath, "Images");
             _imageDirectory = Path.Combine(_environment.ContentRootPath, "Images", "PropertyImages");
             if (!Directory.Exists(_imageDirectory))
             {
-                //Directory.CreateDirectory(_imageDirectory);
+                Directory.CreateDirectory(_imageDirectory);
             }
         }
 
@@ -82,13 +80,13 @@ namespace HemDotNetWebApi.Data
         // Allan
         public async Task<bool> ImageExistsAsync(int imageId)
         {
-            return await _context.PropertyImages.AnyAsync(pi => pi.PropertyImageId == imageId);
+            return await _context.PropertyImages.AnyAsync(i => i.PropertyImageId == imageId);
         }
 
         // Allan
         public async Task<bool> PropertyExistsAsync(int marketPropertyId)
         {
-            return await _context.MarketProperties.AnyAsync(mp => mp.MarketPropertyId == marketPropertyId);
+            return await _context.MarketProperties.AnyAsync(m => m.MarketPropertyId == marketPropertyId);
         }
     }
 }
