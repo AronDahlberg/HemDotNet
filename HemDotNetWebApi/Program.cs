@@ -1,6 +1,7 @@
 
 using HemDotNetWebApi.Data;
 using HemDotNetWebApi.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
 
@@ -30,6 +31,10 @@ namespace HemDotNetWebApi
                 .Build()
                 .GetSection("ConnectionStrings")["HemDotNetDb"])
             );
+
+            builder.Services.AddIdentityCore<IdentityUser>()
+                .AddRoles<IdentityRole>()
+                .AddEntityFrameworkStores<ApplicationDbContext>();
 
             builder.Services.AddTransient<IMarketPropertyRepository, MarketPropertyRepository>();
             builder.Services.AddTransient<IPropertyImageRepository, PropertyImageRepository>();
