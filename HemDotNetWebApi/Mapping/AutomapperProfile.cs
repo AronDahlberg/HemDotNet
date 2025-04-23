@@ -66,6 +66,7 @@ namespace HemDotNetWebApi.Mapping
 
             // Christian
             CreateMap<RealEstateAgentUpdateDTO, RealEstateAgent>();
+ main
 
         }
     }

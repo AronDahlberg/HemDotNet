@@ -79,5 +79,15 @@ namespace HemDotNetWebApi.Data
                 .Where(p => p.IsSold == false)
                 .ToListAsync();
         }
+
+        // Katarina
+        public async Task<MarketProperty?> GetMarketPropertyById(int id)
+        {
+            return await _context.MarketProperties
+                .Include(mp => mp.Municipality)
+                .Include(mp => mp.RealEstateAgent)
+                .Include(mp => mp.Images)
+                .FirstOrDefaultAsync(mp => mp.MarketPropertyId == id);
+        }
     }
 }
