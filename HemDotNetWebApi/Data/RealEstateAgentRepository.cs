@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using HemDotNetWebApi.Models;
+﻿using HemDotNetWebApi.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace HemDotNetWebApi.Data
@@ -13,11 +12,32 @@ namespace HemDotNetWebApi.Data
             _context = context;
         }
 
-        public async Task<IEnumerable<RealEstateAgent>> Get(int agentId)
+        // CHRIS
+        public async Task<RealEstateAgent> GetAsync(int agentId)
         {
             return await _context.RealEstateAgents
-                .Where(p => p.RealEstateAgentId == agentId)
-                .ToListAsync();
+                .Include(a => a.RealEstateAgentAgency)
+                .Include(a => a.RealEstateAgentProperties)
+                .FirstOrDefaultAsync(a => a.RealEstateAgentId == agentId);
         }
+
+        // CHRIS
+        public async Task<RealEstateAgent> UpdateAsync(RealEstateAgent agent)
+        {
+            var existingAgent = await _context.RealEstateAgents
+                .FirstOrDefaultAsync(a => a.RealEstateAgentId == agent.RealEstateAgentId);
+
+            if (existingAgent == null)
+            {
+                throw new KeyNotFoundException($"Agent with ID {agent.RealEstateAgentId} not found.");
+            }
+
+            _context.Entry(existingAgent).CurrentValues.SetValues(agent);
+
+            await _context.SaveChangesAsync();
+
+            return existingAgent;
+        }
+
     }
 }
