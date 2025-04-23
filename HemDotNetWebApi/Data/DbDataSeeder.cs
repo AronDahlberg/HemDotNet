@@ -22,110 +22,211 @@ namespace HemDotNetWebApi.Data
             // These should be called in exactly this order
             await PopulateMunicipalities(context);
             await PopulateRealEstateAgencies(context);
-            await SeedRolesAndUsers(context);  // Add this new method call
-            await PopulateRealEstateAgents(context);
+            await SeedRoles(context);
+            await SeedUsers(context);
             await PopulateMarketProperties(context);
             await PopulatePropertyImages(context);
         }
 
-        // New method to seed roles and users with Identity
-        public static async Task SeedRolesAndUsers(ApplicationDbContext context)
+        // Author: group
+        public static async Task SeedRoles(ApplicationDbContext context)
         {
-            // Only seed if roles aren't already seeded
             if (!context.Roles.Any())
             {
-                // Add roles
                 var roles = new List<IdentityRole>
-            {
-                new IdentityRole
                 {
-                    Name = ApiRoles.User,
-                    NormalizedName = ApiRoles.User.ToUpper(),
-                    Id = "c0ef899a-9033-4d98-9851-cf7c051cc51d"
-                },
-                new IdentityRole
-                {
-                    Name = ApiRoles.Administrator,
-                    NormalizedName = ApiRoles.Administrator.ToUpper(),
-                    Id = "24f60ffc-3f16-4815-83b0-bf191748018c"
-                }
-            };
+                    new IdentityRole
+                    {
+                        Name = ApiRoles.User,
+                        NormalizedName = ApiRoles.User.ToUpper(),
+                        Id = Guid.NewGuid().ToString()
+                    },
+                    new IdentityRole
+                    {
+                        Name = ApiRoles.Administrator,
+                        NormalizedName = ApiRoles.Administrator.ToUpper(),
+                        Id = Guid.NewGuid().ToString()
+                    }
+                };
 
                 context.Roles.AddRange(roles);
                 await context.SaveChangesAsync();
             }
+        }
 
-            // Only seed if users aren't already seeded
-            if (!context.Users.Any(u => u.Email == "user@hemdotnet.se" || u.Email == "admin@hemdotnet.se"))
+        // Allan
+        public static async Task SeedUsers(ApplicationDbContext context)
+        {
+            if (!context.Users.Any())
             {
-                // Get the agencies to relate to users
                 var agencies = await context.RealEstateAgencies.ToListAsync();
                 var nordicHomes = agencies.First(a => a.RealEstateAgencyName == "Nordic Homes");
                 var nordhsMaklarbyra = agencies.First(a => a.RealEstateAgencyName == "Nordhs Mäklarbyrå");
 
-                // Create password hasher
+                /* Author: Group */
+
                 var hasher = new PasswordHasher<RealEstateAgent>();
 
-                // Add users with proper agency references
-                var users = new List<RealEstateAgent>
-            {
-                new RealEstateAgent
+                var agents = new List<RealEstateAgent>
                 {
-                    Id = "a7d64e4d-a8e6-40da-a431-e75fd59ecbdb",
-                    Email = "user@hemdotnet.se",
-                    NormalizedEmail = "USER@HEMDOTNET.SE",
-                    UserName = "user@hemdotnet.se",
-                    NormalizedUserName = "USER@HEMDOTNET.SE",
-                    RealEstateAgentFirstName = "Anna",
-                    RealEstateAgentLastName = "Svensson",
-                    PasswordHash = hasher.HashPassword(null, "password"),
-                    EmailConfirmed = true,
-                    RealEstateAgentEmail = "anna@nordichomes.com",
-                    RealEstateAgentPhoneNumber = "+46 70 123 45 67",
-                    RealEstateAgentImageUrl = "/images/RealEstateAgentWoman.jpg",
-                    RealEstateAgentAgency = nordicHomes
-                },
-                new RealEstateAgent
-                {
-                    Id = "bca74173-1e33-41e8-88df-5a6454c4f900",
-                    Email = "admin@hemdotnet.se",
-                    NormalizedEmail = "ADMIN@HEMDOTNET.SE",
-                    UserName = "admin@hemdotnet.se",
-                    NormalizedUserName = "ADMIN@HEMDOTNET.SE",
-                    RealEstateAgentFirstName = "Mikael",
-                    RealEstateAgentLastName = "Strand",
-                    PasswordHash = hasher.HashPassword(null, "password"),
-                    EmailConfirmed = true,
-                    RealEstateAgentEmail = "mikael@nordichomes.com",
-                    RealEstateAgentPhoneNumber = "+46 70 123 45 67",
-                    RealEstateAgentImageUrl = "/images/RealEstateAgentMan.jpg",
-                    RealEstateAgentAgency = nordhsMaklarbyra
-                }
-            };
+                    new RealEstateAgent
+                    {
+                        Id = Guid.NewGuid().ToString(),
+                        Email = "admin@hemdotnet.se",
+                        NormalizedEmail = "ADMIN@HEMDOTNET.SE",
+                        UserName = "admin@hemdotnet.se",
+                        NormalizedUserName = "ADMIN@HEMDOTNET.SE",
+                        RealEstateAgentFirstName = "Admin",
+                        RealEstateAgentLastName = "Adminsson",
+                        PasswordHash = hasher.HashPassword(null, "password"),
+                        EmailConfirmed = true,
+                        RealEstateAgentEmail = "admin@hemdotnet.se",
+                        RealEstateAgentPhoneNumber = "+46 70 123 45 67",
+                        RealEstateAgentImageUrl = "/images/RealEstateAgentMan.jpg",
+                        RealEstateAgentAgency = nordhsMaklarbyra
+                    },
+                    new RealEstateAgent
+                    {
+                        Id = Guid.NewGuid().ToString(),
+                        Email = "anna@nordichomes.se",
+                        NormalizedEmail = "ANNA@NORDICHOMES.SE",
+                        UserName = "anna@nordichomes.se",
+                        NormalizedUserName = "ANNA@NORDICHOMES.SE",
+                        RealEstateAgentFirstName = "Anna",
+                        RealEstateAgentLastName = "Svensson",
+                        PasswordHash = hasher.HashPassword(null, "password"),
+                        EmailConfirmed = true,
+                        RealEstateAgentEmail = "anna@nordichomes.com",
+                        RealEstateAgentPhoneNumber = "+46 70 123 45 67",
+                        RealEstateAgentImageUrl = "/images/RealEstateAgentWoman.jpg",
+                        RealEstateAgentAgency = nordicHomes
+                    },
+                    new RealEstateAgent
+                    {
+                        Id = Guid.NewGuid().ToString(),
+                        Email = "mikael@nordichomes.se",
+                        NormalizedEmail = "MIKAEL@NORDICHOMES.SE",
+                        UserName = "mikael@nordichomes.se",
+                        NormalizedUserName = "MIKAEL@NORDICHOMES.SE",
+                        RealEstateAgentFirstName = "Mikael",
+                        RealEstateAgentLastName = "Strand",
+                        PasswordHash = hasher.HashPassword(null, "password"),
+                        EmailConfirmed = true,
+                        RealEstateAgentEmail = "mikael@nordichomes.com",
+                        RealEstateAgentPhoneNumber = "+46 70 123 45 67",
+                        RealEstateAgentImageUrl = "/images/RealEstateAgentMan.jpg",
+                        RealEstateAgentAgency = nordicHomes
+                    },
+                    new RealEstateAgent
+                    {
+                        Id = Guid.NewGuid().ToString(),
+                        Email = "maria@nordichomes.com",
+                        NormalizedEmail = "MARIA@NORDICHOMES.COM",
+                        UserName = "maria@nordichomes.com",
+                        NormalizedUserName = "MARIA@NORDICHOMES.COM",
+                        RealEstateAgentFirstName = "Maria",
+                        RealEstateAgentLastName = "Olsson",
+                        PasswordHash = hasher.HashPassword(null, "password"),
+                        EmailConfirmed = true,
+                        RealEstateAgentEmail = "maria@nordichomes.com",
+                        RealEstateAgentPhoneNumber = "+46 70 123 45 67",
+                        RealEstateAgentImageUrl = "/images/RealEstateAgentWoman.jpg",
+                        RealEstateAgentAgency = nordicHomes
+                    },
+                    new RealEstateAgent
+                    {
+                        Id = Guid.NewGuid().ToString(),
+                        Email = "lars@nordhsmaklarbyra.com",
+                        NormalizedEmail = "LARS@NORDHSMAKLARBYRA.COM",
+                        UserName = "lars@nordhsmaklarbyra.com",
+                        NormalizedUserName = "LARS@NORDHSMAKLARBYRA.COM",
+                        RealEstateAgentFirstName = "Lars",
+                        RealEstateAgentLastName = "Olofsson",
+                        PasswordHash = hasher.HashPassword(null, "password"),
+                        EmailConfirmed = true,
+                        RealEstateAgentEmail = "lars@nordhsmaklarbyra.com",
+                        RealEstateAgentPhoneNumber = "+46 70 123 45 67",
+                        RealEstateAgentImageUrl = "/images/RealEstateAgentMan.jpg",
+                        RealEstateAgentAgency = nordhsMaklarbyra
+                    },
+                    new RealEstateAgent
+                    {
+                        Id = Guid.NewGuid().ToString(),
+                        Email = "vendela@nordhsmaklarbyra.com",
+                        NormalizedEmail = "VENDELA@NORDHSMAKLARBYRA.COM",
+                        UserName = "vendela@nordhsmaklarbyra.com",
+                        NormalizedUserName = "VENDELA@NORDHSMAKLARBYRA.COM",
+                        RealEstateAgentFirstName = "Vendela",
+                        RealEstateAgentLastName = "Nordh",
+                        PasswordHash = hasher.HashPassword(null, "password"),
+                        EmailConfirmed = true,
+                        RealEstateAgentEmail = "vendela@nordhsmaklarbyra.com",
+                        RealEstateAgentPhoneNumber = "+46 70 123 45 67",
+                        RealEstateAgentImageUrl = "/images/RealEstateAgentWoman.jpg",
+                        RealEstateAgentAgency = nordhsMaklarbyra
+                    },
+                    new RealEstateAgent
+                    {
+                        Id = Guid.NewGuid().ToString(),
+                        Email = "erik@nordhsmaklarbyra.com",
+                        NormalizedEmail = "ERIK@NORDHSMAKLARBYRA.COM",
+                        UserName = "erik@nordhsmaklarbyra.com",
+                        NormalizedUserName = "ERIK@NORDHSMAKLARBYRA.COM",
+                        RealEstateAgentFirstName = "Erik",
+                        RealEstateAgentLastName = "Åberg",
+                        PasswordHash = hasher.HashPassword(null, "password"),
+                        EmailConfirmed = true,
+                        RealEstateAgentEmail = "erik@nordhsmaklarbyra.com",
+                        RealEstateAgentPhoneNumber = "+46 70 123 45 67",
+                        RealEstateAgentImageUrl = "/images/RealEstateAgentMan.jpg",
+                        RealEstateAgentAgency = nordhsMaklarbyra
+                    },
+                    new RealEstateAgent
+                    {
+                        Id = Guid.NewGuid().ToString(),
+                        Email = "lisa@nordhsmaklarbyra.com",
+                        NormalizedEmail = "LISA@NORDHSMAKLARBYRA.COM",
+                        UserName = "lisa@nordhsmaklarbyra.com",
+                        NormalizedUserName = "LISA@NORDHSMAKLARBYRA.COM",
+                        RealEstateAgentFirstName = "Lisa",
+                        RealEstateAgentLastName = "Karlsson",
+                        PasswordHash = hasher.HashPassword(null, "password"),
+                        EmailConfirmed = true,
+                        RealEstateAgentEmail = "lisa@nordhsmaklarbyra.com",
+                        RealEstateAgentPhoneNumber = "+46 70 123 45 67",
+                        RealEstateAgentImageUrl = "/images/RealEstateAgentWoman.jpg",
+                        RealEstateAgentAgency = nordhsMaklarbyra
+                    }
+                };
 
-                context.Users.AddRange(users);
+                context.Users.AddRange(agents);
                 await context.SaveChangesAsync();
 
-                // Add user roles
-                var userRoles = new List<IdentityUserRole<string>>
-            {
-                new IdentityUserRole<string>()
+                var userRoleId = context.Roles.First(r => r.Name == ApiRoles.User).Id;
+                var adminRoleId = context.Roles.First(r => r.Name == ApiRoles.Administrator).Id;
+
+                var userRoles = new List<IdentityUserRole<string>>();
+
+                userRoles.Add(new IdentityUserRole<string>
                 {
-                    RoleId = "c0ef899a-9033-4d98-9851-cf7c051cc51d",
-                    UserId = "a7d64e4d-a8e6-40da-a431-e75fd59ecbdb"
-                },
-                new IdentityUserRole<string>()
+                    RoleId = adminRoleId,
+                    UserId = agents.First(a => a.Email == "admin@hemdotnet.se").Id
+                });
+
+                foreach (var agent in agents.Where(a => a.Email != "admin@hemdotnet.se"))
                 {
-                    RoleId = "24f60ffc-3f16-4815-83b0-bf191748018c",
-                    UserId = "bca74173-1e33-41e8-88df-5a6454c4f900"
+                    userRoles.Add(new IdentityUserRole<string>
+                    {
+                        RoleId = userRoleId,
+                        UserId = agent.Id
+                    });
                 }
-            };
 
                 context.UserRoles.AddRange(userRoles);
                 await context.SaveChangesAsync();
             }
         }
-
+        // Allan
         public static async Task PopulateMunicipalities(ApplicationDbContext? context)
         {
             if (context != null && !context.Municipalities.Any())
@@ -146,6 +247,7 @@ namespace HemDotNetWebApi.Data
             }
         }
 
+        // Allan
         public static async Task PopulateRealEstateAgencies(ApplicationDbContext? context)
         {
             if (context != null && !context.RealEstateAgencies.Any())
@@ -171,69 +273,7 @@ namespace HemDotNetWebApi.Data
             }
         }
 
-        public static async Task PopulateRealEstateAgents(ApplicationDbContext? context)
-        {
-            if (context != null && context.RealEstateAgents.Count() <= 2) // Only add additional agents if the identity users are the only ones
-            {
-                var agencies = await context.RealEstateAgencies.ToListAsync();
-                var nordicHomes = agencies.First(a => a.RealEstateAgencyName == "Nordic Homes");
-                var nordhsMaklarbyra = agencies.First(a => a.RealEstateAgencyName == "Nordhs Mäklarbyrå");
-
-                // Skip the first two agents as they are now created in SeedRolesAndUsers
-                var agents = new List<RealEstateAgent>
-            {
-                new RealEstateAgent
-                {
-                    RealEstateAgentFirstName = "Maria",
-                    RealEstateAgentLastName = "Olsson",
-                    RealEstateAgentEmail = "maria@nordichomes.com",
-                    RealEstateAgentPhoneNumber = "+46 70 123 45 67",
-                    RealEstateAgentImageUrl = "/images/RealEstateAgentWoman.jpg",
-                    RealEstateAgentAgency = nordicHomes
-                },
-                new RealEstateAgent
-                {
-                    RealEstateAgentFirstName = "Lars",
-                    RealEstateAgentLastName = "Olofsson",
-                    RealEstateAgentEmail = "lars@nordhsmaklarbyra.com",
-                    RealEstateAgentPhoneNumber = "+46 70 123 45 67",
-                    RealEstateAgentImageUrl = "/images/RealEstateAgentMan.jpg",
-                    RealEstateAgentAgency = nordhsMaklarbyra
-                },
-                new RealEstateAgent
-                {
-                    RealEstateAgentFirstName = "Vendela",
-                    RealEstateAgentLastName = "Nordh",
-                    RealEstateAgentEmail = "vendela@nordhsmaklarbyra.com",
-                    RealEstateAgentPhoneNumber = "+46 70 123 45 67",
-                    RealEstateAgentImageUrl = "/images/RealEstateAgentWoman.jpg",
-                    RealEstateAgentAgency = nordhsMaklarbyra
-                },
-                new RealEstateAgent
-                {
-                    RealEstateAgentFirstName = "Erik",
-                    RealEstateAgentLastName = "Åberg",
-                    RealEstateAgentEmail = "erik@nordhsmaklarbyra.com",
-                    RealEstateAgentPhoneNumber = "+46 70 123 45 67",
-                    RealEstateAgentImageUrl = "/images/RealEstateAgentMan.jpg",
-                    RealEstateAgentAgency = nordhsMaklarbyra
-                },
-                new RealEstateAgent
-                {
-                    RealEstateAgentFirstName = "Lisa",
-                    RealEstateAgentLastName = "Karlsson",
-                    RealEstateAgentEmail = "lisa@nordhsmaklarbyra.com",
-                    RealEstateAgentPhoneNumber = "+46 70 123 45 67",
-                    RealEstateAgentImageUrl = "/images/RealEstateAgentWoman.jpg",
-                    RealEstateAgentAgency = nordhsMaklarbyra
-                }
-            };
-
-                context.RealEstateAgents.AddRange(agents);
-                await context.SaveChangesAsync();
-            }
-        }
-
+        // Allan
         public static async Task PopulateMarketProperties(ApplicationDbContext? context)
         {
             if (context != null && !context.MarketProperties.Any())
@@ -247,12 +287,12 @@ namespace HemDotNetWebApi.Data
                 var umea = municipalities.First(m => m.MunicipalityName == "Umeå");
 
                 var agents = await context.RealEstateAgents.Include(a => a.RealEstateAgentAgency).ToListAsync();
-                var agent1 = agents[0]; // Anna Svensson (now also an identity user)
-                var agent2 = agents[1]; // Mikael Strand (now also an identity user)
-                var agent3 = agents[2]; // Maria Olsson
-                var agent4 = agents[3]; // Lars Olofsson
-                var agent5 = agents[4]; // Vendela Nordh
-                var agent6 = agents[5]; // Erik Åberg
+                var agent1 = agents.First(a => a.RealEstateAgentEmail == "anna@nordichomes.com");
+                var agent2 = agents.First(a => a.RealEstateAgentEmail == "mikael@nordichomes.com");
+                var agent3 = agents.First(a => a.RealEstateAgentEmail == "maria@nordichomes.com");
+                var agent4 = agents.First(a => a.RealEstateAgentEmail == "lars@nordhsmaklarbyra.com");
+                var agent5 = agents.First(a => a.RealEstateAgentEmail == "vendela@nordhsmaklarbyra.com");
+                var agent6 = agents.First(a => a.RealEstateAgentEmail == "erik@nordhsmaklarbyra.com");
 
                 var properties = new List<MarketProperty>
             {
@@ -364,6 +404,7 @@ namespace HemDotNetWebApi.Data
             }
         }
 
+        // Allan
         public static async Task PopulatePropertyImages(ApplicationDbContext? context)
         {
             if (context != null && !context.PropertyImages.Any())
