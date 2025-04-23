@@ -19,5 +19,6 @@ namespace HemDotNetWebApi.DTO
         public decimal? YearlyMaintenanceCost { get; set; }
         public int ContructionYear { get; set; }
         public int RealEstateAgentId { get; set; }
+
     }
 }

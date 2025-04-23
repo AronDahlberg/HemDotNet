@@ -89,7 +89,7 @@ namespace HemDotNetWebApi.Data
                 .Include(mp => mp.Images)
                 .FirstOrDefaultAsync(mp => mp.MarketPropertyId == id);
         }
-        // Katarina
+       // Katarina
         public async Task<MarketProperty?> CreateMarketPropertyAsync(MarketProperty marketProperty)
         {
  
@@ -113,7 +113,6 @@ namespace HemDotNetWebApi.Data
 
             return marketProperty;
         }
-
 
 
     }

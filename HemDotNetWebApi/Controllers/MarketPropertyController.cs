@@ -6,6 +6,7 @@ using HemDotNetWebApi.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace HemDotNetWebApi.Controllers
 {
@@ -97,6 +98,7 @@ namespace HemDotNetWebApi.Controllers
             var dto = _mapper.Map<MarketPropertyDetailsDto>(marketProperty);
             return Ok(dto);
         }
+
         // Katarina
         [HttpPost("add/{MarketProperty}")]
         public async Task<IActionResult> CreateMarketProperty([FromBody] MarketPropertyCreateDto createDto)

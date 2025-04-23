@@ -33,4 +33,5 @@ namespace HemDotNetWebApi.DTO
         [Required]
         public int ContructionYear { get; set; }
     }
+
 }
