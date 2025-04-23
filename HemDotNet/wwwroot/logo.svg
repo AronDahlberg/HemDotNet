@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="78.0502 387.7932 143.7015 42.3798" width="143.702px" height="42.3798px">
-  <text style="fill: rgb(255, 255, 255); font-family: Arial; font-size: 25.3905px; font-weight: 900; letter-spacing: -1.7px; line-height: 43.2457px; white-space: pre;" transform="matrix(1, 0, 0, 1.1858370304107668, 2.6866860790056677, -0.8334640984753321)" x="108.638" y="355.439">Hem</text>
-  <g fill="none" fill-rule="evenodd" transform="matrix(1, 0, 0, 1, 78.05024072602748, 388.7659054512665)">
-    <path d="m0 0h32v32h-32z" style="paint-order: stroke;"/>
-    <path d="m14.0787368 1.72185281c1.1290109-.96461213 2.8034221-.96220407 3.9295901.00565135l12.6157966 10.84231384c.8740064.7511418 1.3758765 1.8399284 1.3758765 2.9849077v16.4452743l-10-.001v-5.999c0-3.2383969-2.5655749-5.8775718-5.7750617-5.9958615l-.2249383-.0041385c-3.3137085 0-6 2.6862915-6 6v5.999l-10 .001v-16.4400602c0-1.1489958.50538353-2.241192 1.38466997-2.9924428zm1.9212632 7.27814719c-2.209139 0-4 1.790861-4 4s1.790861 4 4 4 4-1.790861 4-4-1.790861-4-4-4z" fill-rule="nonzero" style="paint-order: stroke; fill: rgb(255, 255, 255);"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="150.151 206.806 159.8737 40.343" width="159.874px" height="40.343px">
+  <text style="fill: rgb(255, 255, 255); font-family: Arial; font-size: 28px; font-weight: 900; letter-spacing: -1.1px; white-space: pre;" x="185.76" y="238.006">Hem.</text>
+  <text style="fill: rgb(255, 255, 255); font-family: Arial; font-size: 28px; font-weight: 900; white-space: pre;" x="260.512" y="238.341">N</text>
+  <text style="fill: rgb(255, 255, 255); font-family: Arial; font-size: 28px; font-weight: 900; letter-spacing: -4.7px; white-space: pre;" x="274.504" y="238.349">ET</text>
+  <g fill="none" fill-rule="evenodd" transform="matrix(1, 0, 0, 1, 179.39302330304713, 171.19259898651535)">
+    <path d="M -15.163 36.398 C -14.034 35.433 -12.36 35.436 -11.234 36.404 L 1.382 47.246 C 2.256 47.997 2.758 49.086 2.758 50.231 L 2.758 66.676 L -7.242 66.675 L -7.242 60.676 C -7.242 57.438 -9.807 54.799 -13.017 54.68 L -13.242 54.676 C -16.556 54.676 -19.242 57.363 -19.242 60.676 L -19.242 66.675 L -29.242 66.676 L -29.242 50.236 C -29.242 49.087 -28.736 47.995 -27.857 47.244 L -15.163 36.398 Z M -13.242 43.676 C -15.451 43.676 -17.242 45.467 -17.242 47.676 C -17.242 49.885 -15.451 51.676 -13.242 51.676 C -11.033 51.676 -9.242 49.885 -9.242 47.676 C -9.242 45.467 -11.033 43.676 -13.242 43.676 Z" fill-rule="nonzero" style="fill: rgb(255, 255, 255);"/>
   </g>
-  <text style="fill: rgb(255, 255, 255); font-family: Arial, sans-serif; font-size: 28px; font-weight: 900; letter-spacing: -5.3px; white-space: pre;" x="168.028" y="420.674">.N</text>
-  <text style="fill: rgb(255, 255, 255); font-family: Arial, sans-serif; font-size: 28px; font-weight: 900; letter-spacing: -4.3px; white-space: pre;" x="185.831" y="420.669">ET</text>
 </svg>
