@@ -82,5 +82,20 @@ namespace HemDotNetWebApi.Controllers
             var activeListingDtos = _mapper.Map<IEnumerable<ActiveMarketListingDTO>>(activeListings);
             return activeListingDtos;
         }
+
+        // Katarina
+        [HttpGet("ById/{MarketPropertyId}")]
+        public async Task<IActionResult> GetMarketPropertyById(int MarketPropertyId)
+        {
+            var marketProperty = await _marketPropertyRepository.GetMarketPropertyById(MarketPropertyId);
+
+            if (marketProperty == null)
+            {
+                return NotFound($"No market property found with ID {MarketPropertyId}.");
+            }
+
+            var dto = _mapper.Map<MarketPropertyDetailsDto>(marketProperty);
+            return Ok(dto);
+        }
     }
 }

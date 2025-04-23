@@ -16,5 +16,8 @@ namespace HemDotNetWebApi.Data
 
         // CHRIS
         Task<IEnumerable<MarketProperty>> GetAllActiveByAgent(int agentId);
+
+        // Katarina
+        Task<MarketProperty?> GetMarketPropertyById(int id);
     }
 }

@@ -67,6 +67,13 @@ namespace HemDotNetWebApi.Mapping
             // Christian
             CreateMap<RealEstateAgentUpdateDTO, RealEstateAgent>();
 
+            // Katarina
+            CreateMap<MarketProperty, MarketPropertyDetailsDto>()
+    .ForMember(dest => dest.MunicipalityName, opt => opt.MapFrom(src => src.Municipality.MunicipalityName))
+    .ForMember(dest => dest.RealEstateAgentFullName,
+        opt => opt.MapFrom(src => $"{src.RealEstateAgent.RealEstateAgentFirstName} {src.RealEstateAgent.RealEstateAgentLastName}"))
+    .ForMember(dest => dest.Images, opt => opt.MapFrom(src => src.Images));
+
         }
     }
 }
