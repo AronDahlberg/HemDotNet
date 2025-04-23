@@ -33,6 +33,12 @@ namespace HemDotNetWebApi.Mapping
             CreateMap<MarketProperty, ActiveMarketListingDTO>()
                 .ForMember(d => d.MunicipalityName, o => o.MapFrom(s => s.Municipality.MunicipalityName));
 
+            // Christian
+            CreateMap<RealEstateAgent, RealEstateAgentUpdateDTO>();
+
+            // Christian
+            CreateMap<RealEstateAgentUpdateDTO, RealEstateAgent>();
+
         }
     }
 }
