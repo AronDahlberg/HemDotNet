@@ -29,7 +29,7 @@ namespace HemDotNetWebApi.Models
         [ForeignKey("RealEstateAgency")]
         public RealEstateAgency RealEstateAgentAgency { get; set; }
 
-        [NotMapped]
+        //[NotMapped] Hope nothing breaks by commenting out
         public virtual List<MarketProperty> RealEstateAgentProperties { get; set; }
     }
 }

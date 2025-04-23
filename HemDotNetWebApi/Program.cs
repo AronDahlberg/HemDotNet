@@ -13,7 +13,6 @@ namespace HemDotNetWebApi
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
-
             builder.Services.AddControllers()
                 .AddJsonOptions(opt =>
                 {
@@ -22,16 +21,21 @@ namespace HemDotNetWebApi
                     //Author: Allan Crépin
                     opt.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
                 });
-          
+
             builder.Services.AddAutoMapper(typeof(Program));
 
-            builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(new ConfigurationBuilder()
-                                                                                                    .AddJsonFile("appsettings.Development.json")
-                                                                                                    .Build()
-                                                                                                    .GetSection("ConnectionStrings")["HemDotNetDb"]));
+            builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(
+                new ConfigurationBuilder()
+                .AddJsonFile("appsettings.Development.json")
+                .Build()
+                .GetSection("ConnectionStrings")["HemDotNetDb"])
+            );
 
             builder.Services.AddTransient<IMarketPropertyRepository, MarketPropertyRepository>();
             builder.Services.AddTransient<IPropertyImageRepository, PropertyImageRepository>();
+
+            // Author: CHRIS
+            builder.Services.AddTransient<IRealEstateAgentRepository, RealEstateAgentRepository>();
 
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
