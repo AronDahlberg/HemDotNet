@@ -65,18 +65,6 @@ namespace HemDotNetWebApi.Mapping
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
             // Katarina
             CreateMap<MarketProperty, MarketPropertyDetailsDto>()
     .ForMember(dest => dest.MunicipalityName, opt => opt.MapFrom(src => src.Municipality.MunicipalityName))
