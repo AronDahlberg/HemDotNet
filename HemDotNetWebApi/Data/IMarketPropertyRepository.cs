@@ -19,5 +19,9 @@ namespace HemDotNetWebApi.Data
 
         // Katarina
         Task<MarketProperty?> GetMarketPropertyById(int id);
+
+        // Katarina
+        Task<MarketProperty> CreateMarketPropertyAsync(MarketProperty marketProperty);
+
     }
 }

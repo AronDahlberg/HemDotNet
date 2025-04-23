@@ -2,6 +2,7 @@
 
 namespace HemDotNetWebApi.DTO
 {
+    // Katarina
     public class MarketPropertyDetailsDto
     {
         public int MarketPropertyId { get; set; }
