@@ -1,11 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
 namespace HemDotNetWebApi.Migrations
 {
     /// <inheritdoc />
-    public partial class initial : Migration
+    public partial class Initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -80,7 +81,10 @@ namespace HemDotNetWebApi.Migrations
                     MonthlyFee = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     YearlyMaintenanceCost = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     ContructionYear = table.Column<int>(type: "int", nullable: false),
-                    RealEstateAgentId = table.Column<int>(type: "int", nullable: false)
+                    RealEstateAgentId = table.Column<int>(type: "int", nullable: false),
+                    CreationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    IsActive = table.Column<bool>(type: "bit", nullable: false),
+                    IsSold = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -105,15 +109,15 @@ namespace HemDotNetWebApi.Migrations
                 {
                     PropertyImageId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    MarketProperty = table.Column<int>(type: "int", nullable: false),
+                    MarketPropertyId = table.Column<int>(type: "int", nullable: false),
                     PropertyImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_PropertyImages", x => x.PropertyImageId);
                     table.ForeignKey(
-                        name: "FK_PropertyImages_MarketProperties_MarketProperty",
-                        column: x => x.MarketProperty,
+                        name: "FK_PropertyImages_MarketProperties_MarketPropertyId",
+                        column: x => x.MarketPropertyId,
                         principalTable: "MarketProperties",
                         principalColumn: "MarketPropertyId",
                         onDelete: ReferentialAction.Cascade);
@@ -130,9 +134,9 @@ namespace HemDotNetWebApi.Migrations
                 column: "RealEstateAgentId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_PropertyImages_MarketProperty",
+                name: "IX_PropertyImages_MarketPropertyId",
                 table: "PropertyImages",
-                column: "MarketProperty");
+                column: "MarketPropertyId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_RealEstateAgents_RealEstateAgency",

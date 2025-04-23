@@ -16,7 +16,35 @@ namespace HemDotNetWebApi.Data
             _context = context;
             _mapper = mapper;
         }
-        
+
+        // Allan
+        public async Task<MarketProperty> UpdateMarketProperty(MarketProperty marketProperty)
+        {
+            var existingProperty = await _context.MarketProperties
+                .Include(mp => mp.Municipality)
+                .Include(mp => mp.RealEstateAgent)
+                .FirstOrDefaultAsync(mp => mp.MarketPropertyId == marketProperty.MarketPropertyId);
+
+            if (existingProperty == null)
+            {
+                return null;
+            }
+
+            // We don't allow changing id
+            marketProperty.MarketPropertyId = existingProperty.MarketPropertyId;
+
+            // we say to EF: "forget about this object"
+            _context.Entry(existingProperty).State = EntityState.Detached;
+
+            // this tells EF: here's a new object representing a row in the database. Treat all its properties as changed,
+            // and update them in the database. Generated SQL Update query for this row
+            _context.Entry(marketProperty).State = EntityState.Modified;
+
+            await _context.SaveChangesAsync();
+
+            return marketProperty;
+        }
+
         //Author: Johan Ek
         public async Task<IEnumerable<PartialMarketPropertyDTO>> GetAllMarketPropertiesPartial()
         {
@@ -24,6 +52,8 @@ namespace HemDotNetWebApi.Data
             return await _context.MarketProperties
                 .Include(mp => mp.Municipality)
                 .Include(mp => mp.Images)
+                .Where(p => p.IsActive == true)
+                .Where(p => p.IsSold == false)
                 .ProjectTo<PartialMarketPropertyDTO>(_mapper.ConfigurationProvider)
                 .ToListAsync();
         }
@@ -34,15 +64,19 @@ namespace HemDotNetWebApi.Data
             return await _context.MarketProperties
                 .Include(p => p.Municipality)
                 .Include(p => p.Images)
+                .Where(p => p.IsActive == true)
+                .Where(p => p.IsSold == false)
                 .Where(p => p.Municipality.MunicipalityName == municipality).ToListAsync();
         }
-        
-        // CHRIS (TODO: only get active ones)
+
+        // CHRIS
         public async Task<IEnumerable<MarketProperty>> GetAllActiveByAgent(int agentId)
         {
             return await _context.MarketProperties
-                .Where(p => p.RealEstateAgent.RealEstateAgentId == agentId)
                 .Include(p => p.Municipality)
+                .Where(p => p.RealEstateAgent.RealEstateAgentId == agentId)
+                .Where(p => p.IsActive == true)
+                .Where(p => p.IsSold == false)
                 .ToListAsync();
         }
     }

@@ -32,6 +32,7 @@ namespace HemDotNetWebApi
             );
 
             builder.Services.AddTransient<IMarketPropertyRepository, MarketPropertyRepository>();
+            builder.Services.AddTransient<IPropertyImageRepository, PropertyImageRepository>();
 
             // Author: CHRIS
             builder.Services.AddTransient<IRealEstateAgentRepository, RealEstateAgentRepository>();
