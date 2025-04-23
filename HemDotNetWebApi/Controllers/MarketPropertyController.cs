@@ -95,7 +95,7 @@ namespace HemDotNetWebApi.Controllers
                 return NotFound($"No market property found with ID {MarketPropertyId}.");
             }
 
-            var dto = _mapper.Map<MarketPropertyDto>(marketProperty);
+            var dto = _mapper.Map<MarketPropertyDetailsDto>(marketProperty);
             return Ok(dto);
         }
     }

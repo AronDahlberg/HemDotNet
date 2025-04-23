@@ -2,11 +2,11 @@
 
 namespace HemDotNetWebApi.DTO
 {
-    // Allan
-    public class MarketPropertyDto
+    public class MarketPropertyDetailsDto
     {
         public int MarketPropertyId { get; set; }
-        public int MunicipalityId { get; set; }
+        public string MunicipalityName { get; set; }
+        public string RealEstateAgentFullName { get; set; }
         public PropertyCategory Category { get; set; }
         public decimal Price { get; set; }
         public double LivingArea { get; set; }
@@ -18,7 +18,6 @@ namespace HemDotNetWebApi.DTO
         public decimal? MonthlyFee { get; set; }
         public decimal? YearlyMaintenanceCost { get; set; }
         public int ContructionYear { get; set; }
-        public int RealEstateAgentId { get; set; }
-
+        public List<PropertyImageDto> Images { get; set; }
     }
 }
