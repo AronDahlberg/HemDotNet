@@ -21,7 +21,7 @@ namespace HemDotNetWebApi.Data
             // These should be called in exactly this order
             await PopulateMunicipalities(context);
             await PopulateRealEstateAgencies(context);
-            await PopulateRealEstateAgents(context);
+            //await PopulateRealEstateAgents(context);
             await PopulateMarketProperties(context);
             await PopulatePropertyImages(context);
         }

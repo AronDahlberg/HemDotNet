@@ -1,9 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Identity;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace HemDotNetWebApi.Models
 {
-    public class RealEstateAgent
+    public class RealEstateAgent : IdentityUser
     {
         [Key]
         public int RealEstateAgentId { get; set; }
@@ -25,9 +26,9 @@ namespace HemDotNetWebApi.Models
         [Required]
         public string RealEstateAgentImageUrl { get; set; }
 
-        [Required]
+        
         [ForeignKey("RealEstateAgency")]
-        public RealEstateAgency RealEstateAgentAgency { get; set; }
+        public RealEstateAgency? RealEstateAgentAgency { get; set; }
 
         //[NotMapped] Hope nothing breaks by commenting out
         public virtual List<MarketProperty> RealEstateAgentProperties { get; set; }

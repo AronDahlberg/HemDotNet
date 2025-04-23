@@ -4,6 +4,7 @@ using HemDotNetWebApi.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HemDotNetWebApi.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250423115310_ExtendedRealEstateAgentTable")]
+    partial class ExtendedRealEstateAgentTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -200,7 +203,7 @@ namespace HemDotNetWebApi.Migrations
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
 
-                    b.Property<int?>("RealEstateAgency")
+                    b.Property<int>("RealEstateAgency")
                         .HasColumnType("int");
 
                     b.Property<string>("RealEstateAgentEmail")
@@ -251,52 +254,6 @@ namespace HemDotNetWebApi.Migrations
                     b.HasIndex("RealEstateAgency");
 
                     b.ToTable("AspNetUsers", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = "a7d64e4d-a8e6-40da-a431-e75fd59ecbdb",
-                            AccessFailedCount = 0,
-                            ConcurrencyStamp = "d8e8dca8-0eb6-41d5-b18f-33189ce94b14",
-                            Email = "user@hemdotnet.se",
-                            EmailConfirmed = true,
-                            LockoutEnabled = false,
-                            NormalizedEmail = "USER@HEMDOTNET.SE",
-                            NormalizedUserName = "USER@HEMDOTNET.SE",
-                            PasswordHash = "AQAAAAIAAYagAAAAEGSwuOcO2xQlCnNl5CT7bG6UGEtAIpmTPWmXd/hGaMx1jbMgZT7MCsIrA6LZM7GBJg==",
-                            PhoneNumberConfirmed = false,
-                            RealEstateAgentEmail = "anna@nordichomes.com",
-                            RealEstateAgentFirstName = "Anna",
-                            RealEstateAgentId = 0,
-                            RealEstateAgentImageUrl = "/images/RealEstateAgentWoman.jpg",
-                            RealEstateAgentLastName = "Svensson",
-                            RealEstateAgentPhoneNumber = "+46 70 123 45 67",
-                            SecurityStamp = "81199af2-392d-47a3-a10d-94715f273d97",
-                            TwoFactorEnabled = false,
-                            UserName = "user@hemdotnet.se"
-                        },
-                        new
-                        {
-                            Id = "bca74173-1e33-41e8-88df-5a6454c4f900",
-                            AccessFailedCount = 0,
-                            ConcurrencyStamp = "566faf97-1fb3-47a2-b80a-15f140500d58",
-                            Email = "admin@hemdotnet.se",
-                            EmailConfirmed = true,
-                            LockoutEnabled = false,
-                            NormalizedEmail = "ADMIN@HEMDOTNET.SE",
-                            NormalizedUserName = "ADMIN@HEMDOTNET.SE",
-                            PasswordHash = "AQAAAAIAAYagAAAAEL60/seSnvMJZDuzy71Ei2RIO4YXCNIm3oiz+54ZNBT6z9SJm6iAijUQQwerphQCxw==",
-                            PhoneNumberConfirmed = false,
-                            RealEstateAgentEmail = "mikael@nordichomes.com",
-                            RealEstateAgentFirstName = "Mikael",
-                            RealEstateAgentId = 0,
-                            RealEstateAgentImageUrl = "/images/RealEstateAgentMan.jpg",
-                            RealEstateAgentLastName = "Strand",
-                            RealEstateAgentPhoneNumber = "+46 70 123 45 67",
-                            SecurityStamp = "baffd57d-b3c6-4a6e-a2be-b0513e147922",
-                            TwoFactorEnabled = false,
-                            UserName = "admin@hemdotnet.se"
-                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -324,20 +281,6 @@ namespace HemDotNetWebApi.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = "c0ef899a-9033-4d98-9851-cf7c051cc51d",
-                            Name = "User",
-                            NormalizedName = "User"
-                        },
-                        new
-                        {
-                            Id = "24f60ffc-3f16-4815-83b0-bf191748018c",
-                            Name = "Administator",
-                            NormalizedName = "Administator"
-                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -425,18 +368,6 @@ namespace HemDotNetWebApi.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("AspNetUserRoles", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            UserId = "a7d64e4d-a8e6-40da-a431-e75fd59ecbdb",
-                            RoleId = "c0ef899a-9033-4d98-9851-cf7c051cc51d"
-                        },
-                        new
-                        {
-                            UserId = "bca74173-1e33-41e8-88df-5a6454c4f900",
-                            RoleId = "24f60ffc-3f16-4815-83b0-bf191748018c"
-                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
@@ -492,7 +423,9 @@ namespace HemDotNetWebApi.Migrations
                 {
                     b.HasOne("HemDotNetWebApi.Models.RealEstateAgency", "RealEstateAgentAgency")
                         .WithMany()
-                        .HasForeignKey("RealEstateAgency");
+                        .HasForeignKey("RealEstateAgency")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("RealEstateAgentAgency");
                 });

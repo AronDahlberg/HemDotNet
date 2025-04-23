@@ -32,7 +32,7 @@ namespace HemDotNetWebApi
                 .GetSection("ConnectionStrings")["HemDotNetDb"])
             );
 
-            builder.Services.AddIdentityCore<IdentityUser>()
+            builder.Services.AddIdentityCore<RealEstateAgent>()
                 .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
