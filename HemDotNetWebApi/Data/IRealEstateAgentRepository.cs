@@ -5,6 +5,9 @@ namespace HemDotNetWebApi.Data
     public interface IRealEstateAgentRepository
     {
         // CHRIS
-        Task<IEnumerable<RealEstateAgent>> Get(int agentId);
+        Task<RealEstateAgent> UpdateAsync(RealEstateAgent agent);
+        
+        // CHRIS
+        Task<RealEstateAgent> GetAsync(int agentId);
     }
 }
