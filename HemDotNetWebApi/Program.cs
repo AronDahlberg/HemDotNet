@@ -41,6 +41,14 @@ namespace HemDotNetWebApi
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAll",
+                    b => b.AllowAnyMethod()
+                    .AllowAnyHeader()
+                    .AllowAnyOrigin());
+            });
+
             var app = builder.Build();
 
             // Populates the database when the program is ran, and checks that the
@@ -60,6 +68,7 @@ namespace HemDotNetWebApi
 
             app.UseAuthorization();
 
+            app.UseCors("AllowAll");
 
             app.MapControllers();
 
