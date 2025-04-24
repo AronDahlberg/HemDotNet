@@ -45,5 +45,20 @@ namespace HemDotNetWebApi.Data
                 .Include(p => p.Municipality)
                 .ToListAsync();
         }
+
+        // Adam
+        public async Task<bool> AgentDelete(int propertyId, int agentId)
+        {
+            var property = await _context.MarketProperties
+                .Include(p => p.RealEstateAgent)
+                .FirstOrDefaultAsync(p => p.MarketPropertyId == propertyId && p.RealEstateAgent.RealEstateAgentId == agentId);
+            if (property == null)
+            {
+                return false;
+            }
+            _context.MarketProperties.Remove(property);
+            await _context.SaveChangesAsync();
+            return true;
+        }
     }
 }

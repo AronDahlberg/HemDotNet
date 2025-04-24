@@ -57,5 +57,20 @@ namespace HemDotNetWebApi.Controllers
             var activeListingDtos = _mapper.Map<IEnumerable<ActiveMarketListingDTO>>(activeListings);
             return activeListingDtos;
         }
+
+        // Adam
+        [HttpDelete("AgentDelete/{propertyId}/{agentId}")]
+        public async Task<IActionResult> AgentDelete(int propertyId, int agentId)
+        {
+            var result = await _marketPropertyRepository.AgentDelete(propertyId, agentId);
+            if (result)
+            {
+                return Ok("Property deleted successfully.");
+            }
+            else
+            {
+                return NotFound("Property not found or you do not have permission to delete it.");
+            }
+        }
     }
 }
