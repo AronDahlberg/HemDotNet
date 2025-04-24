@@ -89,5 +89,31 @@ namespace HemDotNetWebApi.Data
                 .Include(mp => mp.Images)
                 .FirstOrDefaultAsync(mp => mp.MarketPropertyId == id);
         }
+       // Katarina
+        public async Task<MarketProperty?> CreateMarketPropertyAsync(MarketProperty marketProperty)
+        {
+ 
+            var municipality = await _context.Municipalities
+                .FirstOrDefaultAsync(m => m.MunicipalityId == marketProperty.Municipality.MunicipalityId);
+
+            var agent = await _context.RealEstateAgents
+                .FirstOrDefaultAsync(a => a.RealEstateAgentId == marketProperty.RealEstateAgent.RealEstateAgentId);
+
+            if (municipality == null || agent == null)
+            {
+                return null;
+            }
+
+           
+            marketProperty.Municipality = municipality;
+            marketProperty.RealEstateAgent = agent;
+
+            _context.MarketProperties.Add(marketProperty);
+            await _context.SaveChangesAsync();
+
+            return marketProperty;
+        }
+
+
     }
 }

@@ -98,5 +98,25 @@ namespace HemDotNetWebApi.Controllers
             var dto = _mapper.Map<MarketPropertyDetailsDto>(marketProperty);
             return Ok(dto);
         }
+
+        // Katarina
+        [HttpPost("add/{MarketProperty}")]
+        public async Task<IActionResult> CreateMarketProperty([FromBody] MarketPropertyCreateDto createDto)
+        {
+            var marketProperty = _mapper.Map<MarketProperty>(createDto);
+
+            var createdProperty = await _marketPropertyRepository.CreateMarketPropertyAsync(marketProperty);
+
+            if (createdProperty == null)
+            {
+                return BadRequest("Invalid MunicipalityId or RealEstateAgentId.");
+            }
+
+            var resultDto = _mapper.Map<MarketPropertyDetailsDto>(createdProperty);
+
+            return CreatedAtAction(nameof(GetMarketPropertyById), new { MarketPropertyId = createdProperty.MarketPropertyId }, resultDto);
+        }
+
+
     }
 }
