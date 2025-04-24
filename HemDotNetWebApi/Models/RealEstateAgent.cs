@@ -6,7 +6,8 @@ namespace HemDotNetWebApi.Models
 {
     public class RealEstateAgent : IdentityUser
     {
-        [Key]
+        //[Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int RealEstateAgentId { get; set; }
 
         [Required]

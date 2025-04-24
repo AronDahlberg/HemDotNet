@@ -77,6 +77,7 @@ namespace HemDotNetWebApi.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("RealEstateAgentId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<decimal?>("YearlyMaintenanceCost")
@@ -213,7 +214,10 @@ namespace HemDotNetWebApi.Migrations
                         .HasColumnType("nvarchar(30)");
 
                     b.Property<int>("RealEstateAgentId")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("RealEstateAgentId"));
 
                     b.Property<string>("RealEstateAgentImageUrl")
                         .IsRequired()
