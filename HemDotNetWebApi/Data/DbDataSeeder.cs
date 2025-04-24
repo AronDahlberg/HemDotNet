@@ -28,7 +28,7 @@ namespace HemDotNetWebApi.Data
             await PopulatePropertyImages(context);
         }
 
-        // Author: group
+        // Author: Group
         public static async Task SeedRoles(ApplicationDbContext context)
         {
             if (!context.Roles.Any())
@@ -65,7 +65,7 @@ namespace HemDotNetWebApi.Data
 
                 int agentIdCounter = 1;
 
-                /* Author: Group */
+                /* Coder: Johan, Participants: All */
 
                 var hasher = new PasswordHasher<RealEstateAgent>();
 
@@ -208,6 +208,7 @@ namespace HemDotNetWebApi.Data
                         RealEstateAgentAgency = nordhsMaklarbyra
                     }
                 };
+
 
                 context.Users.AddRange(agents);
                 await context.SaveChangesAsync();

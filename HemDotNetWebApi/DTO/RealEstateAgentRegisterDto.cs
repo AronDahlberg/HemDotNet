@@ -2,6 +2,7 @@
 
 namespace HemDotNetWebApi.DTO
 {
+    /* Coder: Allan, Participants: All */
     public class RealEstateAgentRegisterDto
     {
         [Required]

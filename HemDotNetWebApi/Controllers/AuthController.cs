@@ -20,7 +20,8 @@ namespace HemDotNetWebApi.Controllers
             this._userManager = userManager;   
             this._context = context;
         }
-        
+
+        /* Coder: Allan, Participants: All */
         [HttpPost]
         [Route("register")]
         public async Task<IActionResult> Register(RealEstateAgentRegisterDto registerDto)

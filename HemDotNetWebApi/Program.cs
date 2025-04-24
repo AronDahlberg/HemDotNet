@@ -32,6 +32,7 @@ namespace HemDotNetWebApi
                 .GetSection("ConnectionStrings")["HemDotNetDb"])
             );
 
+            /* Coder: Johan, Participants: All */
             builder.Services.AddIdentityCore<RealEstateAgent>()
                 .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
@@ -46,6 +47,7 @@ namespace HemDotNetWebApi
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
+            /* Coder: Johan, Participants: All */
             builder.Services.AddCors(options =>
             {
                 options.AddPolicy("AllowAll",
@@ -73,6 +75,7 @@ namespace HemDotNetWebApi
 
             app.UseAuthorization();
 
+            /* Coder: Johan, Participants: All */
             app.UseCors("AllowAll");
 
             app.MapControllers();
