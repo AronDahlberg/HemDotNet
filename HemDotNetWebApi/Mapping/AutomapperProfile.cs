@@ -9,6 +9,34 @@ namespace HemDotNetWebApi.Mapping
     {
         public AutomapperProfile()
         {
+            // Allan
+            CreateMap<MarketPropertyUpdateDto, MarketProperty>()
+            .ForMember(dest => dest.Municipality, opt => opt.MapFrom(src =>
+                new Municipality { MunicipalityId = src.MunicipalityId }))
+            .ForMember(dest => dest.RealEstateAgent, opt => opt.MapFrom(src =>
+                new RealEstateAgent { RealEstateAgentId = src.RealEstateAgentId }))
+            .ForMember(dest => dest.Images, opt => opt.Ignore());
+
+            // Allan
+            CreateMap<MarketProperty, MarketPropertyDto>()
+            .ForMember(dest => dest.MunicipalityId, opt =>
+                opt.MapFrom(src => src.Municipality.MunicipalityId))
+            .ForMember(dest => dest.RealEstateAgentId, opt =>
+                opt.MapFrom(src => src.RealEstateAgent.RealEstateAgentId));
+
+
+            // Allan
+            // PropertyImage mappings
+            CreateMap<PropertyImage, PropertyImageDto>()
+                .ForMember(dest => dest.ImageUrl, opt => opt.MapFrom(src => src.PropertyImageUrl))
+                .ForMember(dest => dest.MarketPropertyId, opt =>
+                    opt.MapFrom(src => src.MarketProperty.MarketPropertyId));
+
+            CreateMap<PropertyImageDto, PropertyImage>()
+                .ForMember(dest => dest.MarketProperty, opt =>
+                    opt.MapFrom(src => new MarketProperty { MarketPropertyId = src.MarketPropertyId }));
+            //
+
             //Author: Johan Ek
             CreateMap<MarketProperty, PartialMarketPropertyDTO>()
                 .ForMember(dest => dest.Images,
@@ -32,6 +60,39 @@ namespace HemDotNetWebApi.Mapping
             // Christian
             CreateMap<MarketProperty, ActiveMarketListingDTO>()
                 .ForMember(d => d.MunicipalityName, o => o.MapFrom(s => s.Municipality.MunicipalityName));
+
+            // Christian
+            CreateMap<RealEstateAgent, RealEstateAgentUpdateDTO>();
+
+
+            // Katarina
+            CreateMap<MarketProperty, MarketPropertyDetailsDto>()
+    .ForMember(dest => dest.MunicipalityName, opt => opt.MapFrom(src => src.Municipality.MunicipalityName))
+    .ForMember(dest => dest.RealEstateAgentFullName,
+        opt => opt.MapFrom(src => $"{src.RealEstateAgent.RealEstateAgentLastName} {src.RealEstateAgent.RealEstateAgentFirstName}"))
+    .ForMember(dest => dest.Images, opt => opt.MapFrom(src => src.Images));
+
+            // Christian
+            CreateMap<RealEstateAgentUpdateDTO, RealEstateAgent>();
+
+            // Katarina
+            CreateMap<MarketProperty, MarketPropertyDetailsDto>()
+    .ForMember(dest => dest.MunicipalityName, opt => opt.MapFrom(src => src.Municipality.MunicipalityName))
+    .ForMember(dest => dest.RealEstateAgentFullName,
+        opt => opt.MapFrom(src => $"{src.RealEstateAgent.RealEstateAgentFirstName} {src.RealEstateAgent.RealEstateAgentLastName}"))
+    .ForMember(dest => dest.Images, opt => opt.MapFrom(src => src.Images));
+
+            // Katarina
+            CreateMap<MarketPropertyCreateDto, MarketProperty>()
+                        .ForMember(dest => dest.Municipality, opt => opt.MapFrom(src =>
+                            new Municipality { MunicipalityId = src.MunicipalityId })) 
+                        .ForMember(dest => dest.RealEstateAgent, opt => opt.MapFrom(src =>
+                            new RealEstateAgent { RealEstateAgentId = src.RealEstateAgentId }))  
+                        .ForMember(dest => dest.Images, opt => opt.Ignore())  
+                        .ForMember(dest => dest.IsActive, opt => opt.MapFrom(src => true))  
+                        .ForMember(dest => dest.IsSold, opt => opt.MapFrom(src => false))  
+                        .ForMember(dest => dest.CreationDate, opt => opt.MapFrom(src => DateTime.UtcNow));  
+
 
         }
     }

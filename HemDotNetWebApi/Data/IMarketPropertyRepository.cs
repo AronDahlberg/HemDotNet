@@ -5,6 +5,9 @@ namespace HemDotNetWebApi.Data
 {
     public interface IMarketPropertyRepository
     {
+        // Allan
+        Task<MarketProperty> UpdateMarketProperty(MarketProperty marketProperty);
+
         //Author: Johan Ek
         Task<IEnumerable<PartialMarketPropertyDTO>> GetAllMarketPropertiesPartial();
 
@@ -16,5 +19,12 @@ namespace HemDotNetWebApi.Data
 
         // Adam
         Task<bool> AgentDelete(int propertyId, int agentId);
+
+        // Katarina
+        Task<MarketProperty?> GetMarketPropertyById(int id);
+
+        // Katarina
+        Task<MarketProperty> CreateMarketPropertyAsync(MarketProperty marketProperty);
+
     }
 }

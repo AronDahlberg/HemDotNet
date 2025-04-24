@@ -1,6 +1,7 @@
 
 using HemDotNetWebApi.Data;
 using HemDotNetWebApi.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
 
@@ -13,7 +14,6 @@ namespace HemDotNetWebApi
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
-
             builder.Services.AddControllers()
                 .AddJsonOptions(opt =>
                 {
@@ -22,19 +22,37 @@ namespace HemDotNetWebApi
                     //Author: Allan Crépin
                     opt.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
                 });
-          
+
             builder.Services.AddAutoMapper(typeof(Program));
 
-            builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(new ConfigurationBuilder()
-                                                                                                    .AddJsonFile("appsettings.Development.json")
-                                                                                                    .Build()
-                                                                                                    .GetSection("ConnectionStrings")["HemDotNetDb"]));
+            builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(
+                new ConfigurationBuilder()
+                .AddJsonFile("appsettings.Development.json")
+                .Build()
+                .GetSection("ConnectionStrings")["HemDotNetDb"])
+            );
+
+            builder.Services.AddIdentityCore<RealEstateAgent>()
+                .AddRoles<IdentityRole>()
+                .AddEntityFrameworkStores<ApplicationDbContext>();
 
             builder.Services.AddTransient<IMarketPropertyRepository, MarketPropertyRepository>();
+            builder.Services.AddTransient<IPropertyImageRepository, PropertyImageRepository>();
+
+            // Author: CHRIS
+            builder.Services.AddTransient<IRealEstateAgentRepository, RealEstateAgentRepository>();
 
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAll",
+                    b => b.AllowAnyMethod()
+                    .AllowAnyHeader()
+                    .AllowAnyOrigin());
+            });
 
             var app = builder.Build();
 
@@ -55,6 +73,7 @@ namespace HemDotNetWebApi
 
             app.UseAuthorization();
 
+            app.UseCors("AllowAll");
 
             app.MapControllers();
 
