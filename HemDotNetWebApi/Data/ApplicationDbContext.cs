@@ -1,9 +1,12 @@
-﻿using HemDotNetWebApi.Models;
+﻿using HemDotNetWebApi.Constants;
+using HemDotNetWebApi.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace HemDotNetWebApi.Data
 {
-    public class ApplicationDbContext : DbContext
+    public class ApplicationDbContext : IdentityDbContext<RealEstateAgent>
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
@@ -14,6 +17,12 @@ namespace HemDotNetWebApi.Data
         public DbSet<PropertyImage> PropertyImages { get; set; }
         public DbSet<RealEstateAgency> RealEstateAgencies { get; set; }
         public DbSet<RealEstateAgent> RealEstateAgents { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder);
+
+        }
 
     }
 }

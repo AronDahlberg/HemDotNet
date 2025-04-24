@@ -1,6 +1,7 @@
 
 using HemDotNetWebApi.Data;
 using HemDotNetWebApi.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
 
@@ -31,6 +32,10 @@ namespace HemDotNetWebApi
                 .GetSection("ConnectionStrings")["HemDotNetDb"])
             );
 
+            builder.Services.AddIdentityCore<RealEstateAgent>()
+                .AddRoles<IdentityRole>()
+                .AddEntityFrameworkStores<ApplicationDbContext>();
+
             builder.Services.AddTransient<IMarketPropertyRepository, MarketPropertyRepository>();
             builder.Services.AddTransient<IPropertyImageRepository, PropertyImageRepository>();
 
@@ -40,6 +45,14 @@ namespace HemDotNetWebApi
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAll",
+                    b => b.AllowAnyMethod()
+                    .AllowAnyHeader()
+                    .AllowAnyOrigin());
+            });
 
             var app = builder.Build();
 
@@ -60,6 +73,7 @@ namespace HemDotNetWebApi
 
             app.UseAuthorization();
 
+            app.UseCors("AllowAll");
 
             app.MapControllers();
 
