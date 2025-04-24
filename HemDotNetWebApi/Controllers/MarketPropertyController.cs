@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using HemDotNetWebApi.Data;
 using HemDotNetWebApi.DTO;
 using HemDotNetWebApi.DTOs;
@@ -84,6 +84,22 @@ namespace HemDotNetWebApi.Controllers
             return activeListingDtos;
         }
 
+
+        // Adam
+        [HttpDelete("AgentDelete/{propertyId}/{agentId}")]
+        public async Task<IActionResult> AgentDelete(int propertyId, int agentId)
+        {
+            var result = await _marketPropertyRepository.AgentDelete(propertyId, agentId);
+            if (result)
+            {
+                return Ok("Property deleted successfully.");
+            }
+            else
+            {
+                return NotFound("Property not found or you do not have permission to delete it.");
+            }
+        }
+
         // Katarina
         [HttpGet("ById/{MarketPropertyId}")]
         public async Task<IActionResult> GetMarketPropertyById(int MarketPropertyId)
@@ -116,7 +132,6 @@ namespace HemDotNetWebApi.Controllers
 
             return CreatedAtAction(nameof(GetMarketPropertyById), new { MarketPropertyId = createdProperty.MarketPropertyId }, resultDto);
         }
-
 
     }
 }

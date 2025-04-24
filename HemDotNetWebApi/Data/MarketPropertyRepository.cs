@@ -80,6 +80,21 @@ namespace HemDotNetWebApi.Data
                 .ToListAsync();
         }
 
+        // Adam
+        public async Task<bool> AgentDelete(int propertyId, int agentId)
+        {
+            var property = await _context.MarketProperties
+                .Include(p => p.RealEstateAgent)
+                .FirstOrDefaultAsync(p => p.MarketPropertyId == propertyId && p.RealEstateAgent.RealEstateAgentId == agentId);
+            if (property == null)
+            {
+                return false;
+            }
+            _context.MarketProperties.Remove(property);
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
         // Katarina
         public async Task<MarketProperty?> GetMarketPropertyById(int id)
         {
@@ -113,7 +128,6 @@ namespace HemDotNetWebApi.Data
 
             return marketProperty;
         }
-
 
     }
 }
