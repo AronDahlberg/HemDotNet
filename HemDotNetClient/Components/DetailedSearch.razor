@@ -1,14 +1,22 @@
-﻿<style>
+﻿
+<!--
+
+Author: Allan
+
+-->
+
+
+<style>
 
     /*
     .hero-section {
-        background-image: url('pexels-neighborhood.jpg');
-        background-size: cover;
-        background-position: center;
-        background-repeat: no-repeat;
-        height: 100vh;
-        width: 100%;
-        color: white;
+    background-image: url('pexels-neighborhood.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    height: 100vh;
+    width: 100%;
+    color: white;
     }
     */
 
@@ -17,85 +25,174 @@
 <!--<div class="hero-section container col-xxl-8 px-4 py-5 bg-white border rounded my-3">-->
 <div class="hero-section container-fluid col-xxl-8 bg-light text-dark py-5">
     <div class="container bg-white rounded py-5 px-5">
-    <div class="row flex-lg-row-reverse align-items-center g-5 py-3">
-        <div class="col-12 col-sm-8 col-lg-6 border rounded py-3 shadow">
-            <h4 class="mb-4">Sök bostäder</h4>
-            <div class="mb-3">
-                <label for="areaInput" class="form-label">Område</label>
-                <input type="text" class="form-control" id="areaInput" placeholder="Skriv område eller adress" @bind="searchModel.Area">
-            </div>
-
-            <div class="mb-3">
-                <label class="form-label">Typ</label>
-                <div class="btn-group d-flex flex-wrap gap-2" role="group">
-                    @foreach (var type in propertyTypes)
-                    {
-                        <button type="button"
-                                class="btn btn-outline-primary @((searchModel.SelectedTypes.Contains(type) ? "active" : ""))"
-                                @onclick="() => ToggleType(type)">
-                            @type
-                        </button>
-                    }
+        <div class="row flex-lg-row-reverse align-items-center g-5 py-3">
+            <div class="col-12 col-sm-8 col-lg-6 border rounded py-3 shadow">
+                <h4 class="mb-4">Sök bostäder</h4>
+                <div class="mb-3">
+                    <label for="areaInput" class="form-label">Område</label>
+                    <input type="text" class="form-control" id="areaInput" placeholder="Skriv område eller adress" @bind="searchModel.Area">
                 </div>
-            </div>
 
-            <div class="row mb-3">
-                <div class="col-md-4">
-                    <label class="form-label">Minst antal rum</label>
+                <div class="mb-3">
+                    <label class="form-label">Typ</label>
+                    <div class="btn-group d-flex flex-wrap gap-2" role="group">
+                        @foreach (var type in propertyTypes)
+                        {
+                            <button type="button"
+                            class="btn btn-outline-primary @((searchModel.SelectedTypes.Contains(type) ? "active" : ""))"
+                            @onclick="() => ToggleType(type)">
+                                @type
+                            </button>
+                        }
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-4">
+                        <label class="form-label">Minst antal rum</label>
                         <select class="form-select shadow-sm border-primary rounded-3 fw-semibold text-dark w-100" @bind="searchModel.MinRooms">
-                        <option value="">Alla</option>
-                        @for (int i = 1; i <= 6; i++)
-                        {
-                            <option value="@i">@i+</option>
-                        }
-                    </select>
-                </div>
-                <div class="col-md-4">
-                    <label class="form-label">Minsta boarea</label>
+                            <option value="">Alla</option>
+                            @for (int i = 1; i <= 6; i++)
+                            {
+                                <option value="@i">@i+</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Minsta boarea</label>
                         <select class="form-select shadow-sm border-primary rounded-3 fw-semibold text-dark w-100" @bind="searchModel.MinArea">
-                        <option value="">Alla</option>
-                        @for (int i = 20; i <= 200; i += 20)
-                        {
-                            <option value="@i">@i m²</option>
-                        }
-                    </select>
-                </div>
-                <div class="col-md-4">
-                    <label class="form-label">Högst pris</label>
+                            <option value="">Alla</option>
+                            @for (int i = 20; i <= 200; i += 20)
+                            {
+                                <option value="@i">@i m²</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Högst pris</label>
                         <select class="form-select shadow-sm border-primary rounded-3 fw-semibold text-dark w-100" @bind="searchModel.MaxPrice">
-                        <option value="">Inget</option>
-                        @foreach (var price in new[] { 1000000, 2000000, 3000000, 5000000 })
-                        {
-                            <option value="@price">@($"{price:N0} kr")</option>
-                        }
-                    </select>
+                            <option value="">Inget</option>
+                            @foreach (var price in new[] { 1000000, 2000000, 3000000, 5000000 })
+                            {
+                                <option value="@price">@($"{price:N0} kr")</option>
+                            }
+                        </select>
+                    </div>
                 </div>
-            </div>
 
-            <div class="row mb-3">
-                <div class="col-md-12">
-                    <label class="form-label">Nyproduktion</label>
+                <div class="row mb-3">
+                    <div class="col-md-12">
+                        <label class="form-label">Nyproduktion</label>
                         <select class="form-select shadow-sm border-primary rounded-3 fw-semibold text-dark w-100" @bind="searchModel.NewProduction">
-                        <option value="true">Visa nyproduktion</option>
-                        <option value="false">Dölj nyproduktion</option>
-                    </select>
+                            <option value="true">Visa nyproduktion</option>
+                            <option value="false">Dölj nyproduktion</option>
+                        </select>
+                    </div>
                 </div>
+
+                <button class="btn btn-primary w-100" @onclick="Search">Hitta bostäder till salu</button>
             </div>
 
-            <button class="btn btn-primary w-100" @onclick="Search">Hitta bostäder till salu</button>
-        </div>
-
-        <div class="col-lg-6">
-            <h1 class="display-5 fw-bold text-body-emphasis lh-1 mb-3">Hitta din drömbostad hos oss, <b class="text-primary">gratis.</b></h1>
-            <p class="lead">Vi hjälper dig att hitta den perfekta bostaden som passar både dina behov och din budget. Utforska vårt breda utbud och hitta något som passar just dig.</p>
+            <div class="col-lg-6">
+                <h1 class="display-5 fw-bold text-body-emphasis lh-1 mb-3">Hitta din drömbostad hos oss, <b class="text-primary">gratis.</b></h1>
+                <p class="lead">Vi hjälper dig att hitta den perfekta bostaden som passar både dina behov och din budget. Utforska vårt breda utbud och hitta något som passar just dig.</p>
                 <div class="d-grid gap-4">
                     <button type="button" class="btn btn-primary btn-lg px-4">Börja söka</button>
                     <button type="button" class="btn btn-outline-secondary btn-lg px-4">Läs mer</button>
                 </div>
+            </div>
         </div>
     </div>
-    </div>
 </div>
+
+
+
+
+
+@inject HttpClient Http
+@using System.Timers
+<input type="text"
+       class="form-control"
+       placeholder="Write municipality or address"
+       value="@searchTerm"
+       @oninput="OnSearchTermChanged" />
+@if (suggestions.Any())
+{
+    <ul class="list-group mt-1">
+        @foreach (var item in suggestions)
+        {
+            <li class="list-group-item" @onclick="() => SelectSuggestion(item)">@item</li>
+        }
+    </ul>
+}
+@code {
+    private string searchTerm;
+    private List<string> suggestions = new();
+    private Timer debounceTimer;
+
+    protected override void OnInitialized()
+    {
+        debounceTimer = new Timer(400); // 400ms delay
+        debounceTimer.Elapsed += async (s, e) => await InvokeAsync(PerformSearch);
+        debounceTimer.AutoReset = false;
+    }
+
+    private void OnInputChanged()
+    {
+        debounceTimer.Stop();
+        debounceTimer.Start();
+    }
+
+    private async Task PerformSearch()
+    {
+        List<string> municipalities = new List<string>() { "Stockholm", "Umeå", "Örebro", "Sundsvall", "Lund", "Övik" };
+        if (string.IsNullOrWhiteSpace(searchTerm))
+        {
+            suggestions.Clear();
+        }
+        else
+        {
+            /*
+            var results = await Http.GetFromJsonAsync<List<string>>($"Municipality/search?query={searchTerm}");
+            suggestions = results ?? new List<string>();
+            */
+            var results = municipalities
+                .Where(m => m.StartsWith(searchTerm, StringComparison.OrdinalIgnoreCase))
+                .OrderBy(m => m)
+                .Take(10)
+                .ToList();
+
+            // Debug output
+            Console.WriteLine($"Search term: {searchTerm}, Results count: {results.Count}");
+            foreach (var result in results)
+            {
+                Console.WriteLine($"Result: {result}");
+            }
+
+            suggestions = results;
+        }
+        await InvokeAsync(StateHasChanged);
+    }
+
+    private void SelectSuggestion(string selected)
+    {
+        searchTerm = selected;
+        suggestions.Clear();
+    }
+
+    private async Task OnSearchTermChanged(ChangeEventArgs e)
+    {
+        searchTerm = e.Value?.ToString();
+        OnInputChanged();
+    }
+}
+
+
+
+
+
+
+
 
 @code {
     private SearchModel searchModel = new();
