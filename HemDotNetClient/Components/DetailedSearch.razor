@@ -1,0 +1,135 @@
+﻿<style>
+
+    /*
+    .hero-section {
+        background-image: url('pexels-neighborhood.jpg');
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        height: 100vh;
+        width: 100%;
+        color: white;
+    }
+    */
+
+</style>
+
+<!--<div class="hero-section container col-xxl-8 px-4 py-5 bg-white border rounded my-3">-->
+<div class="hero-section container-fluid col-xxl-8 bg-light text-dark py-5">
+    <div class="container bg-white rounded py-5 px-5 shadow">
+    <div class="row flex-lg-row-reverse align-items-center g-5 py-3">
+        <!-- Search Form (Right) -->
+        <div class="col-12 col-sm-8 col-lg-6">
+            <h4 class="mb-4">Sök bostäder</h4>
+            <div class="mb-3">
+                <label for="areaInput" class="form-label">Område</label>
+                <input type="text" class="form-control" id="areaInput" placeholder="Skriv område eller adress" @bind="searchModel.Area">
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Typ</label>
+                <div class="btn-group d-flex flex-wrap gap-2" role="group">
+                    @foreach (var type in propertyTypes)
+                    {
+                        <button type="button"
+                                class="btn btn-outline-primary @((searchModel.SelectedTypes.Contains(type) ? "active" : ""))"
+                                @onclick="() => ToggleType(type)">
+                            @type
+                        </button>
+                    }
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-md-4">
+                    <label class="form-label">Minst antal rum</label>
+                    <select class="form-select" @bind="searchModel.MinRooms">
+                        <option value="">Alla</option>
+                        @for (int i = 1; i <= 6; i++)
+                        {
+                            <option value="@i">@i+</option>
+                        }
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Minsta boarea</label>
+                    <select class="form-select" @bind="searchModel.MinArea">
+                        <option value="">Alla</option>
+                        @for (int i = 20; i <= 200; i += 20)
+                        {
+                            <option value="@i">@i m²</option>
+                        }
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Högst pris</label>
+                    <select class="form-select" @bind="searchModel.MaxPrice">
+                        <option value="">Inget</option>
+                        @foreach (var price in new[] { 1000000, 2000000, 3000000, 5000000 })
+                        {
+                            <option value="@price">@($"{price:N0} kr")</option>
+                        }
+                    </select>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-md-12">
+                    <label class="form-label">Nyproduktion</label>
+                    <select class="form-select" @bind="searchModel.NewProduction">
+                        <option value="true">Visa nyproduktion</option>
+                        <option value="false">Dölj nyproduktion</option>
+                    </select>
+                </div>
+            </div>
+
+            <button class="btn btn-success w-100" @onclick="Search">Hitta bostäder till salu</button>
+        </div>
+
+        <!-- Text Content (Left) -->
+        <div class="col-lg-6">
+            <h1 class="display-5 fw-bold text-body-emphasis lh-1 mb-3">Hitta din drömbostad hos oss, <b class="text-primary">gratis.</b></h1>
+            <p class="lead">Vi hjälper dig att hitta den perfekta bostaden som passar både dina behov och din budget. Utforska vårt breda utbud och hitta något som passar just dig.</p>
+            <div class="d-grid gap-2 d-md-flex justify-content-md-start">
+                <button type="button" class="btn btn-primary btn-lg px-4 me-md-2">Börja söka</button>
+                <button type="button" class="btn btn-outline-secondary btn-lg px-4">Läs mer</button>
+            </div>
+        </div>
+    </div>
+    </div>
+</div>
+
+@code {
+    private SearchModel searchModel = new();
+
+    private List<string> propertyTypes = new()
+    {
+        "Alla typer", "Villa", "Lägenhet", "Fritidshus", "Radhus"
+    };
+
+    private void ToggleType(string type)
+    {
+        if (searchModel.SelectedTypes.Contains(type))
+            searchModel.SelectedTypes.Remove(type);
+        else
+            searchModel.SelectedTypes.Add(type);
+    }
+
+    private void Search()
+    {
+        // Implement your search logic or API call
+        Console.WriteLine($"Searching for: {searchModel.Area}");
+    }
+
+    public class SearchModel
+    {
+        public string Area { get; set; } = "";
+        public string ExpandArea { get; set; } = "0";
+        public List<string> SelectedTypes { get; set; } = new() { "Alla typer" };
+        public string MinRooms { get; set; }
+        public string MinArea { get; set; }
+        public string MaxPrice { get; set; }
+        public string NewProduction { get; set; } = "true";
+        public string Keywords { get; set; }
+    }
+}
