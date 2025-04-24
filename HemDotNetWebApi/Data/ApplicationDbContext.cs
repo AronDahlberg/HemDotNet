@@ -8,6 +8,7 @@ namespace HemDotNetWebApi.Data
 {
     public class ApplicationDbContext : IdentityDbContext<RealEstateAgent>
     {
+        // Author: All
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
         }
