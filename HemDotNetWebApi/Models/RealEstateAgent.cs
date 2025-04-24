@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace HemDotNetWebApi.Models
 {
+    // Author: All
     public class RealEstateAgent : IdentityUser
     {
         //[Key]

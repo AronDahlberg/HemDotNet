@@ -4,6 +4,7 @@ using HemDotNetWebApi.Common;
 
 namespace HemDotNetWebApi.Models
 {
+    // Author: All
     public class MarketProperty
     {
         [Key]
