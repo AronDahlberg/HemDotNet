@@ -9,6 +9,7 @@ namespace HemDotNetWebApi.Controllers
 {
     // Allan
     [ApiController]
+    [Route("[controller]")]
     public class PropertyImageController : ControllerBase
     {
         private readonly IPropertyImageRepository _repository;
@@ -22,7 +23,7 @@ namespace HemDotNetWebApi.Controllers
         }
 
         // Allan
-        [HttpGet("getByProperty/{marketPropertyId}")]
+        [HttpGet("{marketPropertyId}")]
         public async Task<ActionResult<IEnumerable<PropertyImageDto>>> GetPropertyImages(int marketPropertyId)
         {
             if (!await _repository.PropertyExistsAsync(marketPropertyId))
@@ -35,7 +36,7 @@ namespace HemDotNetWebApi.Controllers
         }
 
         // Allan
-        [HttpPost("add/")]
+        [HttpPost]
         [Consumes("multipart/form-data")]
         public async Task<ActionResult<PropertyImageDto>> AddPropertyImage([FromForm] AddPropertyImageDto dto, IFormFile imageFile)
         {
@@ -91,7 +92,7 @@ namespace HemDotNetWebApi.Controllers
         }
 
         // Allan
-        [HttpDelete("delete/{imageId}")]
+        [HttpDelete("{imageId}")]
         public async Task<ActionResult> DeletePropertyImage(int imageId)
         {
             if (!await _repository.ImageExistsAsync(imageId))
