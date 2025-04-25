@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace HemDotNetWebApi.Migrations
 {
     /// <inheritdoc />
-    public partial class Initial : Migration
+    public partial class ChangeToStringsYes : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -79,8 +79,6 @@ namespace HemDotNetWebApi.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    RealEstateAgentId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
                     RealEstateAgentFirstName = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
                     RealEstateAgentLastName = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
                     RealEstateAgentEmail = table.Column<string>(type: "nvarchar(max)", nullable: false),

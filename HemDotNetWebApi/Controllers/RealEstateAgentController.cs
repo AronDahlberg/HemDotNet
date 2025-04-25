@@ -22,7 +22,7 @@ namespace HemDotNetWebApi.Controllers
         // Chris
         // GET: RealEstateAgent/5
         [HttpGet("{agentId}")]
-        public async Task<IActionResult> GetAgent(int agentId)
+        public async Task<IActionResult> GetAgent(string agentId)
         {
             var agent = await _realEstateAgentRepository.GetAsync(agentId);
 
@@ -37,7 +37,7 @@ namespace HemDotNetWebApi.Controllers
         // Chris
         // PUT: RealEstateAgent/5
         [HttpPut("{agentId}")]
-        public async Task<ActionResult<RealEstateAgentUpdateDTO>> Update(int agentId, RealEstateAgentUpdateDTO agentUpdateDto)
+        public async Task<ActionResult<RealEstateAgentUpdateDTO>> Update(string agentId, RealEstateAgentUpdateDTO agentUpdateDto)
         {
             var agentToUpdate = await _realEstateAgentRepository.GetAsync(agentId);
 

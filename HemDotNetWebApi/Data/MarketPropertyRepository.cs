@@ -70,22 +70,22 @@ namespace HemDotNetWebApi.Data
         }
 
         // CHRIS
-        public async Task<IEnumerable<MarketProperty>> GetAllActiveByAgent(int agentId)
+        public async Task<IEnumerable<MarketProperty>> GetAllActiveByAgent(string agentId)
         {
             return await _context.MarketProperties
                 .Include(p => p.Municipality)
-                .Where(p => p.RealEstateAgent.RealEstateAgentId == agentId)
+                .Where(p => p.RealEstateAgent.Id == agentId)
                 .Where(p => p.IsActive == true)
                 .Where(p => p.IsSold == false)
                 .ToListAsync();
         }
 
         // Adam
-        public async Task<bool> AgentDelete(int propertyId, int agentId)
+        public async Task<bool> AgentDelete(int propertyId, string agentId)
         {
             var property = await _context.MarketProperties
                 .Include(p => p.RealEstateAgent)
-                .FirstOrDefaultAsync(p => p.MarketPropertyId == propertyId && p.RealEstateAgent.RealEstateAgentId == agentId);
+                .FirstOrDefaultAsync(p => p.MarketPropertyId == propertyId && p.RealEstateAgent.Id == agentId);
             if (property == null)
             {
                 return false;
@@ -112,7 +112,7 @@ namespace HemDotNetWebApi.Data
                 .FirstOrDefaultAsync(m => m.MunicipalityId == marketProperty.Municipality.MunicipalityId);
 
             var agent = await _context.RealEstateAgents
-                .FirstOrDefaultAsync(a => a.RealEstateAgentId == marketProperty.RealEstateAgent.RealEstateAgentId);
+                .FirstOrDefaultAsync(a => a.Id == marketProperty.RealEstateAgent.Id);
 
             if (municipality == null || agent == null)
             {

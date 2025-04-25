@@ -76,8 +76,8 @@ namespace HemDotNetWebApi.Controllers
          }
         
         // Chris
-        [HttpGet("{agentId}")]
-        public async Task<IEnumerable<ActiveMarketListingDTO>> GetByAgent(int agentId)
+        [HttpGet("ByAgent/{agentId}")]
+        public async Task<IEnumerable<ActiveMarketListingDTO>> GetByAgent(string agentId)
         {
             var activeListings = await _marketPropertyRepository.GetAllActiveByAgent(agentId);
             var activeListingDtos = _mapper.Map<IEnumerable<ActiveMarketListingDTO>>(activeListings);
@@ -86,7 +86,7 @@ namespace HemDotNetWebApi.Controllers
 
         // Adam
         [HttpDelete("{propertyId}/{agentId}")]
-        public async Task<IActionResult> AgentDelete(int propertyId, int agentId)
+        public async Task<IActionResult> AgentDelete(int propertyId, string agentId)
         {
             var result = await _marketPropertyRepository.AgentDelete(propertyId, agentId);
             if (result)

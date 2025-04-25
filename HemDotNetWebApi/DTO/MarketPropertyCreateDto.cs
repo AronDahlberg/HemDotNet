@@ -7,7 +7,7 @@ namespace HemDotNetWebApi.DTO
     public class MarketPropertyCreateDto
     {
         [Required]
-        public int RealEstateAgentId { get; set; }
+        public string RealEstateAgentId { get; set; }
         [Required]
         public int MunicipalityId { get; set; }
         [Required]
