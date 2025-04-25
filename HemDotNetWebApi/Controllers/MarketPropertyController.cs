@@ -25,7 +25,7 @@ namespace HemDotNetWebApi.Controllers
         }
 
         // Allan
-        [HttpPut("update/")]
+        [HttpPut()]
         public async Task<ActionResult<MarketPropertyDto>> UpdateMarketProperty(MarketPropertyUpdateDto updateDto)
         {
             try
@@ -49,7 +49,7 @@ namespace HemDotNetWebApi.Controllers
             }
         }
         //Author: Johan Ek
-        [HttpGet("/api/MarketProperties")]
+        [HttpGet("MarketProperties/")]
         public async Task<IActionResult> GetAllMarketPropertiesPartial()
         {
             var partialMarketPropertiesDTO = await _marketPropertyRepository.GetAllMarketPropertiesPartial();
@@ -62,8 +62,8 @@ namespace HemDotNetWebApi.Controllers
         }
 
         // Allan
-        [HttpGet("byMunicipality/{municipality}")]
-        public async Task<ActionResult<IEnumerable<MarketPropertyListingDto>>> GetMarketPropertyByMunicipality(string municipality)
+        [HttpGet("byMunicipality/")]
+        public async Task<ActionResult<IEnumerable<MarketPropertyListingDto>>> GetMarketPropertyByMunicipality([FromQuery] string municipality)
         {
             var properties = await _marketPropertyRepository.GetAllByMunicipality(municipality);
 
@@ -76,7 +76,7 @@ namespace HemDotNetWebApi.Controllers
          }
         
         // Chris
-        [HttpGet("ByAgent/{agentId}")]
+        [HttpGet("{agentId}")]
         public async Task<IEnumerable<ActiveMarketListingDTO>> GetByAgent(int agentId)
         {
             var activeListings = await _marketPropertyRepository.GetAllActiveByAgent(agentId);
@@ -84,9 +84,8 @@ namespace HemDotNetWebApi.Controllers
             return activeListingDtos;
         }
 
-
         // Adam
-        [HttpDelete("AgentDelete/{propertyId}/{agentId}")]
+        [HttpDelete("{propertyId}/{agentId}")]
         public async Task<IActionResult> AgentDelete(int propertyId, int agentId)
         {
             var result = await _marketPropertyRepository.AgentDelete(propertyId, agentId);
@@ -101,7 +100,7 @@ namespace HemDotNetWebApi.Controllers
         }
 
         // Katarina
-        [HttpGet("ById/{MarketPropertyId}")]
+        [HttpGet("{MarketPropertyId}")]
         public async Task<IActionResult> GetMarketPropertyById(int MarketPropertyId)
         {
             var marketProperty = await _marketPropertyRepository.GetMarketPropertyById(MarketPropertyId);
@@ -116,7 +115,7 @@ namespace HemDotNetWebApi.Controllers
         }
 
         // Katarina
-        [HttpPost("add/{MarketProperty}")]
+        [HttpPost("{MarketProperty}")]
         public async Task<IActionResult> CreateMarketProperty([FromBody] MarketPropertyCreateDto createDto)
         {
             var marketProperty = _mapper.Map<MarketProperty>(createDto);

@@ -28,7 +28,7 @@ namespace HemDotNetWebApi.Data
             await PopulatePropertyImages(context);
         }
 
-        // Author: group
+        // Author: Group
         public static async Task SeedRoles(ApplicationDbContext context)
         {
             if (!context.Roles.Any())
@@ -65,7 +65,7 @@ namespace HemDotNetWebApi.Data
 
                 int agentIdCounter = 1;
 
-                /* Author: Group */
+                /* Coder: Johan, Participants: All */
 
                 var hasher = new PasswordHasher<RealEstateAgent>();
 
@@ -73,8 +73,8 @@ namespace HemDotNetWebApi.Data
                 {
                     new RealEstateAgent
                     {
-                        Id = Guid.NewGuid().ToString(),
-                        RealEstateAgentId = agentIdCounter++,
+                        //Id = Guid.NewGuid().ToString(),
+                        //RealEstateAgentId = agentIdCounter++,
                         Email = "admin@hemdotnet.se",
                         NormalizedEmail = "ADMIN@HEMDOTNET.SE",
                         UserName = "admin@hemdotnet.se",
@@ -90,8 +90,8 @@ namespace HemDotNetWebApi.Data
                     },
                     new RealEstateAgent
                     {
-                        Id = Guid.NewGuid().ToString(),
-                        RealEstateAgentId = agentIdCounter++,
+                        //Id = Guid.NewGuid().ToString(),
+                        //RealEstateAgentId = agentIdCounter++,
                         Email = "anna@nordichomes.se",
                         NormalizedEmail = "ANNA@NORDICHOMES.SE",
                         UserName = "anna@nordichomes.se",
@@ -107,8 +107,8 @@ namespace HemDotNetWebApi.Data
                     },
                     new RealEstateAgent
                     {
-                        Id = Guid.NewGuid().ToString(),
-                        RealEstateAgentId = agentIdCounter++,
+                        //Id = Guid.NewGuid().ToString(),
+                        //RealEstateAgentId = agentIdCounter++,
                         Email = "mikael@nordichomes.se",
                         NormalizedEmail = "MIKAEL@NORDICHOMES.SE",
                         UserName = "mikael@nordichomes.se",
@@ -124,8 +124,8 @@ namespace HemDotNetWebApi.Data
                     },
                     new RealEstateAgent
                     {
-                        Id = Guid.NewGuid().ToString(),
-                        RealEstateAgentId = agentIdCounter++,
+                        //Id = Guid.NewGuid().ToString(),
+                        //RealEstateAgentId = agentIdCounter++,
                         Email = "maria@nordichomes.com",
                         NormalizedEmail = "MARIA@NORDICHOMES.COM",
                         UserName = "maria@nordichomes.com",
@@ -141,8 +141,8 @@ namespace HemDotNetWebApi.Data
                     },
                     new RealEstateAgent
                     {
-                        Id = Guid.NewGuid().ToString(),
-                        RealEstateAgentId = agentIdCounter++,
+                        //Id = Guid.NewGuid().ToString(),
+                        //RealEstateAgentId = agentIdCounter++,
                         Email = "lars@nordhsmaklarbyra.com",
                         NormalizedEmail = "LARS@NORDHSMAKLARBYRA.COM",
                         UserName = "lars@nordhsmaklarbyra.com",
@@ -158,8 +158,8 @@ namespace HemDotNetWebApi.Data
                     },
                     new RealEstateAgent
                     {
-                        Id = Guid.NewGuid().ToString(),
-                        RealEstateAgentId = agentIdCounter++,
+                        //Id = Guid.NewGuid().ToString(),
+                        //RealEstateAgentId = agentIdCounter++,
                         Email = "vendela@nordhsmaklarbyra.com",
                         NormalizedEmail = "VENDELA@NORDHSMAKLARBYRA.COM",
                         UserName = "vendela@nordhsmaklarbyra.com",
@@ -175,8 +175,8 @@ namespace HemDotNetWebApi.Data
                     },
                     new RealEstateAgent
                     {
-                        Id = Guid.NewGuid().ToString(),
-                        RealEstateAgentId = agentIdCounter++,
+                        //Id = Guid.NewGuid().ToString(),
+                        //RealEstateAgentId = agentIdCounter++,
                         Email = "erik@nordhsmaklarbyra.com",
                         NormalizedEmail = "ERIK@NORDHSMAKLARBYRA.COM",
                         UserName = "erik@nordhsmaklarbyra.com",
@@ -192,8 +192,8 @@ namespace HemDotNetWebApi.Data
                     },
                     new RealEstateAgent
                     {
-                        Id = Guid.NewGuid().ToString(),
-                        RealEstateAgentId = agentIdCounter++,
+                        //Id = Guid.NewGuid().ToString(),
+                        //RealEstateAgentId = agentIdCounter++,
                         Email = "lisa@nordhsmaklarbyra.com",
                         NormalizedEmail = "LISA@NORDHSMAKLARBYRA.COM",
                         UserName = "lisa@nordhsmaklarbyra.com",
@@ -208,6 +208,7 @@ namespace HemDotNetWebApi.Data
                         RealEstateAgentAgency = nordhsMaklarbyra
                     }
                 };
+
 
                 context.Users.AddRange(agents);
                 await context.SaveChangesAsync();

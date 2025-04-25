@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HemDotNetWebApi.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250423143305_Initial")]
+    [Migration("20250424091455_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -80,6 +80,7 @@ namespace HemDotNetWebApi.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("RealEstateAgentId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<decimal?>("YearlyMaintenanceCost")
@@ -216,7 +217,10 @@ namespace HemDotNetWebApi.Migrations
                         .HasColumnType("nvarchar(30)");
 
                     b.Property<int>("RealEstateAgentId")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("RealEstateAgentId"));
 
                     b.Property<string>("RealEstateAgentImageUrl")
                         .IsRequired()

@@ -4,9 +4,11 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace HemDotNetWebApi.Models
 {
+    // Author: All
     public class RealEstateAgent : IdentityUser
     {
-        [Key]
+        //[Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int RealEstateAgentId { get; set; }
 
         [Required]

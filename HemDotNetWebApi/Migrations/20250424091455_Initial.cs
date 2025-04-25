@@ -79,7 +79,8 @@ namespace HemDotNetWebApi.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    RealEstateAgentId = table.Column<int>(type: "int", nullable: false),
+                    RealEstateAgentId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     RealEstateAgentFirstName = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
                     RealEstateAgentLastName = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
                     RealEstateAgentEmail = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -214,7 +215,7 @@ namespace HemDotNetWebApi.Migrations
                     MonthlyFee = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     YearlyMaintenanceCost = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     ContructionYear = table.Column<int>(type: "int", nullable: false),
-                    RealEstateAgentId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    RealEstateAgentId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     CreationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     IsActive = table.Column<bool>(type: "bit", nullable: false),
                     IsSold = table.Column<bool>(type: "bit", nullable: false)
