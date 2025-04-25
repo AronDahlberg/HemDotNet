@@ -3,6 +3,7 @@ using HemDotNetWebApi.Data;
 using HemDotNetWebApi.DTO;
 using HemDotNetWebApi.DTOs;
 using HemDotNetWebApi.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -12,7 +13,6 @@ namespace HemDotNetWebApi.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-
     public class MarketPropertyController : ControllerBase
     {
         private readonly IMapper _mapper;
@@ -25,7 +25,9 @@ namespace HemDotNetWebApi.Controllers
         }
 
         // Allan
-        [HttpPut()]
+        [HttpPut]
+        [Authorize]
+
         public async Task<ActionResult<MarketPropertyDto>> UpdateMarketProperty(MarketPropertyUpdateDto updateDto)
         {
             try
@@ -86,6 +88,8 @@ namespace HemDotNetWebApi.Controllers
 
         // Adam
         [HttpDelete("{propertyId}/{agentId}")]
+        [Authorize]
+
         public async Task<IActionResult> AgentDelete(int propertyId, string agentId)
         {
             var result = await _marketPropertyRepository.AgentDelete(propertyId, agentId);
@@ -115,6 +119,7 @@ namespace HemDotNetWebApi.Controllers
         }
 
         // Katarina
+        [Authorize]
         [HttpPost("{MarketProperty}")]
         public async Task<IActionResult> CreateMarketProperty([FromBody] MarketPropertyCreateDto createDto)
         {

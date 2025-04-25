@@ -2,6 +2,7 @@
 using HemDotNetWebApi.Data;
 using HemDotNetWebApi.DTO;
 using HemDotNetWebApi.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -23,6 +24,7 @@ namespace HemDotNetWebApi.Controllers
         }
 
         // Allan
+        [Authorize]
         [HttpGet("{marketPropertyId}")]
         public async Task<ActionResult<IEnumerable<PropertyImageDto>>> GetPropertyImages(int marketPropertyId)
         {
@@ -38,6 +40,8 @@ namespace HemDotNetWebApi.Controllers
         // Allan
         [HttpPost]
         [Consumes("multipart/form-data")]
+        [Authorize]
+
         public async Task<ActionResult<PropertyImageDto>> AddPropertyImage([FromForm] AddPropertyImageDto dto, IFormFile imageFile)
         {
             if (imageFile == null || imageFile.Length == 0)
@@ -93,6 +97,8 @@ namespace HemDotNetWebApi.Controllers
 
         // Allan
         [HttpDelete("{imageId}")]
+        [Authorize]
+
         public async Task<ActionResult> DeletePropertyImage(int imageId)
         {
             if (!await _repository.ImageExistsAsync(imageId))
