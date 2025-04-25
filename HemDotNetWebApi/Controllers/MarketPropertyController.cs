@@ -76,7 +76,7 @@ namespace HemDotNetWebApi.Controllers
          }
         
         // Chris
-        [HttpGet("{agentId}")]
+        [HttpGet("ByAgent/{agentId}")]
         public async Task<IEnumerable<ActiveMarketListingDTO>> GetByAgent(string agentId)
         {
             var activeListings = await _marketPropertyRepository.GetAllActiveByAgent(agentId);
