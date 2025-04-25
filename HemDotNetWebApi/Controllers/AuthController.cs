@@ -64,9 +64,35 @@ namespace HemDotNetWebApi.Controllers
             }
             catch(Exception ex)
             {
-                return Problem($"Something went wrong in the {nameof(Register)}", statusCode: 500);
+                return Problem($"Something went wrong in the {nameof(Register)} {ex.InnerException.Message}", statusCode: 500);
             }
             
+        }
+
+        /* Coder: Allan, Participants: All */
+        [HttpPost]
+        [Route("login")]
+        public async Task<IActionResult> Login(LoginUserDto userDto)
+        {
+
+            try
+            {
+                var user = await _userManager.FindByEmailAsync(userDto.Email);
+                var passwordValid = await _userManager.CheckPasswordAsync(user, userDto.Password);
+
+                if (user == null && passwordValid == false)
+                {
+                    return Unauthorized();
+                }
+
+                // add what is needed for JWT
+
+                return Accepted();
+            }
+            catch (Exception ex)
+            {
+                return Problem($"Something went wrong with {nameof(Login)}", statusCode: 500);
+            }
         }
     }
 }

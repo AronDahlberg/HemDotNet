@@ -14,7 +14,7 @@ namespace HemDotNetWebApi.Mapping
             .ForMember(dest => dest.Municipality, opt => opt.MapFrom(src =>
                 new Municipality { MunicipalityId = src.MunicipalityId }))
             .ForMember(dest => dest.RealEstateAgent, opt => opt.MapFrom(src =>
-                new RealEstateAgent { RealEstateAgentId = src.RealEstateAgentId }))
+                new RealEstateAgent { Id = src.RealEstateAgentId }))
             .ForMember(dest => dest.Images, opt => opt.Ignore());
 
             // Allan
@@ -22,7 +22,7 @@ namespace HemDotNetWebApi.Mapping
             .ForMember(dest => dest.MunicipalityId, opt =>
                 opt.MapFrom(src => src.Municipality.MunicipalityId))
             .ForMember(dest => dest.RealEstateAgentId, opt =>
-                opt.MapFrom(src => src.RealEstateAgent.RealEstateAgentId));
+                opt.MapFrom(src => src.RealEstateAgent.Id));
 
 
             // Allan
@@ -87,7 +87,7 @@ namespace HemDotNetWebApi.Mapping
                         .ForMember(dest => dest.Municipality, opt => opt.MapFrom(src =>
                             new Municipality { MunicipalityId = src.MunicipalityId })) 
                         .ForMember(dest => dest.RealEstateAgent, opt => opt.MapFrom(src =>
-                            new RealEstateAgent { RealEstateAgentId = src.RealEstateAgentId }))  
+                            new RealEstateAgent { Id = src.RealEstateAgentId }))  
                         .ForMember(dest => dest.Images, opt => opt.Ignore())  
                         .ForMember(dest => dest.IsActive, opt => opt.MapFrom(src => true))  
                         .ForMember(dest => dest.IsSold, opt => opt.MapFrom(src => false))  

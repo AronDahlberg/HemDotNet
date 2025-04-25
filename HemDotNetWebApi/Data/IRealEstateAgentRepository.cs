@@ -8,6 +8,6 @@ namespace HemDotNetWebApi.Data
         Task<RealEstateAgent> UpdateAsync(RealEstateAgent agent);
         
         // CHRIS
-        Task<RealEstateAgent> GetAsync(int agentId);
+        Task<RealEstateAgent> GetAsync(string agentId);
     }
 }

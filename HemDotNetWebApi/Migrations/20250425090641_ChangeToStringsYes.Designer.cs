@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HemDotNetWebApi.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250424091455_Initial")]
-    partial class Initial
+    [Migration("20250425090641_ChangeToStringsYes")]
+    partial class ChangeToStringsYes
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -215,12 +215,6 @@ namespace HemDotNetWebApi.Migrations
                         .IsRequired()
                         .HasMaxLength(30)
                         .HasColumnType("nvarchar(30)");
-
-                    b.Property<int>("RealEstateAgentId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("RealEstateAgentId"));
 
                     b.Property<string>("RealEstateAgentImageUrl")
                         .IsRequired()

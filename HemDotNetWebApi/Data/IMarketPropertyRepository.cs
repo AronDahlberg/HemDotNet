@@ -15,10 +15,10 @@ namespace HemDotNetWebApi.Data
         Task<IEnumerable<MarketProperty>> GetAllByMunicipality(string municipality);
 
         // CHRIS
-        Task<IEnumerable<MarketProperty>> GetAllActiveByAgent(int agentId);
+        Task<IEnumerable<MarketProperty>> GetAllActiveByAgent(string agentId);
 
         // Adam
-        Task<bool> AgentDelete(int propertyId, int agentId);
+        Task<bool> AgentDelete(int propertyId, string agentId);
 
         // Katarina
         Task<MarketProperty?> GetMarketPropertyById(int id);

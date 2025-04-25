@@ -13,23 +13,23 @@ namespace HemDotNetWebApi.Data
         }
 
         // CHRIS
-        public async Task<RealEstateAgent> GetAsync(int agentId)
+        public async Task<RealEstateAgent> GetAsync(string agentId)
         {
             return await _context.RealEstateAgents
                 .Include(a => a.RealEstateAgentAgency)
                 .Include(a => a.RealEstateAgentProperties)
-                .FirstOrDefaultAsync(a => a.RealEstateAgentId == agentId);
+                .FirstOrDefaultAsync(a => a.Id == agentId);
         }
 
         // CHRIS
         public async Task<RealEstateAgent> UpdateAsync(RealEstateAgent agent)
         {
             var existingAgent = await _context.RealEstateAgents
-                .FirstOrDefaultAsync(a => a.RealEstateAgentId == agent.RealEstateAgentId);
+                .FirstOrDefaultAsync(a => a.Id == agent.Id);
 
             if (existingAgent == null)
             {
-                throw new KeyNotFoundException($"Agent with ID {agent.RealEstateAgentId} not found.");
+                throw new KeyNotFoundException($"Agent with ID {agent.Id} not found.");
             }
 
             _context.Entry(existingAgent).CurrentValues.SetValues(agent);

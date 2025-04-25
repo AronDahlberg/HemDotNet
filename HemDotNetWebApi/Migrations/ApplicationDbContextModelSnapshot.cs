@@ -213,12 +213,6 @@ namespace HemDotNetWebApi.Migrations
                         .HasMaxLength(30)
                         .HasColumnType("nvarchar(30)");
 
-                    b.Property<int>("RealEstateAgentId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("RealEstateAgentId"));
-
                     b.Property<string>("RealEstateAgentImageUrl")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
