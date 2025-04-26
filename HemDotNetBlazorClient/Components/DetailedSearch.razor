@@ -183,5 +183,37 @@ Author: Allan
     }
 
 
+    private void SelectSuggestion(string selected)
+    {
+        searchTerm = selected;
+        suggestions.Clear();
+    }
+
+    private async Task OnSearchTermChanged(ChangeEventArgs e)
+    {
+        searchTerm = e.Value?.ToString();
+        OnInputChanged();
+    }
+
+
+    private string HighlightSubstring(string input, string search)
+    {
+        if (string.IsNullOrEmpty(search))
+            return input;
+
+        var index = input.IndexOf(search, StringComparison.OrdinalIgnoreCase);
+        if (index == -1)
+            return input;
+
+        return input.Substring(0, index) +
+               "<strong>" + input.Substring(index, search.Length) + "</strong>" +
+               input.Substring(index + search.Length);
+    }
+
+    private MarkupString DisplayMatchedText(string suggestion)
+    {
+        var highlightedText = HighlightSubstring(suggestion, searchTerm);
+        return new MarkupString(highlightedText);
+    }
 }
 
