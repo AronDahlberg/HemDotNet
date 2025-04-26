@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="150.151 206.802 159.9637 40.008" width="159.964px" height="40.008px">
+  <text style="fill: rgb(0, 5, 5); font-family: Arial; font-size: 28px; font-weight: 900; letter-spacing: -1.1px; white-space: pre;" x="185.76" y="238.006">Hem.</text>
+  <text style="fill: rgb(5, 5, 5); font-family: Arial; font-size: 28px; font-weight: 900; white-space: pre;" x="260.602" y="238.002">N</text>
+  <text style="fill: rgb(5, 5, 5); font-family: Arial; font-size: 28px; font-weight: 900; letter-spacing: -4.7px; white-space: pre;" x="274.594" y="238.01">ET</text>
+  <g fill="none" fill-rule="evenodd" transform="matrix(1, 0, 0, 1, 179.39302330304716, 171.19259898651535)">
+    <path d="M -15.163 36.398 C -14.034 35.433 -12.36 35.436 -11.234 36.404 L 1.382 47.246 C 2.256 47.997 2.758 49.086 2.758 50.231 L 2.758 66.676 L -7.242 66.675 L -7.242 60.676 C -7.242 57.438 -9.807 54.799 -13.017 54.68 L -13.242 54.676 C -16.556 54.676 -19.242 57.363 -19.242 60.676 L -19.242 66.675 L -29.242 66.676 L -29.242 50.236 C -29.242 49.087 -28.736 47.995 -27.857 47.244 L -15.163 36.398 Z M -13.242 43.676 C -15.451 43.676 -17.242 45.467 -17.242 47.676 C -17.242 49.885 -15.451 51.676 -13.242 51.676 C -11.033 51.676 -9.242 49.885 -9.242 47.676 C -9.242 45.467 -11.033 43.676 -13.242 43.676 Z" fill-rule="nonzero" style="fill: rgb(5, 5, 5);"/>
+  </g>
+</svg>
