@@ -151,5 +151,37 @@ Author: Allan
     }
 
 
+    private async Task PerformSearch()
+    {
+        List<string> municipalities = new List<string>() { "Stockholm", "Umeå", "Örebro", "Sundsvall", "Lund", "Övik", "Östersund", "Östhammar" };
+        if (string.IsNullOrWhiteSpace(searchTerm))
+        {
+            suggestions.Clear();
+        }
+        else
+        {
+            /*
+            var results = await Http.GetFromJsonAsync<List<string>>($"Municipality/search?query={searchTerm}");
+            suggestions = results ?? new List<string>();
+            */
+            var results = municipalities
+                .Where(m => m.StartsWith(searchTerm, StringComparison.OrdinalIgnoreCase))
+                .OrderBy(m => m)
+                .Take(10)
+                .ToList();
+
+            // Debug output
+            Console.WriteLine($"Search term: {searchTerm}, Results count: {results.Count}");
+            foreach (var result in results)
+            {
+                Console.WriteLine($"Result: {result}");
+            }
+
+            suggestions = results;
+        }
+        await InvokeAsync(StateHasChanged);
+    }
+
+
 }
 
