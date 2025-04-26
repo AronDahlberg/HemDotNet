@@ -215,5 +215,43 @@ Author: Allan
         var highlightedText = HighlightSubstring(suggestion, searchTerm);
         return new MarkupString(highlightedText);
     }
+
+
+
+
+
+
+
+    private SearchModel searchModel = new();
+
+    private List<string> propertyTypes = new()
+    {
+        "Alla typer", "Villa", "Lägenhet", "Fritidshus", "Radhus"
+    };
+
+    private void ToggleType(string type)
+    {
+        if (searchModel.SelectedTypes.Contains(type))
+            searchModel.SelectedTypes.Remove(type);
+        else
+            searchModel.SelectedTypes.Add(type);
+    }
+
+    private void Search()
+    {
+        Console.WriteLine($"Searching for: {searchModel.Area}");
+    }
+
+    public class SearchModel
+    {
+        public string Area { get; set; } = "";
+        public string ExpandArea { get; set; } = "0";
+        public List<string> SelectedTypes { get; set; } = new() { "Alla typer" };
+        public string MinRooms { get; set; }
+        public string MinArea { get; set; }
+        public string MaxPrice { get; set; }
+        public string NewProduction { get; set; } = "true";
+        public string Keywords { get; set; }
+    }
 }
 
