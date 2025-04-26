@@ -135,5 +135,13 @@ Author: Allan
     private List<string> suggestions = new();
     private Timer debounceTimer;
 
+
+    protected override void OnInitialized()
+    {
+        debounceTimer = new Timer(400); // 400ms delay
+        debounceTimer.Elapsed += async (s, e) => await InvokeAsync(PerformSearch);
+        debounceTimer.AutoReset = false;
+    }
+
 }
 
