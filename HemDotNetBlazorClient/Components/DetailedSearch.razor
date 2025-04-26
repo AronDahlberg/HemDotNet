@@ -143,5 +143,13 @@ Author: Allan
         debounceTimer.AutoReset = false;
     }
 
+
+    private void OnInputChanged()
+    {
+        debounceTimer.Stop();
+        debounceTimer.Start();
+    }
+
+
 }
 
