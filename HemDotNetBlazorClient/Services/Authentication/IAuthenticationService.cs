@@ -1,6 +1,6 @@
 ﻿using HemDotNetBlazorClient.Services.Base;
 
-namespace IdentityDemoClient.Services.Authentication
+namespace HemDotNetBlazorClient.Services.Authentication
 {
     /* Coder: Adam, Participants: All */
     public interface IAuthenticationService
