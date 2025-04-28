@@ -22,7 +22,6 @@
 
   <ItemGroup>
     <Folder Include="Providers\" />
-    <Folder Include="Services\Authentication\" />
   </ItemGroup>
 
 </Project>
