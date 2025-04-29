@@ -1,8 +1,11 @@
+using HemDotNetWebApi.Constants;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HemDotNetWebApi.Controllers
 {
     [ApiController]
+    [Authorize(Roles = ApiRoles.Administrator)]
     [Route("[controller]")]
     public class WeatherForecastController : ControllerBase
     {
