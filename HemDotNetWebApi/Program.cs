@@ -96,8 +96,6 @@ namespace HemDotNetWebApi
 
             app.UseHttpsRedirection();
 
-            app.UseAuthorization();
-
             /* Coder: Johan, Participants: All */
             app.UseCors("AllowAll");
 
