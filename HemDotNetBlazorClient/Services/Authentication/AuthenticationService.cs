@@ -19,6 +19,7 @@ namespace HemDotNetBlazorClient.Services.Authentication
             this.authenticationStateProvider = authenticationStateProvider;
         }
 
+        // Co-Author:Allan
         public async Task<bool> AuthenticateAsync(LoginUserDto loginModel)
         {
             AuthResponse response;
@@ -29,7 +30,7 @@ namespace HemDotNetBlazorClient.Services.Authentication
             catch (Exception ex)
             {
                 Console.WriteLine($"Login failed: {ex.Message}");
-                throw; // or return false if preferred
+                throw;
             }
 
             // Store token

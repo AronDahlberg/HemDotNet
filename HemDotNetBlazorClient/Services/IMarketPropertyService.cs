@@ -1,6 +1,10 @@
-﻿namespace HemDotNetBlazorClient.Services
+﻿using HemDotNetBlazorClient.Services.Base;
+
+namespace HemDotNetBlazorClient.Services
 {
-    public class IMarketPropertyService
+    // Allan
+    public interface IMarketPropertyService
     {
+        Task<Response<List<PartialMarketPropertyDTO>>> GetMarketProperties();
     }
 }

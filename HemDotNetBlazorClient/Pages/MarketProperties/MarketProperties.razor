@@ -1,0 +1,65 @@
+﻿
+@*Allan*@
+
+@using HemDotNetBlazorClient.Services
+@using Microsoft.AspNetCore.Authorization
+@page "/marketproperties"
+@inject IMarketPropertyService marketPropertyService
+@attribute [Authorize]
+
+
+<h3>Market Properties</h3>
+
+@if (!response.Success)
+{
+    <div class="alert alert-danger">
+        <h4>@response.Message</h4>
+    </div>
+}
+else if (mProperties == null)
+{
+    <div class="alert alert-info">
+        <h4>Loading data...</h4>
+    </div>
+}
+else
+{
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+        @foreach (var property in mProperties)
+        {
+            <div class="col">
+                <div class="card h-100 shadow-sm">
+
+
+                    <div class="card-body">
+                        <h5 class="card-title">@property.PropertyAddress</h5>
+                        <p class="card-text">
+                            <strong>Municipality:</strong> @property.MunicipalityName<br />
+                            <strong>Category:</strong> @property.Category<br />
+                            <strong>Price:</strong> @property.Price.ToString("C")
+                        </p>
+                    </div>
+                    <div class="card-footer d-flex justify-content-between">
+                        <a class="btn btn-sm btn-info" href="/marketproperties/details/@property.PropertyAddress">Details</a>
+                        <a class="btn btn-sm btn-warning" href="/marketproperties/edit/@property.PropertyAddress">Edit</a>
+                        <a class="btn btn-sm btn-danger" href="/marketproperties/delete/@property.PropertyAddress">Delete</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
+
+@code {
+    private List<PartialMarketPropertyDTO> mProperties;
+    private Response<List<PartialMarketPropertyDTO>> response = new Response<List<PartialMarketPropertyDTO>> { Success = true };
+
+    protected override async Task OnInitializedAsync()
+    {
+        response = await marketPropertyService.GetMarketProperties();
+        if (response.Success)
+        {
+            mProperties = response.Data;
+        }
+    }
+}

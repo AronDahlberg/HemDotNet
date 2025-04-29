@@ -12,14 +12,15 @@ namespace HemDotNetBlazorClient.Services
         {
             _client = client;
         }
-
+        /*
         public async Task<WeatherForecast[]> GetWeather(string uri)
         {
                 await GetBearerToken();
                 //var data = await _client.GetWeatherForecastAsync();
-                return await _client.GetFromJsonAsync<WeatherForecast[]>(uri);
+                //return await _client.GetFromJsonAsync<WeatherForecast[]>(uri);
 
 
         }
+        */
     }
 }

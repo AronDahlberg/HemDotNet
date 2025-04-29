@@ -17,22 +17,29 @@ namespace HemDotNetBlazorClient
             builder.RootComponents.Add<App>("#app");
             builder.RootComponents.Add<HeadOutlet>("head::after");
 
-            builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://localhost:7080/") });
+            // Base HTTP client (NSwag and general use)
+            builder.Services.AddScoped(sp => new HttpClient
+            {
+                BaseAddress = new Uri("https://localhost:7080/")
+            });
 
+            // Local storage for storing JWT tokens
             builder.Services.AddBlazoredLocalStorage();
 
+            // Auth state management
             builder.Services.AddScoped<ApiAuthenticationStateProvider>();
-
-            builder.Services.AddScoped<ApiAuthenticationStateProvider>();
-            builder.Services.AddScoped<AuthenticationStateProvider>(p =>
-                p.GetRequiredService<ApiAuthenticationStateProvider>());
+            builder.Services.AddScoped<AuthenticationStateProvider>(provider =>
+                provider.GetRequiredService<ApiAuthenticationStateProvider>());
             builder.Services.AddAuthorizationCore();
+
+            // NSwag client
             builder.Services.AddScoped<IClient, Client>();
+
+            //  Application services
             builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
-            //builder.Services.AddScoped<AuthorizeApiClient>(); // custom client
+            builder.Services.AddScoped<IMarketPropertyService, MarketPropertyService>();
 
-            //builder.Services.AddScoped<WeatherService>();
-
+            // Run the app
             await builder.Build().RunAsync();
         }
     }
