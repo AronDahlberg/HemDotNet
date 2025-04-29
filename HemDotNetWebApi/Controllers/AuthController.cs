@@ -102,7 +102,8 @@ namespace HemDotNetWebApi.Controllers
                     UserId = user.Id
                 };
 
-                return Accepted(response);
+                //return Accepted(response);
+                return Ok(response);
             }
             catch (Exception ex)
             {

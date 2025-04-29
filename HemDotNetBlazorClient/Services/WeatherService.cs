@@ -1,5 +1,7 @@
 ﻿using Blazored.LocalStorage;
 using HemDotNetBlazorClient.Services.Base;
+using System.Net.Http;
+using System;
 
 namespace HemDotNetBlazorClient.Services
 {
@@ -11,15 +13,12 @@ namespace HemDotNetBlazorClient.Services
             _client = client;
         }
 
-        public async Task GetWeather()
+        public async Task<WeatherForecast[]> GetWeather(string uri)
         {
-            try
-            {
-                //await GetBearerToken();
-                var data = await _client.GetWeatherForecastAsync();
+                await GetBearerToken();
+                //var data = await _client.GetWeatherForecastAsync();
+                return await _client.GetFromJsonAsync<WeatherForecast[]>(uri);
 
-            }
-            catch (Exception ex) { }
 
         }
     }

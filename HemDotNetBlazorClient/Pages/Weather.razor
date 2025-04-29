@@ -1,6 +1,8 @@
 ﻿@page "/weather"
 @using HemDotNetBlazorClient.Services
+@* @inject AuthorizeApiClient ApiClient *@
 @inject WeatherService weatherService
+
 
 <PageTitle>Weather</PageTitle>
 
@@ -38,15 +40,6 @@ else
 }
 
 @code {
-    private WeatherForecast[]? forecasts;
-
-    protected override async Task OnInitializedAsync()
-    {
-
-        //forecasts = await Http.GetFromJsonAsync<WeatherForecast[]>("https://localhost:7080/WeatherForecast");
-        Console.WriteLine("test");
-        var cl = weatherService.GetWeather();
-    }
 
     public class WeatherForecast
     {
@@ -58,4 +51,15 @@ else
 
         public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
     }
+
+    private WeatherForecast[]? forecasts;
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        //forecasts = await ApiClient.GetAuthorizedJsonAsync<WeatherForecast[]>("WeatherForecast");
+        //forecasts = await weatherService.GetWeather("WeatherForecast");
+    }
+
+    
 }

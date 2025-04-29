@@ -22,13 +22,16 @@ namespace HemDotNetBlazorClient
             builder.Services.AddBlazoredLocalStorage();
 
             builder.Services.AddScoped<ApiAuthenticationStateProvider>();
+
+            builder.Services.AddScoped<ApiAuthenticationStateProvider>();
             builder.Services.AddScoped<AuthenticationStateProvider>(p =>
-            p.GetRequiredService<ApiAuthenticationStateProvider>());
+                p.GetRequiredService<ApiAuthenticationStateProvider>());
             builder.Services.AddAuthorizationCore();
             builder.Services.AddScoped<IClient, Client>();
             builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
+            //builder.Services.AddScoped<AuthorizeApiClient>(); // custom client
 
-            builder.Services.AddScoped<WeatherService>();
+            //builder.Services.AddScoped<WeatherService>();
 
             await builder.Build().RunAsync();
         }

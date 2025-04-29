@@ -52,6 +52,7 @@ namespace HemDotNetWebApi.Controllers
         }
         //Author: Johan Ek
         [HttpGet("MarketProperties/")]
+        [Authorize]
         public async Task<IActionResult> GetAllMarketPropertiesPartial()
         {
             var partialMarketPropertiesDTO = await _marketPropertyRepository.GetAllMarketPropertiesPartial();

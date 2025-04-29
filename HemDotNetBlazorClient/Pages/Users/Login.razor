@@ -23,14 +23,18 @@
 
 @code {
     LoginUserDto LoginModel = new LoginUserDto();
-    
+
     public async Task HandleLogin()
     {
+        Console.WriteLine("test1");
+
         string message = string.Empty;
         try
         {
+            Console.WriteLine("test2");
             var response = await authService.AuthenticateAsync(LoginModel);
 
+            Console.WriteLine("test5");
             if (response)
             {
                 navManager.NavigateTo("/");
@@ -39,6 +43,7 @@
         }
         catch (ApiException aex)
         {
+            Console.WriteLine("test3");
             if (aex.StatusCode >= 200 && aex.StatusCode <= 299)
             {
                 navManager.NavigateTo("/");
