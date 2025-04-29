@@ -3,7 +3,7 @@ using HemDotNetBlazorClient.Services.Base;
 using HemDotNetBlazorClient.Providers;
 using Microsoft.AspNetCore.Components.Authorization;
 
-namespace IdentityDemoClient.Services.Authentication
+namespace HemDotNetBlazorClient.Services.Authentication
 {
     /* Coder: Adam, Participants: All */
     public class AuthenticationService : IAuthenticationService
