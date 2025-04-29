@@ -1,5 +1,6 @@
 using Blazored.LocalStorage;
 using HemDotNetBlazorClient.Providers;
+using HemDotNetBlazorClient.Services;
 using HemDotNetBlazorClient.Services.Authentication;
 using HemDotNetBlazorClient.Services.Base;
 using Microsoft.AspNetCore.Components.Authorization;
@@ -26,6 +27,8 @@ namespace HemDotNetBlazorClient
             builder.Services.AddAuthorizationCore();
             builder.Services.AddScoped<IClient, Client>();
             builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
+
+            builder.Services.AddScoped<WeatherService>();
 
             await builder.Build().RunAsync();
         }
