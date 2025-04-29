@@ -2,6 +2,7 @@ using Blazored.LocalStorage;
 using HemDotNetBlazorClient.Providers;
 using HemDotNetBlazorClient.Services.Authentication;
 using HemDotNetBlazorClient.Services.Base;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 
@@ -20,7 +21,7 @@ namespace HemDotNetBlazorClient
             builder.Services.AddBlazoredLocalStorage();
 
             builder.Services.AddScoped<ApiAuthenticationStateProvider>();
-            builder.Services.AddScoped<ApiAuthenticationStateProvider>(p =>
+            builder.Services.AddScoped<AuthenticationStateProvider>(p =>
             p.GetRequiredService<ApiAuthenticationStateProvider>());
             builder.Services.AddAuthorizationCore();
             builder.Services.AddScoped<IClient, Client>();
