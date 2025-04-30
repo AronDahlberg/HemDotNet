@@ -139,22 +139,27 @@ namespace HemDotNetWebApi.Data
                 .Include(mp => mp.Images)
                 .AsQueryable();
 
+            /*
             if (!string.IsNullOrEmpty(searchDto.Area))
             {
                 query = query.Where(mp => mp.PropertyAddress.Contains(searchDto.Area)
                                        || mp.Municipality.MunicipalityName.Contains(searchDto.Area));
             }
+            */
+            /*
 
             if (searchDto.SelectedTypes != null && searchDto.SelectedTypes.Any())
             {
                 query = query.Where(mp => searchDto.SelectedTypes.Contains(mp.Category));
             }
+            */
 
             if (searchDto.MinRooms.HasValue)
             {
                 query = query.Where(mp => mp.AmountOfRooms >= searchDto.MinRooms.Value);
             }
 
+            /*
             if (searchDto.MinArea.HasValue)
             {
                 query = query.Where(mp => mp.LivingArea >= searchDto.MinArea.Value);
@@ -176,6 +181,7 @@ namespace HemDotNetWebApi.Data
                     query = query.Where(mp => mp.ContructionYear < DateTime.UtcNow.Year - 5);
                 }
             }
+            */
 
             query = query.Where(mp => mp.IsActive && !mp.IsSold);
 

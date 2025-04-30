@@ -98,7 +98,12 @@ namespace HemDotNetWebApi.Mapping
             CreateMap<Municipality, MunicipalityNameDto>()
             .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.MunicipalityName));
 
+            // Allan
+            CreateMap<MarketProperty, PartialMarketPropertyDTO>()
+            .ForMember(dest => dest.MunicipalityName, opt => opt.MapFrom(src => src.Municipality.MunicipalityName))
+            .ForMember(dest => dest.Images, opt => opt.MapFrom(src => src.Images));
 
+            CreateMap<PropertyImage, PartialPropertyImageDTO>();
         }
     }
 }

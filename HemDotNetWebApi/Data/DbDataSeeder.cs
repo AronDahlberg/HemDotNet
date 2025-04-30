@@ -321,7 +321,9 @@ namespace HemDotNetWebApi.Data
                     MonthlyFee = 1500,
                     YearlyMaintenanceCost = 18000,
                     ContructionYear = 1995,
-                    RealEstateAgent = agent1
+                    RealEstateAgent = agent1,
+                    IsActive = true,
+                    IsSold = false,
                 },
 
                 new MarketProperty
@@ -338,7 +340,9 @@ namespace HemDotNetWebApi.Data
                     MonthlyFee = 3900,
                     YearlyMaintenanceCost = 8500,
                     ContructionYear = 2010,
-                    RealEstateAgent = agent2
+                    RealEstateAgent = agent2,
+                    IsActive = true,
+                    IsSold = false,
                 },
 
                 new MarketProperty
@@ -355,7 +359,9 @@ namespace HemDotNetWebApi.Data
                     MonthlyFee = 2700,
                     YearlyMaintenanceCost = 15000,
                     ContructionYear = 2005,
-                    RealEstateAgent = agent3
+                    RealEstateAgent = agent3,
+                    IsActive = true,
+                    IsSold = false,
                 },
 
                 new MarketProperty
@@ -372,7 +378,9 @@ namespace HemDotNetWebApi.Data
                     MonthlyFee = 0,
                     YearlyMaintenanceCost = 22000,
                     ContructionYear = 2018,
-                    RealEstateAgent = agent4
+                    RealEstateAgent = agent4,
+                    IsActive = true,
+                    IsSold = false,
                 },
 
                 new MarketProperty
@@ -389,7 +397,9 @@ namespace HemDotNetWebApi.Data
                     MonthlyFee = 3200,
                     YearlyMaintenanceCost = 5000,
                     ContructionYear = 1905,
-                    RealEstateAgent = agent5
+                    RealEstateAgent = agent5,
+                    IsActive = true,
+                    IsSold = false,
                 },
 
                 new MarketProperty
@@ -406,7 +416,9 @@ namespace HemDotNetWebApi.Data
                     MonthlyFee = 0,
                     YearlyMaintenanceCost = 10000,
                     ContructionYear = 1985,
-                    RealEstateAgent = agent6
+                    RealEstateAgent = agent6,
+                    IsActive = true,
+                    IsSold = false,
                 }
             };
 
