@@ -38,6 +38,7 @@ namespace HemDotNetBlazorClient
             //  Application services
             builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
             builder.Services.AddScoped<IMarketPropertyService, MarketPropertyService>();
+            builder.Services.AddScoped<IMunicipalityService, MunicipalityService>();
 
             // Run the app
             await builder.Build().RunAsync();

@@ -43,6 +43,9 @@ namespace HemDotNetWebApi
             builder.Services.AddTransient<IMarketPropertyRepository, MarketPropertyRepository>();
             builder.Services.AddTransient<IPropertyImageRepository, PropertyImageRepository>();
 
+            // Allan
+            builder.Services.AddTransient<IMunicipalityRepository, MunicipalityRepository>();
+
             // Author: CHRIS
             builder.Services.AddTransient<IRealEstateAgentRepository, RealEstateAgentRepository>();
 
@@ -78,6 +81,8 @@ namespace HemDotNetWebApi
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JwtSettings:Key"]))
                 };
             });
+
+            /* */
 
             var app = builder.Build();
 

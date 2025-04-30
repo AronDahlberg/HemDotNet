@@ -23,6 +23,7 @@ namespace HemDotNetWebApi.Data
             return await _context.Municipalities.ToListAsync();
         }
 
+        // Allan
         public async Task<IEnumerable<Municipality>> SearchMunicipalitiesAsync(string searchTerm)
         {
             return await _context.Municipalities

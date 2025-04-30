@@ -4,27 +4,27 @@ using HemDotNetBlazorClient.Services.Base;
 namespace HemDotNetBlazorClient.Services
 {
     // Allan
-    public class MarketPropertyService : BaseHttpService, IMarketPropertyService
+    public class MunicipalityService : BaseHttpService, IMunicipalityService
     {
         private readonly IClient _client;
 
-        public MarketPropertyService(ILocalStorageService localStorage, IClient client)
+        public MunicipalityService(ILocalStorageService localStorage, IClient client)
             : base(localStorage, client)
         {
             _client = client;
         }
 
         // Author: Allan
-        public async Task<Response<List<PartialMarketPropertyDTO>>> GetMarketProperties()
+        public async Task<Response<List<MunicipalityNameDto>>> MunicipalitiesSearch(string searchTerm)
         {
-            Response<List<PartialMarketPropertyDTO>> response;
+            Response<List<MunicipalityNameDto>> response;
 
             try
             {
                 await GetBearerToken();
 
-                var data = await _client.MarketPropertiesAsync();
-                response = new Response<List<PartialMarketPropertyDTO>>
+                var data = await _client.SearchAsync(searchTerm);
+                response = new Response<List<MunicipalityNameDto>>
                 {
                     Data = data.ToList(),
                     Success = true
@@ -32,7 +32,7 @@ namespace HemDotNetBlazorClient.Services
             }
             catch (ApiException ex)
             {
-                response = ConvertApiExceptions<List<PartialMarketPropertyDTO>>(ex);
+                response = ConvertApiExceptions<List<MunicipalityNameDto>>(ex);
             }
 
             return response;

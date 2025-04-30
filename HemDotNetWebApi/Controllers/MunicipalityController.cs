@@ -22,16 +22,30 @@ namespace HemDotNetWebApi.Controllers
 
         // Author: Allan
         [HttpGet]
-        public async Task<IActionResult> GetAllMarketMunicipalities()
+        public async Task<ActionResult<IEnumerable<MunicipalityNameDto>>> GetAllMarketMunicipalities()
         {
             var municipalities = await _municipalityRepository.GetAllMunicipalities();
-            if (municipalities == null)
+            if (municipalities == null || !municipalities.Any())
             {
-                return NotFound($"No municipalities found.");
+                return NotFound("No municipalities found.");
             }
-            
-            //var dto = _mapper.Map<MarketPropertyDetailsDto>(marketProperty);
-            //return Ok(dto);
+
+            var dto = _mapper.Map<IEnumerable<MunicipalityNameDto>>(municipalities);
+            return Ok(dto);
+        }
+
+        // Author: Allan
+        [HttpGet("search")]
+        public async Task<ActionResult<IEnumerable<MunicipalityNameDto>>> SearchMunicipalities([FromQuery] string searchTerm)
+        {
+            if (string.IsNullOrWhiteSpace(searchTerm))
+            {
+                return BadRequest("Search term is required.");
+            }
+
+            var results = await _municipalityRepository.SearchMunicipalitiesAsync(searchTerm);
+            var dto = _mapper.Map<IEnumerable<MunicipalityNameDto>>(results);
+            return Ok(dto);
         }
 
     }

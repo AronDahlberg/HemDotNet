@@ -4,22 +4,23 @@ Author: Allan
 
 -->
 
-@inject HttpClient Http
+@* @inject HttpClient Http*@
+@inject IMunicipalityService municipalityService
 @using System.Timers
 
 <style>
 
     .list-group-item:hover {
-        background-color: #f1f1f1;
-        cursor: pointer;
+    background-color: #f1f1f1;
+    cursor: pointer;
     }
 
     .position-absolute {
-        position: absolute;
-        background-color: white;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    position: absolute;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
     }
 
     /*
@@ -45,11 +46,11 @@ Author: Allan
                 <div class="mb-3">
                     <label for="areaInput" class="form-label">Område</label>
                     <input type="text"
-                           class="form-control"
-                           id="areaInput"
-                           placeholder="Write municipality or address"
-                           value="@searchTerm"
-                           @oninput="OnSearchTermChanged" />
+                    class="form-control"
+                    id="areaInput"
+                    placeholder="Ange ort eller kommun"
+                    value="@searchTerm"
+                    @oninput="OnSearchTermChanged" />
                     @if (suggestions.Any())
                     {
                         <ul class="list-group mt-2 position-absolute w-100" style="max-height: 300px; overflow-y: auto; z-index: 100;">
@@ -69,8 +70,8 @@ Author: Allan
                         @foreach (var type in propertyTypes)
                         {
                             <button type="button"
-                                    class="btn btn-outline-primary @((searchModel.SelectedTypes.Contains(type) ? "active" : ""))"
-                                    @onclick="() => ToggleType(type)">
+                            class="btn btn-outline-primary @((searchModel.SelectedTypes.Contains(type) ? "active" : ""))"
+                            @onclick="() => ToggleType(type)">
                                 @type
                             </button>
                         }
@@ -127,7 +128,7 @@ Author: Allan
                 <h1 class="display-5 fw-bold text-body-emphasis lh-1 mb-3">Hitta din drömbostad hos oss, <b class="text-primary">gratis.</b></h1>
                 <p class="lead">Vi hjälper dig att hitta den perfekta bostaden som passar både dina behov och din budget. Utforska vårt breda utbud och hitta något som passar just dig.</p>
                 <div class="d-grid gap-4">
-                    <button type="button" class="btn btn-primary btn-lg px-4">Börja söka</button>
+                    <button type="button" class="btn btn-primary btn-lg px-4">Alla bostäder</button>
                     <button type="button" class="btn btn-outline-secondary btn-lg px-4">Läs mer</button>
                 </div>
             </div>
@@ -144,11 +145,14 @@ Author: Allan
 
 
 @code {
+
+    // Author: Allan
+
     private string searchTerm;
     private List<string> suggestions = new();
     private Timer debounceTimer;
 
-
+    // Allan
     protected override void OnInitialized()
     {
         debounceTimer = new Timer(400); // 400ms delay
@@ -156,59 +160,52 @@ Author: Allan
         debounceTimer.AutoReset = false;
     }
 
-
+    // Allan
     private void OnInputChanged()
     {
         debounceTimer.Stop();
         debounceTimer.Start();
     }
 
-
+    // Allan
     private async Task PerformSearch()
     {
-        List<string> municipalities = new List<string>() { "Stockholm", "Umeå", "Örebro", "Sundsvall", "Lund", "Övik", "Östersund", "Östhammar" };
         if (string.IsNullOrWhiteSpace(searchTerm))
         {
             suggestions.Clear();
         }
         else
         {
-            /*
-            var results = await Http.GetFromJsonAsync<List<string>>($"Municipality/search?query={searchTerm}");
-            suggestions = results ?? new List<string>();
-            */
-            var results = municipalities
-                .Where(m => m.StartsWith(searchTerm, StringComparison.OrdinalIgnoreCase))
-                .OrderBy(m => m)
-                .Take(10)
-                .ToList();
+            var response = await municipalityService.MunicipalitiesSearch(searchTerm);
 
-            // Debug output
-            Console.WriteLine($"Search term: {searchTerm}, Results count: {results.Count}");
-            foreach (var result in results)
+            if (response != null && response.Data != null)
             {
-                Console.WriteLine($"Result: {result}");
+                suggestions = response.Data
+                    .Select(m => m.Name)
+                    .ToList();
             }
-
-            suggestions = results;
+            else
+            {
+                suggestions = new List<string>();
+            }
         }
         await InvokeAsync(StateHasChanged);
     }
 
-
+    // Allan
     private void SelectSuggestion(string selected)
     {
         searchTerm = selected;
         suggestions.Clear();
     }
-
+    // Allan
     private async Task OnSearchTermChanged(ChangeEventArgs e)
     {
         searchTerm = e.Value?.ToString();
         OnInputChanged();
     }
 
-
+    // Allan
     private string HighlightSubstring(string input, string search)
     {
         if (string.IsNullOrEmpty(search))
@@ -222,7 +219,7 @@ Author: Allan
                "<strong>" + input.Substring(index, search.Length) + "</strong>" +
                input.Substring(index + search.Length);
     }
-
+    // Allan
     private MarkupString DisplayMatchedText(string suggestion)
     {
         var highlightedText = HighlightSubstring(suggestion, searchTerm);
@@ -230,11 +227,7 @@ Author: Allan
     }
 
 
-
-
-
-
-
+    
     private SearchModel searchModel = new();
 
     private List<string> propertyTypes = new()
@@ -242,6 +235,7 @@ Author: Allan
         "Alla typer", "Villa", "Lägenhet", "Fritidshus", "Radhus"
     };
 
+    // Allan
     private void ToggleType(string type)
     {
         if (searchModel.SelectedTypes.Contains(type))
@@ -249,7 +243,7 @@ Author: Allan
         else
             searchModel.SelectedTypes.Add(type);
     }
-
+    // Allan
     private void Search()
     {
         Console.WriteLine($"Searching for: {searchModel.Area}");
