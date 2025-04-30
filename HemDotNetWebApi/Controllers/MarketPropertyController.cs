@@ -147,7 +147,7 @@ namespace HemDotNetWebApi.Controllers
             var properties = await _marketPropertyRepository.SearchMarketPropertiesAsync(searchDto);
 
             if (!properties.Any())
-                return NotFound("No properties matched your search criteria.");
+                return NotFound("No properties matched the search.");
 
             var dtoList = _mapper.Map<List<PartialMarketPropertyDTO>>(properties);
             return Ok(dtoList);
