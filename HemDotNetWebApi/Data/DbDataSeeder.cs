@@ -354,7 +354,7 @@ namespace HemDotNetWebApi.Data
                     AncillaryArea = 11.0,
                     LotArea = 43.0,
                     PropertyAddress = "Drottningatan 6",
-                    Description = "Mysig liten lägenhet utan mögel på väggarna.",
+                    Description = "Mysig liten lägenhet mitt i stan.",
                     AmountOfRooms = 1,
                     MonthlyFee = 4100,
                     YearlyMaintenanceCost = 10100,
