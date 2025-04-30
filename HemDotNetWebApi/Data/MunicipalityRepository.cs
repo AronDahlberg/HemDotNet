@@ -26,7 +26,8 @@ namespace HemDotNetWebApi.Data
         public async Task<IEnumerable<Municipality>> SearchMunicipalitiesAsync(string searchTerm)
         {
             return await _context.Municipalities
-                .Where(m => m.MunicipalityName.StartsWith(searchTerm))
+                //.Where(m => m.MunicipalityName.StartsWith(searchTerm))
+                .Where(m => EF.Functions.Like(m.MunicipalityName, searchTerm + "%")) // Case insensitive
                 .OrderBy(m => m.MunicipalityName)
                 .Take(10)
                 .ToListAsync();
