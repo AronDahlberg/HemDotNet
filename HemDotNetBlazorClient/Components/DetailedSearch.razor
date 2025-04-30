@@ -148,7 +148,7 @@ Author: Allan
     // Allan
     protected override void OnInitialized()
     {
-        debounceTimer = new Timer(400); // 400ms delay
+        debounceTimer = new Timer(100); // 400ms delay
         debounceTimer.Elapsed += async (s, e) => await InvokeAsync(PerformSearch);
         debounceTimer.AutoReset = false;
     }
@@ -276,6 +276,10 @@ Author: Allan
         {
             //var response = await Http.PostAsJsonAsync("api/MarketProperty/search", searchDto);
             var response = await marketPropertyService.SearchMarketProperties(searchDto);
+            Console.WriteLine(System.Text.Json.JsonSerializer.Serialize(response.Data, new System.Text.Json.JsonSerializerOptions
+                {
+                    WriteIndented = true
+                }));
             /*
             if (response.IsSuccessStatusCode)
             {
