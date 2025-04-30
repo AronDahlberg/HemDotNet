@@ -328,6 +328,44 @@ namespace HemDotNetWebApi.Data
 
                 new MarketProperty
                 {
+                    Municipality = stockholm,
+                    Category = PropertyCategory.CondominiumApartment,
+                    Price = 1400000,
+                    LivingArea = 38.0,
+                    AncillaryArea = 12.0,
+                    LotArea = 38.0,
+                    PropertyAddress = "Drottningatan 5",
+                    Description = "Mysig liten lägenhet utan mögel på väggarna.",
+                    AmountOfRooms = 1,
+                    MonthlyFee = 4000,
+                    YearlyMaintenanceCost = 10000,
+                    ContructionYear = 2003,
+                    RealEstateAgent = agent6,
+                    IsActive = true,
+                    IsSold = false,
+                },
+
+                new MarketProperty
+                {
+                    Municipality = stockholm,
+                    Category = PropertyCategory.CondominiumApartment,
+                    Price = 1500000,
+                    LivingArea = 43.0,
+                    AncillaryArea = 11.0,
+                    LotArea = 43.0,
+                    PropertyAddress = "Drottningatan 6",
+                    Description = "Mysig liten lägenhet utan mögel på väggarna.",
+                    AmountOfRooms = 1,
+                    MonthlyFee = 4100,
+                    YearlyMaintenanceCost = 10100,
+                    ContructionYear = 2003,
+                    RealEstateAgent = agent6,
+                    IsActive = true,
+                    IsSold = true,
+                },
+
+                new MarketProperty
+                {
                     Municipality = goteborg,
                     Category = PropertyCategory.CondominiumApartment,
                     Price = 2850000,
