@@ -148,7 +148,7 @@ Author: Allan
     // Allan
     protected override void OnInitialized()
     {
-        debounceTimer = new Timer(100); // 400ms delay
+        debounceTimer = new Timer(100);
         debounceTimer.Elapsed += async (s, e) => await InvokeAsync(PerformSearch);
         debounceTimer.AutoReset = false;
     }
@@ -301,7 +301,6 @@ Author: Allan
     public class SearchModel
     {
         public string Area { get; set; } = "";
-        public string ExpandArea { get; set; } = "0";
         public HashSet<PropertyCategory> SelectedTypes { get; set; } = new();
         public bool ShowAllTypes { get; set; } = true;
         public string MinRooms { get; set; } = "";
