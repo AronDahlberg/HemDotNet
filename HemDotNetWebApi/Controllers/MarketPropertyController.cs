@@ -51,11 +51,11 @@ namespace HemDotNetWebApi.Controllers
             }
         }
         //Author: Johan Ek
+        //[ProducesResponseType(typeof(List<PartialMarketPropertyDTO>), StatusCodes.Status200OK)]
+        //[ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpGet("MarketProperties/")]
         [Authorize]
-        [ProducesResponseType(typeof(List<PartialMarketPropertyDTO>), StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> GetAllMarketPropertiesPartial()
+        public async Task<ActionResult<IEnumerable<PartialMarketPropertyDTO>>> GetAllMarketPropertiesPartial()
         {
             var partialMarketPropertiesDTO = await _marketPropertyRepository.GetAllMarketPropertiesPartial();
             if (partialMarketPropertiesDTO == null || !partialMarketPropertiesDTO.Any())
