@@ -37,5 +37,29 @@ namespace HemDotNetBlazorClient.Services
 
             return response;
         }
+
+        // Author: Allan
+        public async Task<Response<List<PartialMarketPropertyDTO>>> SearchMarketProperties(MarketPropertySearchDto searchDto)
+        {
+            Response<List<PartialMarketPropertyDTO>> response;
+
+            try
+            {
+                //await GetBearerToken();
+
+                var data = await _client.SearchPOSTAsync(searchDto)
+                response = new Response<List<PartialMarketPropertyDTO>>
+                {
+                    Data = data.ToList(),
+                    Success = true
+                };
+            }
+            catch (ApiException ex)
+            {
+                response = ConvertApiExceptions<List<PartialMarketPropertyDTO>>(ex);
+            }
+
+            return response;
+        }
     }
 }
