@@ -141,7 +141,7 @@ namespace HemDotNetWebApi.Controllers
         }
 
         // Allan
-        [HttpPost("search")]
+        [HttpPost("filter")]
         public async Task<ActionResult<List<PartialMarketPropertyDTO>>> SearchProperties([FromBody] MarketPropertySearchDto searchDto)
         {
             var properties = await _marketPropertyRepository.SearchMarketPropertiesAsync(searchDto);

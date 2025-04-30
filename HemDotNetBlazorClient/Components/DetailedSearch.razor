@@ -167,6 +167,8 @@ Author: Allan
         debounceTimer.Start();
     }
 
+
+
     // Allan
     private async Task PerformSearch()
     {
@@ -244,9 +246,36 @@ Author: Allan
             searchModel.SelectedTypes.Add(type);
     }
     // Allan
-    private void Search()
+    private async Task Search()
     {
-        Console.WriteLine($"Searching for: {searchModel.Area}");
+        var searchDto = new MarketPropertySearchDto
+            {
+                Area = searchTerm,
+                SelectedTypes = searchModel.SelectedTypes, // must be List<PropertyCategory>
+                MinRooms = searchModel.MinRooms,
+                MinArea = searchModel.MinArea,
+                MaxPrice = searchModel.MaxPrice,
+                NewProduction = searchModel.NewProduction
+            };
+
+        try
+        {
+            var response = await Http.PostAsJsonAsync("api/MarketProperty/search", searchDto);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var properties = await response.Content.ReadFromJsonAsync<List<MarketProperty>>();
+                // Do something with 'properties', for example, display the search results
+            }
+            else
+            {
+                // Handle error or show "No properties found"
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error fetching properties: {ex.Message}");
+        }
     }
 
     public class SearchModel

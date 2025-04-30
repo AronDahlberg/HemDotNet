@@ -47,7 +47,7 @@ namespace HemDotNetBlazorClient.Services
             {
                 //await GetBearerToken();
 
-                var data = await _client.SearchPOSTAsync(searchDto)
+                var data = await _client.SearchPOSTAsync(searchDto);
                 response = new Response<List<PartialMarketPropertyDTO>>
                 {
                     Data = data.ToList(),
