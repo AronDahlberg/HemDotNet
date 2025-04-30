@@ -108,12 +108,12 @@ namespace HemDotNetBlazorClient.Services.Base
 
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task<System.Collections.Generic.ICollection<PartialMarketPropertyDTO>> SearchPOSTAsync(MarketPropertySearchDto body);
+        System.Threading.Tasks.Task<System.Collections.Generic.ICollection<PartialMarketPropertyDTO>> FilterAsync(MarketPropertySearchDto body);
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task<System.Collections.Generic.ICollection<PartialMarketPropertyDTO>> SearchPOSTAsync(MarketPropertySearchDto body, System.Threading.CancellationToken cancellationToken);
+        System.Threading.Tasks.Task<System.Collections.Generic.ICollection<PartialMarketPropertyDTO>> FilterAsync(MarketPropertySearchDto body, System.Threading.CancellationToken cancellationToken);
 
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
@@ -126,12 +126,12 @@ namespace HemDotNetBlazorClient.Services.Base
 
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task<System.Collections.Generic.ICollection<MunicipalityNameDto>> SearchGETAsync(string searchTerm);
+        System.Threading.Tasks.Task<System.Collections.Generic.ICollection<MunicipalityNameDto>> SearchAsync(string searchTerm);
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task<System.Collections.Generic.ICollection<MunicipalityNameDto>> SearchGETAsync(string searchTerm, System.Threading.CancellationToken cancellationToken);
+        System.Threading.Tasks.Task<System.Collections.Generic.ICollection<MunicipalityNameDto>> SearchAsync(string searchTerm, System.Threading.CancellationToken cancellationToken);
 
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
@@ -944,15 +944,15 @@ namespace HemDotNetBlazorClient.Services.Base
 
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual System.Threading.Tasks.Task<System.Collections.Generic.ICollection<PartialMarketPropertyDTO>> SearchPOSTAsync(MarketPropertySearchDto body)
+        public virtual System.Threading.Tasks.Task<System.Collections.Generic.ICollection<PartialMarketPropertyDTO>> FilterAsync(MarketPropertySearchDto body)
         {
-            return SearchPOSTAsync(body, System.Threading.CancellationToken.None);
+            return FilterAsync(body, System.Threading.CancellationToken.None);
         }
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<System.Collections.Generic.ICollection<PartialMarketPropertyDTO>> SearchPOSTAsync(MarketPropertySearchDto body, System.Threading.CancellationToken cancellationToken)
+        public virtual async System.Threading.Tasks.Task<System.Collections.Generic.ICollection<PartialMarketPropertyDTO>> FilterAsync(MarketPropertySearchDto body, System.Threading.CancellationToken cancellationToken)
         {
             var client_ = _httpClient;
             var disposeClient_ = false;
@@ -969,8 +969,8 @@ namespace HemDotNetBlazorClient.Services.Base
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
-                    // Operation Path: "MarketProperty/search"
-                    urlBuilder_.Append("MarketProperty/search");
+                    // Operation Path: "MarketProperty/filter"
+                    urlBuilder_.Append("MarketProperty/filter");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -1104,15 +1104,15 @@ namespace HemDotNetBlazorClient.Services.Base
 
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual System.Threading.Tasks.Task<System.Collections.Generic.ICollection<MunicipalityNameDto>> SearchGETAsync(string searchTerm)
+        public virtual System.Threading.Tasks.Task<System.Collections.Generic.ICollection<MunicipalityNameDto>> SearchAsync(string searchTerm)
         {
-            return SearchGETAsync(searchTerm, System.Threading.CancellationToken.None);
+            return SearchAsync(searchTerm, System.Threading.CancellationToken.None);
         }
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<System.Collections.Generic.ICollection<MunicipalityNameDto>> SearchGETAsync(string searchTerm, System.Threading.CancellationToken cancellationToken)
+        public virtual async System.Threading.Tasks.Task<System.Collections.Generic.ICollection<MunicipalityNameDto>> SearchAsync(string searchTerm, System.Threading.CancellationToken cancellationToken)
         {
             var client_ = _httpClient;
             var disposeClient_ = false;

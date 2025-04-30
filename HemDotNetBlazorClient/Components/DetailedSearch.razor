@@ -4,12 +4,12 @@ Author: Allan
 
 -->
 
-@* @inject HttpClient Http*@
 @inject IMunicipalityService municipalityService
+@inject IMarketPropertyService marketPropertyService
 @using System.Timers
+@using HemDotNetBlazorClient.Services.Base
 
 <style>
-
     .list-group-item:hover {
     background-color: #f1f1f1;
     cursor: pointer;
@@ -34,10 +34,9 @@ Author: Allan
     color: white;
     }
     */
-
 </style>
 
-
+<!--Allan-->
 <div class="hero-section container-fluid col-xxl-8 bg-light text-dark py-5">
     <div class="container bg-white rounded py-5 px-5">
         <div class="row flex-lg-row-reverse align-items-center g-5 py-3">
@@ -67,12 +66,17 @@ Author: Allan
                 <div class="mb-3">
                     <label class="form-label">Typ</label>
                     <div class="btn-group d-flex flex-wrap gap-2" role="group">
-                        @foreach (var type in propertyTypes)
+                        <button type="button"
+                        class="btn btn-outline-primary @(searchModel.ShowAllTypes ? "active" : "")"
+                        @onclick="ToggleAllTypes">
+                            Alla typer
+                        </button>
+                        @foreach (PropertyCategory type in Enum.GetValues(typeof(PropertyCategory)))
                         {
                             <button type="button"
                             class="btn btn-outline-primary @((searchModel.SelectedTypes.Contains(type) ? "active" : ""))"
                             @onclick="() => ToggleType(type)">
-                                @type
+                                @GetPropertyCategoryDisplayName(type)
                             </button>
                         }
                     </div>
@@ -136,18 +140,7 @@ Author: Allan
     </div>
 </div>
 
-
-
-
-
-
-
-
-
 @code {
-
-    // Author: Allan
-
     private string searchTerm;
     private List<string> suggestions = new();
     private Timer debounceTimer;
@@ -166,8 +159,6 @@ Author: Allan
         debounceTimer.Stop();
         debounceTimer.Start();
     }
-
-
 
     // Allan
     private async Task PerformSearch()
@@ -200,12 +191,14 @@ Author: Allan
         searchTerm = selected;
         suggestions.Clear();
     }
+
     // Allan
     private async Task OnSearchTermChanged(ChangeEventArgs e)
     {
         searchTerm = e.Value?.ToString();
         OnInputChanged();
     }
+
 
     // Allan
     private string HighlightSubstring(string input, string search)
@@ -221,6 +214,7 @@ Author: Allan
                "<strong>" + input.Substring(index, search.Length) + "</strong>" +
                input.Substring(index + search.Length);
     }
+
     // Allan
     private MarkupString DisplayMatchedText(string suggestion)
     {
@@ -228,40 +222,61 @@ Author: Allan
         return new MarkupString(highlightedText);
     }
 
-
-    
     private SearchModel searchModel = new();
 
-    private List<string> propertyTypes = new()
+    // Allan
+    private string GetPropertyCategoryDisplayName(PropertyCategory category)
     {
-        "Alla typer", "Villa", "Lägenhet", "Fritidshus", "Radhus"
-    };
+        return category switch
+        {
+            PropertyCategory.Villa => "Villa",
+            PropertyCategory.CondominiumApartment => "Lägenhet",
+            PropertyCategory.CondominiumTownhouse => "Radhus",
+            PropertyCategory.VacationHome => "Fritidshus",
+            _ => category.ToString()
+        };
+    }
 
     // Allan
-    private void ToggleType(string type)
+    private void ToggleAllTypes()
     {
+        searchModel.ShowAllTypes = !searchModel.ShowAllTypes;
+        if (searchModel.ShowAllTypes)
+        {
+            searchModel.SelectedTypes.Clear();
+        }
+    }
+
+
+    // Allan
+    private void ToggleType(PropertyCategory type)
+    {
+        searchModel.ShowAllTypes = false;
+
         if (searchModel.SelectedTypes.Contains(type))
             searchModel.SelectedTypes.Remove(type);
         else
             searchModel.SelectedTypes.Add(type);
     }
+
     // Allan
     private async Task Search()
     {
         var searchDto = new MarketPropertySearchDto
             {
                 Area = searchTerm,
-                SelectedTypes = searchModel.SelectedTypes, // must be List<PropertyCategory>
-                MinRooms = searchModel.MinRooms,
-                MinArea = searchModel.MinArea,
-                MaxPrice = searchModel.MaxPrice,
-                NewProduction = searchModel.NewProduction
+                SelectedTypes = searchModel.ShowAllTypes ? null : searchModel.SelectedTypes,
+                MinRooms = string.IsNullOrEmpty(searchModel.MinRooms) ? null : int.Parse(searchModel.MinRooms),
+                MinArea = string.IsNullOrEmpty(searchModel.MinArea) ? null : double.Parse(searchModel.MinArea),
+                MaxPrice = string.IsNullOrEmpty(searchModel.MaxPrice) ? null : double.Parse(searchModel.MaxPrice),
+                NewProduction = bool.Parse(searchModel.NewProduction)
             };
 
         try
         {
-            var response = await Http.PostAsJsonAsync("api/MarketProperty/search", searchDto);
-
+            //var response = await Http.PostAsJsonAsync("api/MarketProperty/search", searchDto);
+            var response = await marketPropertyService.SearchMarketProperties(searchDto);
+            /*
             if (response.IsSuccessStatusCode)
             {
                 var properties = await response.Content.ReadFromJsonAsync<List<MarketProperty>>();
@@ -271,6 +286,7 @@ Author: Allan
             {
                 // Handle error or show "No properties found"
             }
+            */
         }
         catch (Exception ex)
         {
@@ -282,12 +298,23 @@ Author: Allan
     {
         public string Area { get; set; } = "";
         public string ExpandArea { get; set; } = "0";
-        public List<string> SelectedTypes { get; set; } = new() { "Alla typer" };
-        public string MinRooms { get; set; }
-        public string MinArea { get; set; }
-        public string MaxPrice { get; set; }
+        public HashSet<PropertyCategory> SelectedTypes { get; set; } = new();
+        public bool ShowAllTypes { get; set; } = true;
+        public string MinRooms { get; set; } = "";
+        public string MinArea { get; set; } = "";
+        public string MaxPrice { get; set; } = "";
         public string NewProduction { get; set; } = "true";
-        public string Keywords { get; set; }
+        public string Keywords { get; set; } = "";
     }
+    /*
+    public class MarketPropertySearchDto
+    {
+        public string Area { get; set; }
+        public ICollection<PropertyCategory> SelectedTypes { get; set; }
+        public int? MinRooms { get; set; }
+        public double? MinArea { get; set; }
+        public double? MaxPrice { get; set; }
+        public bool NewProduction { get; set; }
+    }
+    */
 }
-
