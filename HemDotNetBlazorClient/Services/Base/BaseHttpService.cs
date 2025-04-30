@@ -30,13 +30,17 @@ namespace HemDotNetBlazorClient.Services.Base
             return new Response<Guid>() { Message = "Something went  wrong, please try again...", Success = false };
         }
 
+        // Allan
         protected async Task GetBearerToken()
         {
+            /*
             var token = await localStorage.GetItemAsync<string>("accessToken");
             if (token != null)
             {
                 client.HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", token);
-            }
+            }*/
+            var token = await localStorage.GetItemAsync<string>("accessToken");
+            client.HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
         }
     }
 }

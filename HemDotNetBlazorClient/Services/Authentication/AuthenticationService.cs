@@ -19,11 +19,22 @@ namespace HemDotNetBlazorClient.Services.Authentication
             this.authenticationStateProvider = authenticationStateProvider;
         }
 
+        // Co-Author:Allan
         public async Task<bool> AuthenticateAsync(LoginUserDto loginModel)
         {
-            var response = await httpClient.LoginAsync(loginModel);
+            AuthResponse response;
+            try
+            {
+                response = await httpClient.LoginAsync(loginModel);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Login failed: {ex.Message}");
+                throw;
+            }
 
             // Store token
+
             await localStorage.SetItemAsync("accessToken", response.Token);
 
             // Change auth state of app, we need to make sure it's our ApiAuth provider beeing used.
