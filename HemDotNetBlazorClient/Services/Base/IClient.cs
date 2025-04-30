@@ -4,5 +4,6 @@
     {
         //Coder: Johan, Participants: Allan, Chris
         public HttpClient HttpClient { get; }
+
     }
 }
