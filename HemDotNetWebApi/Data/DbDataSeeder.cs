@@ -475,7 +475,7 @@ namespace HemDotNetWebApi.Data
                 var images = properties.Select(property => new PropertyImage
                 {
                     MarketPropertyId = property.MarketPropertyId,
-                    PropertyImageUrl = "images/BasePropertyImage.jpg"
+                    PropertyImageUrl = "Images/BasePropertyImage.jpg"
                 }).ToList();
 
                 context.PropertyImages.AddRange(images);

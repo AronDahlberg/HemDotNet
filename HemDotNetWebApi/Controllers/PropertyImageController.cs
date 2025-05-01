@@ -40,7 +40,6 @@ namespace HemDotNetWebApi.Controllers
         // Allan
         [HttpPost]
         [Consumes("multipart/form-data")]
-        [Authorize]
 
         public async Task<ActionResult<PropertyImageDto>> AddPropertyImage([FromForm] AddPropertyImageDto dto, IFormFile imageFile)
         {

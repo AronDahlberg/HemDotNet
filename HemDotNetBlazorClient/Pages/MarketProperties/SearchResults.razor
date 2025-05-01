@@ -1,6 +1,10 @@
 ﻿@page "/SearchResults"
 @inject IMarketPropertyService marketPropertyService
 @inject NavigationManager NavigationManager
+@inject IConfiguration Configuration
+@inject HttpClient httpClient
+
+
 
 <h1>Search Results</h1>
 <p>Showing results for: @searchModel.Area</p>
@@ -23,6 +27,7 @@ else
                     @if (property.Images?.Any() == true)
                     {
                         <img src="@property.Images.First().PropertyImageUrl" class="card-img-top" alt="Property image" />
+                        <img src="@($"{httpClient.BaseAddress}{property.Images.First().PropertyImageUrl}")" />
                     }
                     <div class="card-body">
                         <h5 class="card-title">@property.PropertyAddress</h5>
