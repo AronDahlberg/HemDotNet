@@ -1,5 +1,36 @@
 ﻿@page "/"
+@inject NavigationManager navigationManager
 
-<PageTitle>Home</PageTitle>
+<!--
 
-<DetailedSearch></DetailedSearch>
+Author: Allan
+
+-->
+
+<div class="hero-section container-fluid col-xxl-8 bg-light text-dark py-5">
+    <div class="container bg-white rounded py-5 px-5">
+        <div class="row flex-lg-row-reverse align-items-center g-5 py-3">
+            <div class="col-12 col-sm-8 col-lg-6">
+                <PropertySearchComponent SearchModel="searchModel" OnSearch="HandleSearch" />
+            </div>
+
+            <div class="col-lg-6">
+                <h1 class="display-5 fw-bold text-body-emphasis lh-1 mb-3">Hitta din drömbostad hos oss, <b class="text-primary">gratis.</b></h1>
+                <p class="lead">Vi hjälper dig att hitta den perfekta bostaden som passar både dina behov och din budget. Utforska vårt breda utbud och hitta något som passar just dig.</p>
+                <div class="d-grid gap-4">
+                    <button type="button" class="btn btn-primary btn-lg px-4">Alla bostäder</button>
+                    <button type="button" class="btn btn-outline-secondary btn-lg px-4">Läs mer</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private SearchModel searchModel = new();
+
+    private void HandleSearch(SearchModel model)
+    {
+        navigationManager.NavigateTo($"/SearchResults{model.ToQueryString()}");
+    }
+}

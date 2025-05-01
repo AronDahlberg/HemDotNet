@@ -2,6 +2,7 @@
 
 namespace HemDotNetBlazorClient.Data
 {
+    // Allan
     public class SearchModel
     {
         public string Area { get; set; } = "";

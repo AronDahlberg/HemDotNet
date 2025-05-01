@@ -1,0 +1,252 @@
+﻿@inject IMunicipalityService municipalityService
+@inject NavigationManager navigationManager
+@using System.Timers
+
+@*Author: Allan*@
+
+<style>
+    .list-group-item:hover {
+        background-color: #f1f1f1;
+        cursor: pointer;
+    }
+
+    .position-absolute {
+        position: absolute;
+        background-color: white;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    }
+</style>
+
+<!--Allan-->
+<div class="border rounded py-3 px-3 shadow">
+    <h4 class="mb-4">Sök bostäder</h4>
+    <div class="mb-3">
+        <label for="areaInput" class="form-label">Område</label>
+        <input type="text"
+               class="form-control"
+               id="areaInput"
+               placeholder="Ange ort eller kommun"
+               value="@searchTerm"
+               @oninput="OnSearchTermChanged" />
+        @if (suggestions.Any())
+        {
+            <ul class="list-group mt-2 position-absolute w-100" style="max-height: 300px; overflow-y: auto; z-index: 100;">
+                @foreach (var suggestion in suggestions)
+                {
+                    <li class="list-group-item" @onclick="() => SelectSuggestion(suggestion)">
+                        @DisplayMatchedText(suggestion)
+                    </li>
+                }
+            </ul>
+        }
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Typ</label>
+        <div class="btn-group d-flex flex-wrap gap-2" role="group">
+            <button type="button"
+                    class="btn btn-outline-primary @(SearchModel.ShowAllTypes ? "active" : "")"
+                    @onclick="ToggleAllTypes">
+                Alla typer
+            </button>
+            @foreach (PropertyCategory type in Enum.GetValues(typeof(PropertyCategory)))
+            {
+                <button type="button"
+                        class="btn btn-outline-primary @((SearchModel.SelectedTypes.Contains(type) ? "active" : ""))"
+                        @onclick="() => ToggleType(type)">
+                    @GetPropertyCategoryDisplayName(type)
+                </button>
+            }
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-md-4">
+            <label class="form-label">Minst antal rum</label>
+            <select class="form-select shadow-sm border-primary rounded-3 fw-semibold text-dark w-100" @bind="SearchModel.MinRooms">
+                <option value="">Alla</option>
+                @for (int i = 1; i <= 6; i++)
+                {
+                    <option value="@i">@i+</option>
+                }
+            </select>
+        </div>
+        <div class="col-md-4">
+            <label class="form-label">Minsta boarea</label>
+            <select class="form-select shadow-sm border-primary rounded-3 fw-semibold text-dark w-100" @bind="SearchModel.MinArea">
+                <option value="">Alla</option>
+                @for (int i = 20; i <= 200; i += 20)
+                {
+                    <option value="@i">@i m²</option>
+                }
+            </select>
+        </div>
+        <div class="col-md-4">
+            <label class="form-label">Högst pris</label>
+            <select class="form-select shadow-sm border-primary rounded-3 fw-semibold text-dark w-100" @bind="SearchModel.MaxPrice">
+                <option value="">Inget</option>
+                @foreach (var price in new[] { 1000000, 2000000, 3000000, 5000000 })
+                {
+                    <option value="@price">@($"{price:N0} kr")</option>
+                }
+            </select>
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-md-12">
+            <label class="form-label">Nyproduktion</label>
+            <select class="form-select shadow-sm border-primary rounded-3 fw-semibold text-dark w-100" @bind="SearchModel.NewProduction">
+                <option value="true">Visa endast nyproduktion</option>
+                <option value="false">Visa allt</option>
+            </select>
+        </div>
+    </div>
+
+    <button class="btn btn-primary w-100" @onclick="Search">Hitta bostäder till salu</button>
+</div>
+
+@code {
+    // Author: Allan
+
+    [Parameter]
+    public SearchModel SearchModel { get; set; } = new SearchModel();
+
+    [Parameter]
+    public EventCallback<SearchModel> OnSearch { get; set; }
+
+    private string searchTerm;
+    private List<string> suggestions = new();
+    private Timer debounceTimer;
+
+    // Allan
+    protected override void OnInitialized()
+    {
+        debounceTimer = new Timer(100);
+        debounceTimer.Elapsed += async (s, e) => await InvokeAsync(PerformSearch);
+        debounceTimer.AutoReset = false;
+
+        // By default, we don't want only nyproduktion
+        SearchModel.NewProduction = "false";
+    }
+
+    // Allan
+    private void OnInputChanged()
+    {
+        debounceTimer.Stop();
+        debounceTimer.Start();
+    }
+
+    // Allan
+    private async Task PerformSearch()
+    {
+        if (string.IsNullOrWhiteSpace(searchTerm))
+        {
+            suggestions.Clear();
+        }
+        else
+        {
+            var response = await municipalityService.MunicipalitiesSearch(searchTerm);
+
+            if (response != null && response.Data != null)
+            {
+                suggestions = response.Data
+                    .Select(m => m.Name)
+                    .ToList();
+            }
+            else
+            {
+                suggestions = new List<string>();
+            }
+        }
+        await InvokeAsync(StateHasChanged);
+    }
+
+    // Allan
+    private void SelectSuggestion(string selected)
+    {
+        searchTerm = selected;
+        suggestions.Clear();
+    }
+
+    // Allan
+    private async Task OnSearchTermChanged(ChangeEventArgs e)
+    {
+        searchTerm = e.Value?.ToString();
+        OnInputChanged();
+    }
+
+    // Allan
+    private string HighlightSubstring(string input, string search)
+    {
+        if (string.IsNullOrEmpty(search))
+            return input;
+
+        var index = input.IndexOf(search, StringComparison.OrdinalIgnoreCase);
+        if (index == -1)
+            return input;
+
+        return input.Substring(0, index) +
+               "<strong>" + input.Substring(index, search.Length) + "</strong>" +
+               input.Substring(index + search.Length);
+    }
+
+    // Allan
+    private MarkupString DisplayMatchedText(string suggestion)
+    {
+        var highlightedText = HighlightSubstring(suggestion, searchTerm);
+        return new MarkupString(highlightedText);
+    }
+
+    // Allan
+    private string GetPropertyCategoryDisplayName(PropertyCategory category)
+    {
+        return category switch
+        {
+            PropertyCategory.Villa => "Villa",
+            PropertyCategory.CondominiumApartment => "Lägenhet",
+            PropertyCategory.CondominiumTownhouse => "Radhus",
+            PropertyCategory.VacationHome => "Fritidshus",
+            _ => category.ToString()
+        };
+    }
+
+    // Allan
+    private void ToggleAllTypes()
+    {
+        SearchModel.ShowAllTypes = !SearchModel.ShowAllTypes;
+        if (SearchModel.ShowAllTypes)
+        {
+            SearchModel.SelectedTypes.Clear();
+        }
+    }
+
+    // Allan
+    private void ToggleType(PropertyCategory type)
+    {
+        SearchModel.ShowAllTypes = false;
+
+        if (SearchModel.SelectedTypes.Contains(type))
+            SearchModel.SelectedTypes.Remove(type);
+        else
+            SearchModel.SelectedTypes.Add(type);
+    }
+
+    // Allan
+    private async Task Search()
+    {
+        SearchModel.Area = searchTerm;
+
+        if (OnSearch.HasDelegate)
+        {
+            await OnSearch.InvokeAsync(SearchModel);
+        }
+        else
+        {
+            // Default navigation if no custom handler is provided
+            navigationManager.NavigateTo($"/SearchResults{SearchModel.ToQueryString()}");
+        }
+    }
+}
