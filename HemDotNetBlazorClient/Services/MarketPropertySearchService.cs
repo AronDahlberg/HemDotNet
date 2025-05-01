@@ -1,8 +1,8 @@
-﻿using static HemDotNetBlazorClient.Components.DetailedSearch;
-using System.Collections.Specialized;
+﻿using System.Collections.Specialized;
 using System.Web;
 using System.Text.Json;
 using HemDotNetBlazorClient.Services.Base;
+using HemDotNetBlazorClient.Data;
 
 namespace HemDotNetBlazorClient.Services
 {
@@ -11,6 +11,7 @@ namespace HemDotNetBlazorClient.Services
         public static string ToQueryString(this SearchModel model)
         {
             var queryParams = new NameValueCollection();
+
 
             if (!string.IsNullOrEmpty(model.Area))
                 queryParams.Add("area", model.Area);

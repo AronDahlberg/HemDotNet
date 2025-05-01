@@ -1,0 +1,68 @@
+﻿@page "/SearchResults"
+@inject IMarketPropertyService marketPropertyService
+@inject NavigationManager NavigationManager
+
+<h1>Search Results</h1>
+<p>Showing results for: @searchModel.Area</p>
+
+@if (searchResults is null)
+{
+    <p>Loading results...</p>
+}
+else if (!searchResults.Any())
+{
+    <p>No properties found for your search criteria.</p>
+}
+else
+{
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+        @foreach (var property in searchResults)
+        {
+            <div class="col">
+                <div class="card h-100">
+                    @if (property.Images?.Any() == true)
+                    {
+                        <img src="@property.Images.First().PropertyImageUrl" class="card-img-top" alt="Property image" />
+                    }
+                    <div class="card-body">
+                        <h5 class="card-title">@property.PropertyAddress</h5>
+                        <p class="card-text">
+                            <strong>Municipality:</strong> @property.MunicipalityName<br />
+                            <strong>Price:</strong> @property.Price.ToString("C")<br />
+                            <strong>Category:</strong> @property.Category
+                        </p>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
+
+@code {
+    private SearchModel searchModel = new();
+    private List<PartialMarketPropertyDTO> searchResults;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var uri = NavigationManager.ToAbsoluteUri(NavigationManager.Uri);
+        searchModel = MarketPropertySearchService.ParseQueryString(uri.Query);
+
+        var searchDto = new MarketPropertySearchDto
+            {
+                Area = searchModel.Area,
+                SelectedTypes = searchModel.ShowAllTypes ? null : searchModel.SelectedTypes,
+                MinRooms = string.IsNullOrEmpty(searchModel.MinRooms) ? null : int.Parse(searchModel.MinRooms),
+                MinArea = string.IsNullOrEmpty(searchModel.MinArea) ? null : double.Parse(searchModel.MinArea),
+                MaxPrice = string.IsNullOrEmpty(searchModel.MaxPrice) ? null : double.Parse(searchModel.MaxPrice),
+                NewProduction = bool.Parse(searchModel.NewProduction)
+            };
+
+        var response = await marketPropertyService.SearchMarketProperties(searchDto);
+
+        if (response.Success)
+        {
+            searchResults = response.Data;
+        }
+    }
+}
+

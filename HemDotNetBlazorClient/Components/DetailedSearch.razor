@@ -6,8 +6,8 @@ Author: Allan
 
 @inject IMunicipalityService municipalityService
 @inject IMarketPropertyService marketPropertyService
+@inject NavigationManager navigationManager
 @using System.Timers
-@using HemDotNetBlazorClient.Services.Base
 
 <style>
     .list-group-item:hover {
@@ -280,6 +280,11 @@ Author: Allan
                 {
                     WriteIndented = true
                 }));
+
+            searchModel.Area = searchTerm;
+
+            navigationManager.NavigateTo($"/SearchResults{searchModel.ToQueryString()}");
+            
             /*
             if (response.IsSuccessStatusCode)
             {
@@ -297,26 +302,4 @@ Author: Allan
             Console.WriteLine($"Error fetching properties: {ex.Message}");
         }
     }
-
-    public class SearchModel
-    {
-        public string Area { get; set; } = "";
-        public HashSet<PropertyCategory> SelectedTypes { get; set; } = new();
-        public bool ShowAllTypes { get; set; } = true;
-        public string MinRooms { get; set; } = "";
-        public string MinArea { get; set; } = "";
-        public string MaxPrice { get; set; } = "";
-        public string NewProduction { get; set; } = "true";
-    }
-    /*
-    public class MarketPropertySearchDto
-    {
-        public string Area { get; set; }
-        public ICollection<PropertyCategory> SelectedTypes { get; set; }
-        public int? MinRooms { get; set; }
-        public double? MinArea { get; set; }
-        public double? MaxPrice { get; set; }
-        public bool NewProduction { get; set; }
-    }
-    */
 }
