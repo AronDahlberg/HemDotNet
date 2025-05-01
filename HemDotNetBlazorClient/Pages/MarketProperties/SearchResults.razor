@@ -4,42 +4,47 @@
 @inject IConfiguration Configuration
 @inject HttpClient httpClient
 
+<style>
+    .image-container {
+        aspect-ratio: 5 / 3;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        position: relative;
+    }
 
-
-<h1>Search Results</h1>
-<p>Showing results for: @searchModel.Area</p>
+        .image-container img {
+            object-fit: cover;
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+</style>
 
 @if (searchResults is null)
 {
-    <p>Loading results...</p>
+    <p>Laddar...</p>
 }
 else if (!searchResults.Any())
 {
-    <p>No properties found for your search criteria.</p>
+    <p>Inga bostäder matchar ditt sök</p>
 }
 else
 {
-    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
-        @foreach (var property in searchResults)
-        {
-            <div class="col">
-                <div class="card h-100">
-                    @if (property.Images?.Any() == true)
-                    {
-                        <img src="@property.Images.First().PropertyImageUrl" class="card-img-top" alt="Property image" />
-                        <img src="@($"{httpClient.BaseAddress}{property.Images.First().PropertyImageUrl}")" />
-                    }
-                    <div class="card-body">
-                        <h5 class="card-title">@property.PropertyAddress</h5>
-                        <p class="card-text">
-                            <strong>Municipality:</strong> @property.MunicipalityName<br />
-                            <strong>Price:</strong> @property.Price.ToString("C")<br />
-                            <strong>Category:</strong> @property.Category
-                        </p>
-                    </div>
-                </div>
-            </div>
-        }
+    <div class="container pt-5">
+        <h1 class="text-center ">
+            Bostäder till salu @if (!string.IsNullOrEmpty(searchModel.Area))
+            {
+                @($"i {searchModel.Area}")
+            }
+        </h1>
+
+        <div class="d-flex flex-column align-items-center py-5">
+            @foreach (var property in searchResults)
+            {
+                <PropertyCard Property="property" />
+            }
+        </div>
     </div>
 }
 
@@ -70,4 +75,3 @@ else
         }
     }
 }
-
