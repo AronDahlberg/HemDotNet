@@ -4,6 +4,8 @@
 @inject IConfiguration Configuration
 @inject HttpClient httpClient
 
+@*Author: Allan*@
+
 <style>
     .image-container {
         aspect-ratio: 5 / 3;
@@ -52,6 +54,7 @@ else
     private SearchModel searchModel = new();
     private List<PartialMarketPropertyDTO> searchResults;
 
+    // Allan
     protected override async Task OnInitializedAsync()
     {
         var uri = NavigationManager.ToAbsoluteUri(NavigationManager.Uri);

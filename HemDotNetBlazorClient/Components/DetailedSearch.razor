@@ -1,13 +1,13 @@
-﻿<!--
+﻿@inject IMunicipalityService municipalityService
+@inject IMarketPropertyService marketPropertyService
+@inject NavigationManager navigationManager
+@using System.Timers
+
+<!--
 
 Author: Allan
 
 -->
-
-@inject IMunicipalityService municipalityService
-@inject IMarketPropertyService marketPropertyService
-@inject NavigationManager navigationManager
-@using System.Timers
 
 <style>
     .list-group-item:hover {
@@ -23,17 +23,6 @@ Author: Allan
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
     }
 
-    /*
-    .hero-section {
-    background-image: url('pexels-neighborhood.jpg');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    height: 100vh;
-    width: 100%;
-    color: white;
-    }
-    */
 </style>
 
 <!--Allan-->
@@ -119,8 +108,8 @@ Author: Allan
                     <div class="col-md-12">
                         <label class="form-label">Nyproduktion</label>
                         <select class="form-select shadow-sm border-primary rounded-3 fw-semibold text-dark w-100" @bind="searchModel.NewProduction">
-                            <option value="true">Visa nyproduktion</option>
-                            <option value="false">Dölj nyproduktion</option>
+                            <option value="true">Visa endast nyproduktion</option>
+                            <option value="false">Visa allt</option>
                         </select>
                     </div>
                 </div>
@@ -151,6 +140,9 @@ Author: Allan
         debounceTimer = new Timer(100);
         debounceTimer.Elapsed += async (s, e) => await InvokeAsync(PerformSearch);
         debounceTimer.AutoReset = false;
+
+        // By default, we don't want only nyproduktion
+        searchModel.NewProduction = "false";
     }
 
     // Allan
@@ -224,6 +216,8 @@ Author: Allan
 
     private SearchModel searchModel = new();
 
+
+
     // Allan
     private string GetPropertyCategoryDisplayName(PropertyCategory category)
     {
@@ -262,44 +256,11 @@ Author: Allan
     // Allan
     private async Task Search()
     {
-        var searchDto = new MarketPropertySearchDto
-            {
-                Area = searchTerm,
-                SelectedTypes = searchModel.ShowAllTypes ? null : searchModel.SelectedTypes,
-                MinRooms = string.IsNullOrEmpty(searchModel.MinRooms) ? null : int.Parse(searchModel.MinRooms),
-                MinArea = string.IsNullOrEmpty(searchModel.MinArea) ? null : double.Parse(searchModel.MinArea),
-                MaxPrice = string.IsNullOrEmpty(searchModel.MaxPrice) ? null : double.Parse(searchModel.MaxPrice),
-                NewProduction = bool.Parse(searchModel.NewProduction)
-            };
-
-        try
-        {
-            //var response = await Http.PostAsJsonAsync("api/MarketProperty/search", searchDto);
-            var response = await marketPropertyService.SearchMarketProperties(searchDto);
-            Console.WriteLine(System.Text.Json.JsonSerializer.Serialize(response.Data, new System.Text.Json.JsonSerializerOptions
-                {
-                    WriteIndented = true
-                }));
 
             searchModel.Area = searchTerm;
 
             navigationManager.NavigateTo($"/SearchResults{searchModel.ToQueryString()}");
             
-            /*
-            if (response.IsSuccessStatusCode)
-            {
-                var properties = await response.Content.ReadFromJsonAsync<List<MarketProperty>>();
-                // Do something with 'properties', for example, display the search results
-            }
-            else
-            {
-                // Handle error or show "No properties found"
-            }
-            */
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error fetching properties: {ex.Message}");
-        }
+        
     }
 }

@@ -6,8 +6,10 @@ using HemDotNetBlazorClient.Data;
 
 namespace HemDotNetBlazorClient.Services
 {
+    // Author: Allan
     public static class MarketPropertySearchService
     {
+        // Allan
         public static string ToQueryString(this SearchModel model)
         {
             var queryParams = new NameValueCollection();
@@ -51,6 +53,7 @@ namespace HemDotNetBlazorClient.Services
             return queryString.ToString();
         }
 
+        // Allan
         public static SearchModel ParseQueryString(string query)
         {
             var model = new SearchModel();
@@ -78,7 +81,7 @@ namespace HemDotNetBlazorClient.Services
                 }
                 catch
                 {
-                    // Handle deserialization error if needed
+                    //
                 }
             }
 

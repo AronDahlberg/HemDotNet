@@ -168,19 +168,15 @@ namespace HemDotNetWebApi.Data
                 query = query.Where(mp => mp.Price <= searchDto.MaxPrice.Value);
             }
 
-            /*
+
             if (searchDto.NewProduction.HasValue)
             {
                 if (searchDto.NewProduction.Value)
                 {
                     query = query.Where(mp => mp.ContructionYear >= DateTime.UtcNow.Year - 5);
                 }
-                else
-                {
-                    query = query.Where(mp => mp.ContructionYear < DateTime.UtcNow.Year - 5);
-                }
             }
-            */
+           
 
             query = query.Where(mp => mp.IsActive && !mp.IsSold);
 
