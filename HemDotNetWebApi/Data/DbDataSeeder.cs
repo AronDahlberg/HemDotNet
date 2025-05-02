@@ -85,7 +85,7 @@ namespace HemDotNetWebApi.Data
                         EmailConfirmed = true,
                         RealEstateAgentEmail = "admin@hemdotnet.se",
                         RealEstateAgentPhoneNumber = "+46 70 123 45 67",
-                        RealEstateAgentImageUrl = "/Images/RealEstateAgentMan.jpg",
+                        RealEstateAgentImageUrl = "Images/RealEstateAgentMan.jpg",
                         RealEstateAgentAgency = nordhsMaklarbyra
                     },
                     new RealEstateAgent
@@ -102,7 +102,7 @@ namespace HemDotNetWebApi.Data
                         EmailConfirmed = true,
                         RealEstateAgentEmail = "anna@nordichomes.com",
                         RealEstateAgentPhoneNumber = "+46 70 123 45 67",
-                        RealEstateAgentImageUrl = "/Images/RealEstateAgentWoman.jpg",
+                        RealEstateAgentImageUrl = "Images/RealEstateAgentWoman.jpg",
                         RealEstateAgentAgency = nordicHomes
                     },
                     new RealEstateAgent
@@ -119,7 +119,7 @@ namespace HemDotNetWebApi.Data
                         EmailConfirmed = true,
                         RealEstateAgentEmail = "mikael@nordichomes.com",
                         RealEstateAgentPhoneNumber = "+46 70 123 45 67",
-                        RealEstateAgentImageUrl = "/Images/RealEstateAgentMan.jpg",
+                        RealEstateAgentImageUrl = "Images/RealEstateAgentMan.jpg",
                         RealEstateAgentAgency = nordicHomes
                     },
                     new RealEstateAgent
@@ -136,7 +136,7 @@ namespace HemDotNetWebApi.Data
                         EmailConfirmed = true,
                         RealEstateAgentEmail = "maria@nordichomes.com",
                         RealEstateAgentPhoneNumber = "+46 70 123 45 67",
-                        RealEstateAgentImageUrl = "/Images/RealEstateAgentWoman.jpg",
+                        RealEstateAgentImageUrl = "Images/RealEstateAgentWoman.jpg",
                         RealEstateAgentAgency = nordicHomes
                     },
                     new RealEstateAgent
@@ -153,7 +153,7 @@ namespace HemDotNetWebApi.Data
                         EmailConfirmed = true,
                         RealEstateAgentEmail = "lars@nordhsmaklarbyra.com",
                         RealEstateAgentPhoneNumber = "+46 70 123 45 67",
-                        RealEstateAgentImageUrl = "/Images/RealEstateAgentMan.jpg",
+                        RealEstateAgentImageUrl = "Images/RealEstateAgentMan.jpg",
                         RealEstateAgentAgency = nordhsMaklarbyra
                     },
                     new RealEstateAgent
@@ -170,7 +170,7 @@ namespace HemDotNetWebApi.Data
                         EmailConfirmed = true,
                         RealEstateAgentEmail = "vendela@nordhsmaklarbyra.com",
                         RealEstateAgentPhoneNumber = "+46 70 123 45 67",
-                        RealEstateAgentImageUrl = "/Images/RealEstateAgentWoman.jpg",
+                        RealEstateAgentImageUrl = "Images/RealEstateAgentWoman.jpg",
                         RealEstateAgentAgency = nordhsMaklarbyra
                     },
                     new RealEstateAgent
@@ -187,7 +187,7 @@ namespace HemDotNetWebApi.Data
                         EmailConfirmed = true,
                         RealEstateAgentEmail = "erik@nordhsmaklarbyra.com",
                         RealEstateAgentPhoneNumber = "+46 70 123 45 67",
-                        RealEstateAgentImageUrl = "/Images/RealEstateAgentMan.jpg",
+                        RealEstateAgentImageUrl = "Images/RealEstateAgentMan.jpg",
                         RealEstateAgentAgency = nordhsMaklarbyra
                     },
                     new RealEstateAgent
@@ -204,7 +204,7 @@ namespace HemDotNetWebApi.Data
                         EmailConfirmed = true,
                         RealEstateAgentEmail = "lisa@nordhsmaklarbyra.com",
                         RealEstateAgentPhoneNumber = "+46 70 123 45 67",
-                        RealEstateAgentImageUrl = "/Images/RealEstateAgentWoman.jpg",
+                        RealEstateAgentImageUrl = "Images/RealEstateAgentWoman.jpg",
                         RealEstateAgentAgency = nordhsMaklarbyra
                     }
                 };
@@ -269,13 +269,13 @@ namespace HemDotNetWebApi.Data
                 {
                     RealEstateAgencyName = "Nordic Homes",
                     RealEstateAgencyPresentation = "Vi tar skandinavisk design till fastighetsbranschen.",
-                    RealEstateAgencyLogoUrl = "/images/PlaceholderLogo.png"
+                    RealEstateAgencyLogoUrl = "Images/PlaceholderLogo.png"
                 },
                 new RealEstateAgency
                 {
                     RealEstateAgencyName = "Nordhs Mäklarbyrå",
                     RealEstateAgencyPresentation = "Letar du efter en pålitlig fastighetsmäklare? Våra mäklare levererar expertis och resultat för ditt bostadsköp eller -försäljning.",
-                    RealEstateAgencyLogoUrl = "/images/PlaceholderLogo.png"
+                    RealEstateAgencyLogoUrl = "Images/PlaceholderLogo.png"
                 }
             };
 
