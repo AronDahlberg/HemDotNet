@@ -162,12 +162,12 @@ namespace HemDotNetBlazorClient.Services.Base
 
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task RealEstateAgentGETAsync(string agentId);
+        System.Threading.Tasks.Task<RealEstateAgent> RealEstateAgentGETAsync(string agentId);
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task RealEstateAgentGETAsync(string agentId, System.Threading.CancellationToken cancellationToken);
+        System.Threading.Tasks.Task<RealEstateAgent> RealEstateAgentGETAsync(string agentId, System.Threading.CancellationToken cancellationToken);
 
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
@@ -1446,7 +1446,7 @@ namespace HemDotNetBlazorClient.Services.Base
 
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual System.Threading.Tasks.Task RealEstateAgentGETAsync(string agentId)
+        public virtual System.Threading.Tasks.Task<RealEstateAgent> RealEstateAgentGETAsync(string agentId)
         {
             return RealEstateAgentGETAsync(agentId, System.Threading.CancellationToken.None);
         }
@@ -1454,7 +1454,7 @@ namespace HemDotNetBlazorClient.Services.Base
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task RealEstateAgentGETAsync(string agentId, System.Threading.CancellationToken cancellationToken)
+        public virtual async System.Threading.Tasks.Task<RealEstateAgent> RealEstateAgentGETAsync(string agentId, System.Threading.CancellationToken cancellationToken)
         {
             if (agentId == null)
                 throw new System.ArgumentNullException("agentId");
@@ -1466,6 +1466,7 @@ namespace HemDotNetBlazorClient.Services.Base
                 using (var request_ = new System.Net.Http.HttpRequestMessage())
                 {
                     request_.Method = new System.Net.Http.HttpMethod("GET");
+                    request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("text/plain"));
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
@@ -1498,7 +1499,12 @@ namespace HemDotNetBlazorClient.Services.Base
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 200)
                         {
-                            return;
+                            var objectResponse_ = await ReadObjectResponseAsync<RealEstateAgent>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            if (objectResponse_.Object == null)
+                            {
+                                throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                            }
+                            return objectResponse_.Object;
                         }
                         else
                         {

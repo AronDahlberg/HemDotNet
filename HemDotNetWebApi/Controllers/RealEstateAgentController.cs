@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using HemDotNetWebApi.Data;
 using HemDotNetWebApi.DTOs;
+using HemDotNetWebApi.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -22,9 +23,8 @@ namespace HemDotNetWebApi.Controllers
 
         // Chris
         // GET: RealEstateAgent/5
-        [Authorize]
         [HttpGet("{agentId}")]
-        public async Task<IActionResult> GetAgent(string agentId)
+        public async Task<ActionResult<RealEstateAgent>> GetAgent(string agentId)
         {
             var agent = await _realEstateAgentRepository.GetAsync(agentId);
 
