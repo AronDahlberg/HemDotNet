@@ -91,9 +91,19 @@ namespace HemDotNetWebApi.Mapping
                         .ForMember(dest => dest.Images, opt => opt.Ignore())  
                         .ForMember(dest => dest.IsActive, opt => opt.MapFrom(src => true))  
                         .ForMember(dest => dest.IsSold, opt => opt.MapFrom(src => false))  
-                        .ForMember(dest => dest.CreationDate, opt => opt.MapFrom(src => DateTime.UtcNow));  
+                        .ForMember(dest => dest.CreationDate, opt => opt.MapFrom(src => DateTime.UtcNow));
 
 
+            // Allan
+            CreateMap<Municipality, MunicipalityNameDto>()
+            .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.MunicipalityName));
+
+            // Allan
+            CreateMap<MarketProperty, PartialMarketPropertyDTO>()
+            .ForMember(dest => dest.MunicipalityName, opt => opt.MapFrom(src => src.Municipality.MunicipalityName))
+            .ForMember(dest => dest.Images, opt => opt.MapFrom(src => src.Images));
+
+            CreateMap<PropertyImage, PartialPropertyImageDTO>();
         }
     }
 }

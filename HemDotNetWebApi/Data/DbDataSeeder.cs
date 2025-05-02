@@ -321,7 +321,47 @@ namespace HemDotNetWebApi.Data
                     MonthlyFee = 1500,
                     YearlyMaintenanceCost = 18000,
                     ContructionYear = 1995,
-                    RealEstateAgent = agent1
+                    RealEstateAgent = agent1,
+                    IsActive = true,
+                    IsSold = false,
+                },
+
+                new MarketProperty
+                {
+                    Municipality = stockholm,
+                    Category = PropertyCategory.CondominiumApartment,
+                    Price = 1400000,
+                    LivingArea = 38.0,
+                    AncillaryArea = 12.0,
+                    LotArea = 38.0,
+                    PropertyAddress = "Drottningatan 5",
+                    Description = "Mysig liten lägenhet utan mögel på väggarna.",
+                    AmountOfRooms = 1,
+                    MonthlyFee = 4000,
+                    YearlyMaintenanceCost = 10000,
+                    ContructionYear = 2003,
+                    RealEstateAgent = agent6,
+                    IsActive = true,
+                    IsSold = false,
+                },
+
+                new MarketProperty
+                {
+                    Municipality = stockholm,
+                    Category = PropertyCategory.CondominiumApartment,
+                    Price = 1500000,
+                    LivingArea = 43.0,
+                    AncillaryArea = 11.0,
+                    LotArea = 43.0,
+                    PropertyAddress = "Drottningatan 6",
+                    Description = "Mysig liten lägenhet mitt i stan.",
+                    AmountOfRooms = 1,
+                    MonthlyFee = 4100,
+                    YearlyMaintenanceCost = 10100,
+                    ContructionYear = 2003,
+                    RealEstateAgent = agent6,
+                    IsActive = true,
+                    IsSold = true,
                 },
 
                 new MarketProperty
@@ -338,7 +378,9 @@ namespace HemDotNetWebApi.Data
                     MonthlyFee = 3900,
                     YearlyMaintenanceCost = 8500,
                     ContructionYear = 2010,
-                    RealEstateAgent = agent2
+                    RealEstateAgent = agent2,
+                    IsActive = true,
+                    IsSold = false,
                 },
 
                 new MarketProperty
@@ -355,7 +397,9 @@ namespace HemDotNetWebApi.Data
                     MonthlyFee = 2700,
                     YearlyMaintenanceCost = 15000,
                     ContructionYear = 2005,
-                    RealEstateAgent = agent3
+                    RealEstateAgent = agent3,
+                    IsActive = true,
+                    IsSold = false,
                 },
 
                 new MarketProperty
@@ -372,7 +416,9 @@ namespace HemDotNetWebApi.Data
                     MonthlyFee = 0,
                     YearlyMaintenanceCost = 22000,
                     ContructionYear = 2018,
-                    RealEstateAgent = agent4
+                    RealEstateAgent = agent4,
+                    IsActive = true,
+                    IsSold = false,
                 },
 
                 new MarketProperty
@@ -389,7 +435,9 @@ namespace HemDotNetWebApi.Data
                     MonthlyFee = 3200,
                     YearlyMaintenanceCost = 5000,
                     ContructionYear = 1905,
-                    RealEstateAgent = agent5
+                    RealEstateAgent = agent5,
+                    IsActive = true,
+                    IsSold = false,
                 },
 
                 new MarketProperty
@@ -406,7 +454,9 @@ namespace HemDotNetWebApi.Data
                     MonthlyFee = 0,
                     YearlyMaintenanceCost = 10000,
                     ContructionYear = 1985,
-                    RealEstateAgent = agent6
+                    RealEstateAgent = agent6,
+                    IsActive = true,
+                    IsSold = false,
                 }
             };
 
@@ -425,7 +475,7 @@ namespace HemDotNetWebApi.Data
                 var images = properties.Select(property => new PropertyImage
                 {
                     MarketPropertyId = property.MarketPropertyId,
-                    PropertyImageUrl = "images/BasePropertyImage.jpg"
+                    PropertyImageUrl = "Images/BasePropertyImage.jpg"
                 }).ToList();
 
                 context.PropertyImages.AddRange(images);

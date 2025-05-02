@@ -3,6 +3,7 @@ using AutoMapper.QueryableExtensions;
 using HemDotNetWebApi.DTO;
 using HemDotNetWebApi.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 namespace HemDotNetWebApi.Data
 {
@@ -127,6 +128,59 @@ namespace HemDotNetWebApi.Data
             await _context.SaveChangesAsync();
 
             return marketProperty;
+        }
+
+        // Allan
+        public async Task<List<MarketProperty>> SearchMarketPropertiesAsync(MarketPropertySearchDto searchDto)
+        {
+            var query = _context.MarketProperties
+                .Include(mp => mp.Municipality)
+                .Include(mp => mp.RealEstateAgent)
+                .Include(mp => mp.Images)
+                .AsQueryable();
+
+            
+            if (!string.IsNullOrEmpty(searchDto.Area))
+            {
+                query = query.Where(mp => mp.PropertyAddress.Contains(searchDto.Area)
+                                       || mp.Municipality.MunicipalityName.Contains(searchDto.Area));
+            }
+            
+
+            if (searchDto.SelectedTypes != null && searchDto.SelectedTypes.Any())
+            {
+                query = query.Where(mp => searchDto.SelectedTypes.Contains(mp.Category));
+            }
+            
+
+            if (searchDto.MinRooms.HasValue)
+            {
+                query = query.Where(mp => mp.AmountOfRooms >= searchDto.MinRooms.Value);
+            }
+
+            if (searchDto.MinArea.HasValue)
+            {
+                query = query.Where(mp => mp.LivingArea >= searchDto.MinArea.Value);
+            }
+
+            if (searchDto.MaxPrice.HasValue)
+            {
+                query = query.Where(mp => mp.Price <= searchDto.MaxPrice.Value);
+            }
+
+
+            if (searchDto.NewProduction.HasValue)
+            {
+                if (searchDto.NewProduction.Value)
+                {
+                    query = query.Where(mp => mp.ContructionYear >= DateTime.UtcNow.Year - 5);
+                }
+            }
+           
+
+            query = query.Where(mp => mp.IsActive && !mp.IsSold);
+
+            return await query.ToListAsync();
         }
 
     }

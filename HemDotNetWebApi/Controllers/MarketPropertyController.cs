@@ -140,5 +140,18 @@ namespace HemDotNetWebApi.Controllers
             return CreatedAtAction(nameof(GetMarketPropertyById), new { MarketPropertyId = createdProperty.MarketPropertyId }, resultDto);
         }
 
+        // Allan
+        [HttpPost("filter")]
+        public async Task<ActionResult<List<PartialMarketPropertyDTO>>> SearchProperties([FromBody] MarketPropertySearchDto searchDto)
+        {
+            var properties = await _marketPropertyRepository.SearchMarketPropertiesAsync(searchDto);
+
+            if (!properties.Any())
+                return NotFound("No properties matched the search.");
+
+            var dtoList = _mapper.Map<List<PartialMarketPropertyDTO>>(properties);
+            return Ok(dtoList);
+        }
+
     }
 }

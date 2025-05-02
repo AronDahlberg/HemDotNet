@@ -5,6 +5,8 @@ namespace HemDotNetBlazorClient.Services
     // Allan
     public interface IMarketPropertyService
     {
+        // Allan
         Task<Response<List<PartialMarketPropertyDTO>>> GetMarketProperties();
+        Task<Response<List<PartialMarketPropertyDTO>>> SearchMarketProperties(MarketPropertySearchDto searchDto);
     }
 }

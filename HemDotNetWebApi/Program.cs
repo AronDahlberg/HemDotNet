@@ -4,6 +4,7 @@ using HemDotNetWebApi.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using System.Text.Json.Serialization;
@@ -43,6 +44,9 @@ namespace HemDotNetWebApi
             builder.Services.AddTransient<IMarketPropertyRepository, MarketPropertyRepository>();
             builder.Services.AddTransient<IPropertyImageRepository, PropertyImageRepository>();
 
+            // Allan
+            builder.Services.AddTransient<IMunicipalityRepository, MunicipalityRepository>();
+
             // Author: CHRIS
             builder.Services.AddTransient<IRealEstateAgentRepository, RealEstateAgentRepository>();
 
@@ -79,6 +83,8 @@ namespace HemDotNetWebApi
                 };
             });
 
+            /* */
+
             var app = builder.Build();
 
             // Populates the database when the program is ran, and checks that the
@@ -93,6 +99,16 @@ namespace HemDotNetWebApi
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
+
+            app.UseStaticFiles();
+
+            // If you need to serve files from outside the web root
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = new PhysicalFileProvider(
+                    Path.Combine(Directory.GetCurrentDirectory(), "Images")),
+                RequestPath = "/images"
+            });
 
             app.UseHttpsRedirection();
 

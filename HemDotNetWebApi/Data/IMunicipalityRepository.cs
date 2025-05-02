@@ -1,6 +1,13 @@
-﻿namespace HemDotNetWebApi.Data
+﻿using HemDotNetWebApi.Models;
+
+namespace HemDotNetWebApi.Data
 {
-    public class IMunicipalityRepository
+    public interface IMunicipalityRepository
     {
+        // Allan
+        public Task<IEnumerable<Municipality>> GetAllMunicipalities();
+
+        // Allan
+        public Task<IEnumerable<Municipality>> SearchMunicipalitiesAsync(string searchTerm);
     }
 }

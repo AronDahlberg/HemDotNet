@@ -1,0 +1,84 @@
+﻿@page "/SearchResults"
+@inject IMarketPropertyService marketPropertyService
+@inject NavigationManager NavigationManager
+@inject IConfiguration Configuration
+@inject HttpClient httpClient
+
+@*Author: Allan*@
+
+<style>
+    .image-container {
+        aspect-ratio: 5 / 3;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        position: relative;
+    }
+
+        .image-container img {
+            object-fit: cover;
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+</style>
+
+@if (searchResults is null)
+{
+    <div class="container pt-5">
+            <p class ="text-center "> Laddar...</p>
+    </div>
+}
+else if (!searchResults.Any())
+{
+    <div class="container pt-5">
+        <p class="text-center text-info"> Inga bostäder matchar ditt sök</p>
+    </div>
+}
+else
+{
+    <div class="container pt-5">
+        <h1 class="text-center ">
+            Bostäder till salu @if (!string.IsNullOrEmpty(searchModel.Area))
+            {
+                @($"i {searchModel.Area}")
+            }
+        </h1>
+
+        <div class="d-flex flex-column align-items-center py-5">
+            @foreach (var property in searchResults)
+            {
+                <PropertyCard Property="property" />
+            }
+        </div>
+    </div>
+}
+
+@code {
+    private SearchModel searchModel = new();
+    private List<PartialMarketPropertyDTO> searchResults;
+
+    // Allan
+    protected override async Task OnInitializedAsync()
+    {
+        var uri = NavigationManager.ToAbsoluteUri(NavigationManager.Uri);
+        searchModel = MarketPropertySearchService.ParseQueryString(uri.Query);
+
+        var searchDto = new MarketPropertySearchDto
+            {
+                Area = searchModel.Area,
+                SelectedTypes = searchModel.ShowAllTypes ? null : searchModel.SelectedTypes,
+                MinRooms = string.IsNullOrEmpty(searchModel.MinRooms) ? null : int.Parse(searchModel.MinRooms),
+                MinArea = string.IsNullOrEmpty(searchModel.MinArea) ? null : double.Parse(searchModel.MinArea),
+                MaxPrice = string.IsNullOrEmpty(searchModel.MaxPrice) ? null : double.Parse(searchModel.MaxPrice),
+                NewProduction = bool.Parse(searchModel.NewProduction)
+            };
+
+        var response = await marketPropertyService.SearchMarketProperties(searchDto);
+
+        if (response.Success)
+        {
+            searchResults = response.Data;
+        }
+    }
+}
