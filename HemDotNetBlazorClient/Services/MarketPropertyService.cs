@@ -61,5 +61,29 @@ namespace HemDotNetBlazorClient.Services
 
             return response;
         }
+
+        // CHRIS
+        public async Task<Response<List<PartialMarketPropertyDTO>>> GetMarketPropertiesByAgent(string agentId)
+        {
+            Response<List<PartialMarketPropertyDTO>> response;
+
+            try
+            {
+                //await GetBearerToken();
+
+                var data = await _client.ByAgentAsync(agentId);
+                response = new Response<List<PartialMarketPropertyDTO>>
+                {
+                    Data = data.ToList(),
+                    Success = true
+                };
+            }
+            catch (ApiException ex)
+            {
+                response = ConvertApiExceptions<List<PartialMarketPropertyDTO>>(ex);
+            }
+
+            return response;
+        }
     }
 }
