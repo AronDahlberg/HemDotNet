@@ -13,23 +13,22 @@ namespace HemDotNetBlazorClient.Services
             _client = client;
         }
         // Author: Allan
-        public async Task<Response<List<PartialMarketPropertyDTO>>> GetAgent(string agentId)
+        public async Task<Response<RealEstateAgentDto>> GetAgentByIdAsync(string agentId)
         {
-            Response<List<PartialMarketPropertyDTO>> response;
+            Response<RealEstateAgentDto> response;
 
             try
             {
-
-                var data = await _client.RealEstateAgentGETAsync("a");
-                response = new Response<List<PartialMarketPropertyDTO>>
+                var data = await _client.GetProfileAsync(agentId);
+                response = new Response<RealEstateAgentDto>
                 {
-                    Data = data.ToList(),
+                    Data = data,
                     Success = true
                 };
             }
             catch (ApiException ex)
             {
-                response = ConvertApiExceptions<List<PartialMarketPropertyDTO>>(ex);
+                response = ConvertApiExceptions<RealEstateAgentDto>(ex);
             }
 
             return response;

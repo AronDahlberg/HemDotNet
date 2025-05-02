@@ -1,0 +1,61 @@
+﻿@page "/users/profile/{Id}"
+@inject IRealEstateAgentService realEstateAgentService
+@inject NavigationManager NavigationManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+@using Microsoft.AspNetCore.Components.Authorization
+
+<h2 class="my-4">Mäklarprofil</h2>
+
+@if (agent == null)
+{
+    <p>Laddar mäklarinformation...</p>
+}
+else
+{
+    <div class="card mb-4">
+        <div class="row g-0">
+            <div class="col-md-3 text-center p-3">
+                <img src="@agent.RealEstateAgentImageUrl" class="img-fluid rounded-circle" alt="Profilbild" style="max-width: 150px;" />
+            </div>
+            <div class="col-md-9">
+                <div class="card-body">
+                    <h4>@agent.RealEstateAgentFirstName @agent.RealEstateAgentLastName</h4>
+                    <p class="mb-1"><strong>Email:</strong> @agent.RealEstateAgentEmail</p>
+                    <p class="mb-1"><strong>Telefon:</strong> @agent.RealEstateAgentPhoneNumber</p>
+
+                    @if (isCurrentUser)
+                    {
+                        <button class="btn btn-outline-primary mt-3" @onclick="NavigateToEdit">Redigera profil</button>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+}
+
+@code {
+    [Parameter] public string Id { get; set; }
+
+    private RealEstateAgentDto agent;
+    private bool isCurrentUser = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        var response = await realEstateAgentService.GetAgentByIdAsync(Id);
+        if (response?.Success == true)
+        {
+            agent = response.Data;
+            isCurrentUser = user.Identity?.IsAuthenticated == true && user.Identity.Name == agent.RealEstateAgentEmail;
+        }
+    }
+
+    private void NavigateToEdit()
+    {
+        NavigationManager.NavigateTo($"/users/profile/edit/{Id}");
+    }
+}
