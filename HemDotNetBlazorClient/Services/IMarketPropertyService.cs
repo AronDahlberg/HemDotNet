@@ -8,7 +8,6 @@ namespace HemDotNetBlazorClient.Services
         // Allan
         Task<Response<List<PartialMarketPropertyDTO>>> GetMarketProperties();
         Task<Response<List<PartialMarketPropertyDTO>>> SearchMarketProperties(MarketPropertySearchDto searchDto);
-        //Author: Johan
-        Task<bool> CreateMarketProperty(MarketPropertyCreateDto newMarketProperty);
+        Task<Response<List<PartialMarketPropertyDTO>>> GetMarketPropertiesByAgent(string agentId);
     }
 }

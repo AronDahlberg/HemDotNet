@@ -75,6 +75,7 @@ namespace HemDotNetWebApi.Data
         {
             return await _context.MarketProperties
                 .Include(p => p.Municipality)
+                .Include(p => p.Images)
                 .Where(p => p.RealEstateAgent.Id == agentId)
                 .Where(p => p.IsActive == true)
                 .Where(p => p.IsSold == false)

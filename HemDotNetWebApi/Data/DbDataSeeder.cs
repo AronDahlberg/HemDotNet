@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace HemDotNetWebApi.Data
@@ -240,21 +241,31 @@ namespace HemDotNetWebApi.Data
         // Allan
         public static async Task PopulateMunicipalities(ApplicationDbContext? context)
         {
+            string filePath = "SeedData/Cities.json";
+
             if (context != null && !context.Municipalities.Any())
             {
-                var municipalities = new List<Municipality>
-            {
-                new Municipality { MunicipalityName = "Stockholm" },
-                new Municipality { MunicipalityName = "Örebro" },
-                new Municipality { MunicipalityName = "Göteborg" },
-                new Municipality { MunicipalityName = "Västerås" },
-                new Municipality { MunicipalityName = "Umeå" },
-                new Municipality { MunicipalityName = "Lund" },
-                new Municipality { MunicipalityName = "Uppsala" }
-            };
 
-                context.Municipalities.AddRange(municipalities);
-                await context.SaveChangesAsync();
+                if (File.Exists(filePath))
+                {
+                    var jsonData = File.ReadAllText(filePath);
+                    var citiesFromJson = JsonSerializer.Deserialize<List<List<string>>>(jsonData);
+
+                    if (citiesFromJson == null || !citiesFromJson.Any())
+                        return;
+
+                    var cityList = citiesFromJson
+                        .Select(data => data[3])
+                        .Distinct()
+                        .ToList();
+
+                    var municipalities = cityList
+                        .Select(city => new Municipality { MunicipalityName = city })
+                        .ToList();
+
+                    context.Municipalities.AddRange(municipalities);
+                    await context.SaveChangesAsync();
+                }
             }
         }
 

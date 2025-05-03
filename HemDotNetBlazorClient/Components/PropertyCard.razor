@@ -1,15 +1,22 @@
 ﻿@inject HttpClient httpClient
 
 @* Author: Allan *@
+@* Additional css fixes/changes by Chris *@
+<style>
+    .image-container {
+        aspect-ratio: 5 / 3;
+    }
+</style>
+
 
 <div class="card mb-3 w-75">
     <div class="row g-0">
         <div class="col-md-4">
             @if (Property.Images?.Any() == true)
             {
-                <div class="image-container">
-                    <img src="@($"{httpClient.BaseAddress}{Property.Images.First().PropertyImageUrl}")"
-                         class="img-fluid rounded-start" alt="Property image">
+                <div class="image-container w-100 h-100 overflow-hidden position-relative">
+                    <img class="object-fit-cover img-fluid rounded-start d-block w-100 h-100" src="@($"{httpClient.BaseAddress}{Property.Images.First().PropertyImageUrl}")"
+                         alt="Property image">
                 </div>
             }
         </div>
