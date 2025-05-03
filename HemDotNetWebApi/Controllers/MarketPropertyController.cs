@@ -123,8 +123,8 @@ namespace HemDotNetWebApi.Controllers
 
         // Katarina
         [Authorize]
-        [HttpPost("{MarketProperty}")]
-        public async Task<IActionResult> CreateMarketProperty([FromBody] MarketPropertyCreateDto createDto)
+        [HttpPost]
+        public async Task<IActionResult> CreateMarketProperty(MarketPropertyCreateDto createDto)
         {
             var marketProperty = _mapper.Map<MarketProperty>(createDto);
 

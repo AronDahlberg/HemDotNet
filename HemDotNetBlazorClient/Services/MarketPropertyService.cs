@@ -61,5 +61,13 @@ namespace HemDotNetBlazorClient.Services
 
             return response;
         }
+
+        //Author: Johan
+        public async Task<bool> CreateMarketProperty(MarketPropertyCreateDto newMarketProperty)
+        {
+            var response = await _client.MarketPropertyPOSTAsync(newMarketProperty);
+
+            return response.IsSuccessStatusCode;
+        }
     }
 }
