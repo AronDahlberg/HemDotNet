@@ -1,0 +1,48 @@
+﻿@*Made by Chris*@
+@using HemDotNetBlazorClient.Components
+@using HemDotNetBlazorClient.Services
+@page "/MarketPropertiesByAgent/{agentId}"
+@inject IMarketPropertyService marketPropertyService
+@inject HttpClient httpClient
+
+<h3 class="py-4 text-center">Market Properties by @AgentId</h3>
+
+@if (!response.Success)
+{
+    <div class="alert alert-danger">
+        <h4>@response.Message</h4>
+    </div>
+}
+else if (marketProperties == null)
+{
+    <div class="alert alert-info">
+        <h4>Loading data...</h4>
+    </div>
+}
+else
+{
+    <div class="d-flex flex-column align-items-center py-5">
+        @foreach (var property in marketProperties)
+        {
+            <PropertyCard Property="property" />
+        }
+    </div>
+}
+
+@code {
+
+    [Parameter]
+    public string? AgentId { get; set; }
+
+    private List<PartialMarketPropertyDTO> marketProperties;
+    private Response<List<PartialMarketPropertyDTO>> response = new Response<List<PartialMarketPropertyDTO>> { Success = true };
+
+    protected override async Task OnInitializedAsync()
+    {
+        response = await marketPropertyService.GetMarketPropertiesByAgent(AgentId);
+        if (response.Success)
+        {
+            marketProperties = response.Data;
+        }
+    }
+}

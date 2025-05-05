@@ -62,8 +62,9 @@ namespace HemDotNetBlazorClient.Services
             return response;
         }
 
-        // Author: Allan
-        public async Task<Response<List<PartialMarketPropertyDTO>>> GetMarketPropertiesByAgent(string id)
+
+        // CHRIS
+        public async Task<Response<List<PartialMarketPropertyDTO>>> GetMarketPropertiesByAgent(string agentId)
         {
             Response<List<PartialMarketPropertyDTO>> response;
 
@@ -71,7 +72,8 @@ namespace HemDotNetBlazorClient.Services
             {
                 //await GetBearerToken();
 
-                var data = await _client.ByAgentAsync(id);
+                var data = await _client.ByAgentAsync(agentId);
+                
                 response = new Response<List<PartialMarketPropertyDTO>>
                 {
                     Data = data.ToList(),
