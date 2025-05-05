@@ -34,7 +34,7 @@ The id is "escaped" beforehand because it will contain "-"
 else
 {
     <div class="container py-4">
-        <div class="card border-0 shadow-sm">
+        <div class="card border-0 shadow-sm mb-4">
             <div class="card-body p-0">
                 <div class="row g-0">
                     <div class="col-md-4 text-center p-4 bg-light">
@@ -90,8 +90,8 @@ else
                         <hr class="my-4">
 
                         <div class="d-flex gap-2">
-                            <a href="#" class="btn btn-sm btn-outline-secondary">
-                                <i class="bi bi-house me-1"></i>Aktiva objekt
+                            <a href="#propertyListings" class="btn btn-sm btn-outline-secondary">
+                                <i class="bi bi-house me-1"></i>@(agentProperties?.Count ?? 0) aktiva objekt
                             </a>
                             <a href="#" class="btn btn-sm btn-outline-secondary">
                                 <i class="bi bi-calendar-check me-1"></i>Boka visning
@@ -101,6 +101,36 @@ else
                 </div>
             </div>
         </div>
+
+        <div id="propertyListings">
+            @if (isLoadingProperties)
+            {
+                <div class="text-center py-5">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Laddar objekt...</span>
+                    </div>
+                    <p class="mt-2 text-muted">Laddar mäklarens objekt...</p>
+                </div>
+            }
+            else if (agentProperties == null || !agentProperties.Any())
+            {
+                <div class="alert alert-info">
+                    <i class="bi bi-info-circle me-2"></i>Mäklaren har inga aktiva objekt för tillfället.
+                </div>
+            }
+            else
+            {
+                <h3 class="fw-bold mb-4">Mäklaren har @agentProperties.Count aktiva objekt</h3>
+                <div class="container pt-5">
+                    <div class="d-flex flex-column align-items-center py-5">
+                        @foreach (var property in agentProperties)
+                        {
+                            <PropertyCard Property="property" />
+                        }
+                    </div>
+                </div>
+            }
+        </div>
     </div>
 }
 
@@ -108,23 +138,65 @@ else
     [Parameter] public string Id { get; set; }
 
     private RealEstateAgentDto agent;
+    private List<PartialMarketPropertyDTO> agentProperties;
     private bool isCurrentUser = false;
-
+    private bool isLoadingProperties = true;
 
     protected override async Task OnInitializedAsync()
     {
+        // Get agent information
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         var user = authState.User;
-
         var response = await realEstateAgentService.GetAgentByIdAsync(Id);
+
         if (response?.Success == true)
         {
             agent = response.Data;
-            isCurrentUser = user.Identity?.IsAuthenticated == true && user.Identity.Name == agent.RealEstateAgentEmail;
+            isCurrentUser = user.Identity?.IsAuthenticated == true &&
+                           user.Identity.Name == agent.RealEstateAgentEmail;
+
+            // Load agent's properties
+            await LoadAgentProperties();
         }
-        marketPropertyService.GetByAgent(string)
+    }
 
+    private async Task LoadAgentProperties()
+    {
+        isLoadingProperties = true;
 
+        try
+        {
+            // Check if the agent has any property IDs
+            if (agent?.PropertyIds != null && agent.PropertyIds.Any())
+            {
+                // Get properties by IDs
+                var propertiesResponse = await marketPropertyService.GetMarketPropertiesByAgent(agent.Id);
+
+                if (propertiesResponse?.Success == true)
+                {
+                    agentProperties = propertiesResponse.Data;
+                }
+                else
+                {
+                    // Handle error
+                    agentProperties = new List<PartialMarketPropertyDTO>();
+                }
+            }
+            else
+            {
+                agentProperties = new List<PartialMarketPropertyDTO>();
+            }
+        }
+        catch (Exception ex)
+        {
+            // Log error if needed
+            agentProperties = new List<PartialMarketPropertyDTO>();
+        }
+        finally
+        {
+            isLoadingProperties = false;
+            StateHasChanged();
+        }
     }
 
     private void NavigateToEdit()
