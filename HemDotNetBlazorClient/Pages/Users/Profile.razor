@@ -142,7 +142,6 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        // Get agent information
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         var user = authState.User;
         var response = await realEstateAgentService.GetAgentByIdAsync(Id);
@@ -153,7 +152,6 @@ else
             isCurrentUser = user.Identity?.IsAuthenticated == true &&
                            user.Identity.Name == agent.RealEstateAgentEmail;
 
-            // Load agent's properties
             await LoadAgentProperties();
         }
     }
@@ -164,10 +162,8 @@ else
 
         try
         {
-            // Check if the agent has any property IDs
             if (agent?.PropertyIds != null && agent.PropertyIds.Any())
             {
-                // Get properties by IDs
                 var propertiesResponse = await marketPropertyService.GetMarketPropertiesByAgent(agent.Id);
 
                 if (propertiesResponse?.Success == true)
@@ -176,7 +172,6 @@ else
                 }
                 else
                 {
-                    // Handle error
                     agentProperties = new List<PartialMarketPropertyDTO>();
                 }
             }
@@ -187,12 +182,13 @@ else
         }
         catch (Exception ex)
         {
-            // Log error if needed
             agentProperties = new List<PartialMarketPropertyDTO>();
         }
         finally
         {
             isLoadingProperties = false;
+
+            // this re-renders the component
             StateHasChanged();
         }
     }
