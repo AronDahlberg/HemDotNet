@@ -62,6 +62,7 @@ namespace HemDotNetBlazorClient.Services
             return response;
         }
 
+
         // CHRIS
         public async Task<Response<List<PartialMarketPropertyDTO>>> GetMarketPropertiesByAgent(string agentId)
         {
@@ -72,6 +73,7 @@ namespace HemDotNetBlazorClient.Services
                 //await GetBearerToken();
 
                 var data = await _client.ByAgentAsync(agentId);
+                
                 response = new Response<List<PartialMarketPropertyDTO>>
                 {
                     Data = data.ToList(),

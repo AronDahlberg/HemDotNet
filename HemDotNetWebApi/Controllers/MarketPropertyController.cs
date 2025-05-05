@@ -82,11 +82,11 @@ namespace HemDotNetWebApi.Controllers
         
         // Chris
         [HttpGet("ByAgent/{agentId}")]
-        public async Task<IEnumerable<PartialMarketPropertyDTO>> GetByAgent(string agentId)
+        public async Task<ActionResult<IEnumerable<PartialMarketPropertyDTO>>> GetByAgent(string agentId)
         {
             var activeListings = await _marketPropertyRepository.GetAllActiveByAgent(agentId);
             var activeListingDtos = _mapper.Map<IEnumerable<PartialMarketPropertyDTO>>(activeListings);
-            return activeListingDtos;
+            return Ok(activeListingDtos);
         }
 
         // Adam
