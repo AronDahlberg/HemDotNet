@@ -33,7 +33,7 @@ The id is "escaped" beforehand because it will contain "-"
 }
 else
 {
-    <div class="container py-4">
+    <div class="container my-5 py-4">
         <div class="card border-0 shadow-sm mb-4">
             <div class="card-body p-0">
                 <div class="row g-0">
@@ -62,7 +62,7 @@ else
                                 <i class="bi bi-building text-primary"></i>
                             </div>
                             <div>
-                                <div class="text-muted small">Företag</div>
+                                <div class="text-muted small">Mäklarbyrå</div>
                                 <div class="fw-medium">@agent.RealEstateAgentAgencyName</div>
                             </div>
                         </div>
@@ -90,11 +90,9 @@ else
                         <hr class="my-4">
 
                         <div class="d-flex gap-2">
-                            <a href="#propertyListings" class="btn btn-sm btn-outline-secondary">
-                                <i class="bi bi-house me-1"></i>@(agentProperties?.Count ?? 0) aktiva objekt
-                            </a>
-                            <a href="#" class="btn btn-sm btn-outline-secondary">
-                                <i class="bi bi-calendar-check me-1"></i>Boka visning
+                            <a href="mailto:@agent.RealEstateAgentEmail?subject=Intresse%20för%20bostad&body=Hej%20@agent.RealEstateAgentFirstName,%0D%0A%0D%0AJag%20är%20intresserad%20av%20att%20veta%20mer%20om%20dina%20tjänster.%0D%0A%0D%0AMed%20vänliga%20hälsningar,"
+                               class="btn btn-sm btn-outline-secondary">
+                                <i class="bi bi-envelope-open me-1"></i>Kontakta mig
                             </a>
                         </div>
                     </div>
@@ -120,9 +118,9 @@ else
             }
             else
             {
-                <h3 class="fw-bold mb-4">Mäklaren har @agentProperties.Count aktiva objekt</h3>
-                <div class="container pt-5">
-                    <div class="d-flex flex-column align-items-center py-5">
+                <h3 class="fw-bold">@agentProperties.Count objekt till salu</h3>
+                <div class="container">
+                    <div class="d-flex flex-column align-items-center my-5">
                         @foreach (var property in agentProperties)
                         {
                             <PropertyCard Property="property" />
