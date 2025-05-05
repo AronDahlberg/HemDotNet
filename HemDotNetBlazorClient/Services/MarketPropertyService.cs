@@ -85,5 +85,42 @@ namespace HemDotNetBlazorClient.Services
 
             return response;
         }
+
+        //Author: Johan
+        public async Task<int> CreateMarketProperty(MarketPropertyCreateDto newMarketProperty)
+        {
+            try
+            {
+                //await GetBearerToken(); ??????
+
+                var marketPropertyId = await _client.MarketPropertyPOSTAsync(newMarketProperty);
+                return marketPropertyId;
+            }
+            catch (ApiException ex)
+            {
+                //Fix this?
+                int error = 0;
+                return error;
+            }
+        }
+
+        //Author: Johan
+        public async Task<MarketPropertyDetailsDto> GetMarketPropertyById(int marketPropertyId)
+        {
+            try
+            {
+                //await GetBearerToken(); ??????
+
+                var marketProperty = await _client.MarketPropertyGETAsync(marketPropertyId);
+
+                return marketProperty;
+            }
+            catch (ApiException ex)
+            {
+                //Fix this?
+                var emptyDto = new MarketPropertyDetailsDto();
+                return emptyDto;
+            }
+        }
     }
 }

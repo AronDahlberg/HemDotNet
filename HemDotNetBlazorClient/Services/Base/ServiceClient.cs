@@ -56,6 +56,15 @@ namespace HemDotNetBlazorClient.Services.Base
 
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
+        System.Threading.Tasks.Task<int> MarketPropertyPOSTAsync(MarketPropertyCreateDto body);
+
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        /// <returns>OK</returns>
+        /// <exception cref="ApiException">A server side error occurred.</exception>
+        System.Threading.Tasks.Task<int> MarketPropertyPOSTAsync(MarketPropertyCreateDto body, System.Threading.CancellationToken cancellationToken);
+
+        /// <returns>OK</returns>
+        /// <exception cref="ApiException">A server side error occurred.</exception>
         System.Threading.Tasks.Task<System.Collections.Generic.ICollection<PartialMarketPropertyDTO>> MarketPropertiesAsync();
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
@@ -92,21 +101,12 @@ namespace HemDotNetBlazorClient.Services.Base
 
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task MarketPropertyGETAsync(int marketPropertyId);
+        System.Threading.Tasks.Task<MarketPropertyDetailsDto> MarketPropertyGETAsync(int marketPropertyId);
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task MarketPropertyGETAsync(int marketPropertyId, System.Threading.CancellationToken cancellationToken);
-
-        /// <returns>OK</returns>
-        /// <exception cref="ApiException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task MarketPropertyPOSTAsync(string marketProperty, MarketPropertyCreateDto body);
-
-        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <returns>OK</returns>
-        /// <exception cref="ApiException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task MarketPropertyPOSTAsync(string marketProperty, MarketPropertyCreateDto body, System.Threading.CancellationToken cancellationToken);
+        System.Threading.Tasks.Task<MarketPropertyDetailsDto> MarketPropertyGETAsync(int marketPropertyId, System.Threading.CancellationToken cancellationToken);
 
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
@@ -119,21 +119,21 @@ namespace HemDotNetBlazorClient.Services.Base
 
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task<System.Collections.Generic.ICollection<MunicipalityNameDto>> MunicipalityAsync();
+        System.Threading.Tasks.Task<System.Collections.Generic.ICollection<MunicipalityDto>> MunicipalityAsync();
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task<System.Collections.Generic.ICollection<MunicipalityNameDto>> MunicipalityAsync(System.Threading.CancellationToken cancellationToken);
+        System.Threading.Tasks.Task<System.Collections.Generic.ICollection<MunicipalityDto>> MunicipalityAsync(System.Threading.CancellationToken cancellationToken);
 
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task<System.Collections.Generic.ICollection<MunicipalityNameDto>> SearchAsync(string searchTerm);
+        System.Threading.Tasks.Task<System.Collections.Generic.ICollection<MunicipalityDto>> SearchAsync(string searchTerm);
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task<System.Collections.Generic.ICollection<MunicipalityNameDto>> SearchAsync(string searchTerm, System.Threading.CancellationToken cancellationToken);
+        System.Threading.Tasks.Task<System.Collections.Generic.ICollection<MunicipalityDto>> SearchAsync(string searchTerm, System.Threading.CancellationToken cancellationToken);
 
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
@@ -198,9 +198,9 @@ namespace HemDotNetBlazorClient.Services.Base
         private static System.Lazy<Newtonsoft.Json.JsonSerializerSettings> _settings = new System.Lazy<Newtonsoft.Json.JsonSerializerSettings>(CreateSerializerSettings, true);
         private Newtonsoft.Json.JsonSerializerSettings _instanceSettings;
 
-#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
+    #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         public Client(System.Net.Http.HttpClient httpClient)
-#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
+    #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         {
             _httpClient = httpClient;
             Initialize();
@@ -248,7 +248,7 @@ namespace HemDotNetBlazorClient.Services.Base
                     request_.Method = new System.Net.Http.HttpMethod("POST");
 
                     var urlBuilder_ = new System.Text.StringBuilder();
-
+                
                     // Operation Path: "Auth/register"
                     urlBuilder_.Append("Auth/register");
 
@@ -325,7 +325,7 @@ namespace HemDotNetBlazorClient.Services.Base
                     request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("text/plain"));
 
                     var urlBuilder_ = new System.Text.StringBuilder();
-
+                
                     // Operation Path: "Auth/login"
                     urlBuilder_.Append("Auth/login");
 
@@ -407,7 +407,7 @@ namespace HemDotNetBlazorClient.Services.Base
                     request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("text/plain"));
 
                     var urlBuilder_ = new System.Text.StringBuilder();
-
+                
                     // Operation Path: "MarketProperty"
                     urlBuilder_.Append("MarketProperty");
 
@@ -465,6 +465,88 @@ namespace HemDotNetBlazorClient.Services.Base
 
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
+        public virtual System.Threading.Tasks.Task<int> MarketPropertyPOSTAsync(MarketPropertyCreateDto body)
+        {
+            return MarketPropertyPOSTAsync(body, System.Threading.CancellationToken.None);
+        }
+
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        /// <returns>OK</returns>
+        /// <exception cref="ApiException">A server side error occurred.</exception>
+        public virtual async System.Threading.Tasks.Task<int> MarketPropertyPOSTAsync(MarketPropertyCreateDto body, System.Threading.CancellationToken cancellationToken)
+        {
+            var client_ = _httpClient;
+            var disposeClient_ = false;
+            try
+            {
+                using (var request_ = new System.Net.Http.HttpRequestMessage())
+                {
+                    var json_ = Newtonsoft.Json.JsonConvert.SerializeObject(body, JsonSerializerSettings);
+                    var content_ = new System.Net.Http.StringContent(json_);
+                    content_.Headers.ContentType = System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json");
+                    request_.Content = content_;
+                    request_.Method = new System.Net.Http.HttpMethod("POST");
+                    request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("text/plain"));
+
+                    var urlBuilder_ = new System.Text.StringBuilder();
+                
+                    // Operation Path: "MarketProperty"
+                    urlBuilder_.Append("MarketProperty");
+
+                    PrepareRequest(client_, request_, urlBuilder_);
+
+                    var url_ = urlBuilder_.ToString();
+                    request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
+
+                    PrepareRequest(client_, request_, url_);
+
+                    var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
+                    var disposeResponse_ = true;
+                    try
+                    {
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
+                        if (response_.Content != null && response_.Content.Headers != null)
+                        {
+                            foreach (var item_ in response_.Content.Headers)
+                                headers_[item_.Key] = item_.Value;
+                        }
+
+                        ProcessResponse(client_, response_);
+
+                        var status_ = (int)response_.StatusCode;
+                        if (status_ == 200)
+                        {
+                            var objectResponse_ = await ReadObjectResponseAsync<int>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            if (objectResponse_.Object == null)
+                            {
+                                throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                            }
+                            return objectResponse_.Object;
+                        }
+                        else
+                        {
+                            var responseData_ = response_.Content == null ? null : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
+                            throw new ApiException("The HTTP status code of the response was not expected (" + status_ + ").", status_, responseData_, headers_, null);
+                        }
+                    }
+                    finally
+                    {
+                        if (disposeResponse_)
+                            response_.Dispose();
+                    }
+                }
+            }
+            finally
+            {
+                if (disposeClient_)
+                    client_.Dispose();
+            }
+        }
+
+        /// <returns>OK</returns>
+        /// <exception cref="ApiException">A server side error occurred.</exception>
         public virtual System.Threading.Tasks.Task<System.Collections.Generic.ICollection<PartialMarketPropertyDTO>> MarketPropertiesAsync()
         {
             return MarketPropertiesAsync(System.Threading.CancellationToken.None);
@@ -485,7 +567,7 @@ namespace HemDotNetBlazorClient.Services.Base
                     request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("text/plain"));
 
                     var urlBuilder_ = new System.Text.StringBuilder();
-
+                
                     // Operation Path: "MarketProperty/MarketProperties"
                     urlBuilder_.Append("MarketProperty/MarketProperties");
 
@@ -563,7 +645,7 @@ namespace HemDotNetBlazorClient.Services.Base
                     request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("text/plain"));
 
                     var urlBuilder_ = new System.Text.StringBuilder();
-
+                
                     // Operation Path: "MarketProperty/byMunicipality"
                     urlBuilder_.Append("MarketProperty/byMunicipality");
                     urlBuilder_.Append('?');
@@ -650,7 +732,7 @@ namespace HemDotNetBlazorClient.Services.Base
                     request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("text/plain"));
 
                     var urlBuilder_ = new System.Text.StringBuilder();
-
+                
                     // Operation Path: "MarketProperty/ByAgent/{agentId}"
                     urlBuilder_.Append("MarketProperty/ByAgent/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(agentId, System.Globalization.CultureInfo.InvariantCulture)));
@@ -734,7 +816,7 @@ namespace HemDotNetBlazorClient.Services.Base
                     request_.Method = new System.Net.Http.HttpMethod("DELETE");
 
                     var urlBuilder_ = new System.Text.StringBuilder();
-
+                
                     // Operation Path: "MarketProperty/{propertyId}/{agentId}"
                     urlBuilder_.Append("MarketProperty/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(propertyId, System.Globalization.CultureInfo.InvariantCulture)));
@@ -790,7 +872,7 @@ namespace HemDotNetBlazorClient.Services.Base
 
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual System.Threading.Tasks.Task MarketPropertyGETAsync(int marketPropertyId)
+        public virtual System.Threading.Tasks.Task<MarketPropertyDetailsDto> MarketPropertyGETAsync(int marketPropertyId)
         {
             return MarketPropertyGETAsync(marketPropertyId, System.Threading.CancellationToken.None);
         }
@@ -798,7 +880,7 @@ namespace HemDotNetBlazorClient.Services.Base
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task MarketPropertyGETAsync(int marketPropertyId, System.Threading.CancellationToken cancellationToken)
+        public virtual async System.Threading.Tasks.Task<MarketPropertyDetailsDto> MarketPropertyGETAsync(int marketPropertyId, System.Threading.CancellationToken cancellationToken)
         {
             if (marketPropertyId == null)
                 throw new System.ArgumentNullException("marketPropertyId");
@@ -810,9 +892,10 @@ namespace HemDotNetBlazorClient.Services.Base
                 using (var request_ = new System.Net.Http.HttpRequestMessage())
                 {
                     request_.Method = new System.Net.Http.HttpMethod("GET");
+                    request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("text/plain"));
 
                     var urlBuilder_ = new System.Text.StringBuilder();
-
+                
                     // Operation Path: "MarketProperty/{MarketPropertyId}"
                     urlBuilder_.Append("MarketProperty/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(marketPropertyId, System.Globalization.CultureInfo.InvariantCulture)));
@@ -842,87 +925,12 @@ namespace HemDotNetBlazorClient.Services.Base
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 200)
                         {
-                            return;
-                        }
-                        else
-                        {
-                            var responseData_ = response_.Content == null ? null : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
-                            throw new ApiException("The HTTP status code of the response was not expected (" + status_ + ").", status_, responseData_, headers_, null);
-                        }
-                    }
-                    finally
-                    {
-                        if (disposeResponse_)
-                            response_.Dispose();
-                    }
-                }
-            }
-            finally
-            {
-                if (disposeClient_)
-                    client_.Dispose();
-            }
-        }
-
-        /// <returns>OK</returns>
-        /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual System.Threading.Tasks.Task MarketPropertyPOSTAsync(string marketProperty, MarketPropertyCreateDto body)
-        {
-            return MarketPropertyPOSTAsync(marketProperty, body, System.Threading.CancellationToken.None);
-        }
-
-        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <returns>OK</returns>
-        /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task MarketPropertyPOSTAsync(string marketProperty, MarketPropertyCreateDto body, System.Threading.CancellationToken cancellationToken)
-        {
-            if (marketProperty == null)
-                throw new System.ArgumentNullException("marketProperty");
-
-            var client_ = _httpClient;
-            var disposeClient_ = false;
-            try
-            {
-                using (var request_ = new System.Net.Http.HttpRequestMessage())
-                {
-                    var json_ = Newtonsoft.Json.JsonConvert.SerializeObject(body, JsonSerializerSettings);
-                    var content_ = new System.Net.Http.StringContent(json_);
-                    content_.Headers.ContentType = System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json");
-                    request_.Content = content_;
-                    request_.Method = new System.Net.Http.HttpMethod("POST");
-
-                    var urlBuilder_ = new System.Text.StringBuilder();
-
-                    // Operation Path: "MarketProperty/{MarketProperty}"
-                    urlBuilder_.Append("MarketProperty/");
-                    urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(marketProperty, System.Globalization.CultureInfo.InvariantCulture)));
-
-                    PrepareRequest(client_, request_, urlBuilder_);
-
-                    var url_ = urlBuilder_.ToString();
-                    request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
-
-                    PrepareRequest(client_, request_, url_);
-
-                    var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
-                    var disposeResponse_ = true;
-                    try
-                    {
-                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
-                        foreach (var item_ in response_.Headers)
-                            headers_[item_.Key] = item_.Value;
-                        if (response_.Content != null && response_.Content.Headers != null)
-                        {
-                            foreach (var item_ in response_.Content.Headers)
-                                headers_[item_.Key] = item_.Value;
-                        }
-
-                        ProcessResponse(client_, response_);
-
-                        var status_ = (int)response_.StatusCode;
-                        if (status_ == 200)
-                        {
-                            return;
+                            var objectResponse_ = await ReadObjectResponseAsync<MarketPropertyDetailsDto>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            if (objectResponse_.Object == null)
+                            {
+                                throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                            }
+                            return objectResponse_.Object;
                         }
                         else
                         {
@@ -970,7 +978,7 @@ namespace HemDotNetBlazorClient.Services.Base
                     request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("text/plain"));
 
                     var urlBuilder_ = new System.Text.StringBuilder();
-
+                
                     // Operation Path: "MarketProperty/filter"
                     urlBuilder_.Append("MarketProperty/filter");
 
@@ -1028,7 +1036,7 @@ namespace HemDotNetBlazorClient.Services.Base
 
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual System.Threading.Tasks.Task<System.Collections.Generic.ICollection<MunicipalityNameDto>> MunicipalityAsync()
+        public virtual System.Threading.Tasks.Task<System.Collections.Generic.ICollection<MunicipalityDto>> MunicipalityAsync()
         {
             return MunicipalityAsync(System.Threading.CancellationToken.None);
         }
@@ -1036,7 +1044,7 @@ namespace HemDotNetBlazorClient.Services.Base
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<System.Collections.Generic.ICollection<MunicipalityNameDto>> MunicipalityAsync(System.Threading.CancellationToken cancellationToken)
+        public virtual async System.Threading.Tasks.Task<System.Collections.Generic.ICollection<MunicipalityDto>> MunicipalityAsync(System.Threading.CancellationToken cancellationToken)
         {
             var client_ = _httpClient;
             var disposeClient_ = false;
@@ -1048,7 +1056,7 @@ namespace HemDotNetBlazorClient.Services.Base
                     request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("text/plain"));
 
                     var urlBuilder_ = new System.Text.StringBuilder();
-
+                
                     // Operation Path: "Municipality"
                     urlBuilder_.Append("Municipality");
 
@@ -1077,7 +1085,7 @@ namespace HemDotNetBlazorClient.Services.Base
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 200)
                         {
-                            var objectResponse_ = await ReadObjectResponseAsync<System.Collections.Generic.ICollection<MunicipalityNameDto>>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            var objectResponse_ = await ReadObjectResponseAsync<System.Collections.Generic.ICollection<MunicipalityDto>>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
@@ -1106,7 +1114,7 @@ namespace HemDotNetBlazorClient.Services.Base
 
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual System.Threading.Tasks.Task<System.Collections.Generic.ICollection<MunicipalityNameDto>> SearchAsync(string searchTerm)
+        public virtual System.Threading.Tasks.Task<System.Collections.Generic.ICollection<MunicipalityDto>> SearchAsync(string searchTerm)
         {
             return SearchAsync(searchTerm, System.Threading.CancellationToken.None);
         }
@@ -1114,7 +1122,7 @@ namespace HemDotNetBlazorClient.Services.Base
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<System.Collections.Generic.ICollection<MunicipalityNameDto>> SearchAsync(string searchTerm, System.Threading.CancellationToken cancellationToken)
+        public virtual async System.Threading.Tasks.Task<System.Collections.Generic.ICollection<MunicipalityDto>> SearchAsync(string searchTerm, System.Threading.CancellationToken cancellationToken)
         {
             var client_ = _httpClient;
             var disposeClient_ = false;
@@ -1126,7 +1134,7 @@ namespace HemDotNetBlazorClient.Services.Base
                     request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("text/plain"));
 
                     var urlBuilder_ = new System.Text.StringBuilder();
-
+                
                     // Operation Path: "Municipality/search"
                     urlBuilder_.Append("Municipality/search");
                     urlBuilder_.Append('?');
@@ -1161,7 +1169,7 @@ namespace HemDotNetBlazorClient.Services.Base
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 200)
                         {
-                            var objectResponse_ = await ReadObjectResponseAsync<System.Collections.Generic.ICollection<MunicipalityNameDto>>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            var objectResponse_ = await ReadObjectResponseAsync<System.Collections.Generic.ICollection<MunicipalityDto>>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
@@ -1213,7 +1221,7 @@ namespace HemDotNetBlazorClient.Services.Base
                     request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("text/plain"));
 
                     var urlBuilder_ = new System.Text.StringBuilder();
-
+                
                     // Operation Path: "PropertyImage/{marketPropertyId}"
                     urlBuilder_.Append("PropertyImage/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(marketPropertyId, System.Globalization.CultureInfo.InvariantCulture)));
@@ -1314,7 +1322,7 @@ namespace HemDotNetBlazorClient.Services.Base
                     request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("text/plain"));
 
                     var urlBuilder_ = new System.Text.StringBuilder();
-
+                
                     // Operation Path: "PropertyImage"
                     urlBuilder_.Append("PropertyImage");
 
@@ -1394,7 +1402,7 @@ namespace HemDotNetBlazorClient.Services.Base
                     request_.Method = new System.Net.Http.HttpMethod("DELETE");
 
                     var urlBuilder_ = new System.Text.StringBuilder();
-
+                
                     // Operation Path: "PropertyImage/{imageId}"
                     urlBuilder_.Append("PropertyImage/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(imageId, System.Globalization.CultureInfo.InvariantCulture)));
@@ -1470,7 +1478,7 @@ namespace HemDotNetBlazorClient.Services.Base
                     request_.Method = new System.Net.Http.HttpMethod("GET");
 
                     var urlBuilder_ = new System.Text.StringBuilder();
-
+                
                     // Operation Path: "RealEstateAgent/{agentId}"
                     urlBuilder_.Append("RealEstateAgent/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(agentId, System.Globalization.CultureInfo.InvariantCulture)));
@@ -1551,7 +1559,7 @@ namespace HemDotNetBlazorClient.Services.Base
                     request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("text/plain"));
 
                     var urlBuilder_ = new System.Text.StringBuilder();
-
+                
                     // Operation Path: "RealEstateAgent/{agentId}"
                     urlBuilder_.Append("RealEstateAgent/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(agentId, System.Globalization.CultureInfo.InvariantCulture)));
@@ -1630,7 +1638,7 @@ namespace HemDotNetBlazorClient.Services.Base
                     request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("text/plain"));
 
                     var urlBuilder_ = new System.Text.StringBuilder();
-
+                
                     // Operation Path: "WeatherForecast"
                     urlBuilder_.Append("WeatherForecast");
 
@@ -1758,7 +1766,7 @@ namespace HemDotNetBlazorClient.Services.Base
                     var field = System.Reflection.IntrospectionExtensions.GetTypeInfo(value.GetType()).GetDeclaredField(name);
                     if (field != null)
                     {
-                        var attribute = System.Reflection.CustomAttributeExtensions.GetCustomAttribute(field, typeof(System.Runtime.Serialization.EnumMemberAttribute))
+                        var attribute = System.Reflection.CustomAttributeExtensions.GetCustomAttribute(field, typeof(System.Runtime.Serialization.EnumMemberAttribute)) 
                             as System.Runtime.Serialization.EnumMemberAttribute;
                         if (attribute != null)
                         {
@@ -1770,13 +1778,13 @@ namespace HemDotNetBlazorClient.Services.Base
                     return converted == null ? string.Empty : converted;
                 }
             }
-            else if (value is bool)
+            else if (value is bool) 
             {
                 return System.Convert.ToString((bool)value, cultureInfo).ToLowerInvariant();
             }
             else if (value is byte[])
             {
-                return System.Convert.ToBase64String((byte[])value);
+                return System.Convert.ToBase64String((byte[]) value);
             }
             else if (value is string[])
             {
@@ -1869,8 +1877,59 @@ namespace HemDotNetBlazorClient.Services.Base
         [Newtonsoft.Json.JsonProperty("yearlyMaintenanceCost", Required = Newtonsoft.Json.Required.Always)]
         public double YearlyMaintenanceCost { get; set; }
 
-        [Newtonsoft.Json.JsonProperty("contructionYear", Required = Newtonsoft.Json.Required.Always)]
+        [Newtonsoft.Json.JsonProperty("constructionYear", Required = Newtonsoft.Json.Required.Always)]
+        public int ConstructionYear { get; set; }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.3.0.0 (NJsonSchema v11.2.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class MarketPropertyDetailsDto
+    {
+        [Newtonsoft.Json.JsonProperty("marketPropertyId", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public int MarketPropertyId { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("municipalityName", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string MunicipalityName { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("realEstateAgentFullName", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string RealEstateAgentFullName { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("category", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
+        public PropertyCategory Category { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("price", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public double Price { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("livingArea", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public double LivingArea { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("ancillaryArea", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public double AncillaryArea { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("lotArea", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public double LotArea { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("propertyAddress", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string PropertyAddress { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("description", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string Description { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("amountOfRooms", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public int AmountOfRooms { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("monthlyFee", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public double? MonthlyFee { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("yearlyMaintenanceCost", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public double? YearlyMaintenanceCost { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("contructionYear", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public int ContructionYear { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("images", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.Collections.Generic.ICollection<PropertyImageDto> Images { get; set; }
 
     }
 
@@ -2018,10 +2077,13 @@ namespace HemDotNetBlazorClient.Services.Base
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.3.0.0 (NJsonSchema v11.2.0.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class MunicipalityNameDto
+    public partial class MunicipalityDto
     {
         [Newtonsoft.Json.JsonProperty("name", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string Name { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("municipalityId", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public int MunicipalityId { get; set; }
 
     }
 
@@ -2165,12 +2227,12 @@ namespace HemDotNetBlazorClient.Services.Base
     public partial class FileParameter
     {
         public FileParameter(System.IO.Stream data)
-            : this(data, null, null)
+            : this (data, null, null)
         {
         }
 
         public FileParameter(System.IO.Stream data, string fileName)
-            : this(data, fileName, null)
+            : this (data, fileName, null)
         {
         }
 
@@ -2227,10 +2289,10 @@ namespace HemDotNetBlazorClient.Services.Base
 
 }
 
-#pragma warning restore 108
-#pragma warning restore 114
-#pragma warning restore 472
-#pragma warning restore 612
+#pragma warning restore  108
+#pragma warning restore  114
+#pragma warning restore  472
+#pragma warning restore  612
 #pragma warning restore 1573
 #pragma warning restore 1591
 #pragma warning restore 8073

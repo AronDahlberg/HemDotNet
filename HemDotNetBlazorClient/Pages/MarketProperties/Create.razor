@@ -1,0 +1,141 @@
+﻿@page "/MarketProperty/Create"
+@inject NavigationManager navigationManager
+@inject IMarketPropertyService propertyService
+@inject IMunicipalityService municipalityService
+
+@* Author: Allan *@
+
+<style>
+    .position-absolute {
+        position: absolute;
+        background-color: white;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    }
+</style>
+
+@* Author: Johan *@
+
+@* @if (!response.Success)
+{
+    <div class="alert alert-danger">
+        <h4>@response.Message</h4>
+    </div>
+} *@
+
+<div class="border rounded py-4 px-4 shadow">
+    <h4 class="mb-4">Lägg till ny bostad</h4>
+
+    <EditForm Model="@NewMarketProperty" OnValidSubmit="@HandleValidSubmit">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <div class="mb-3">
+
+            <label class="form-label">Kommun</label>
+            <select class="form-select" @bind="NewMarketProperty.MunicipalityId">
+                <option value="">Välj kommun</option>
+                @foreach (var municipality in allMunicipalities)
+                {
+                    <option value="@municipality.MunicipalityId">@municipality.Name</option>
+                }
+            </select>
+
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Typ av bostad</label>
+            <select class="form-select" @bind="NewMarketProperty.Category">
+                @foreach (PropertyCategory category in Enum.GetValues(typeof(PropertyCategory)))
+                {
+                    <option value="@category">@GetPropertyCategoryDisplayName(category)</option>
+                }
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Pris</label>
+            <InputNumber class="form-control" @bind-Value="NewMarketProperty.Price" />
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label class="form-label">Boarea (m²)</label>
+                <InputNumber class="form-control" @bind-Value="NewMarketProperty.AncillaryArea" />
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">Tomtarea (m²)</label>
+                <InputNumber class="form-control" @bind-Value="NewMarketProperty.LotArea" />
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Adress</label>
+            <InputText class="form-control" @bind-Value="NewMarketProperty.PropertyAddress" />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Beskrivning</label>
+            <InputTextArea class="form-control" @bind-Value="NewMarketProperty.Description" />
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-md-4">
+                <label class="form-label">Antal rum</label>
+                <InputNumber class="form-control" @bind-Value="NewMarketProperty.AmountOfRooms" />
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">Månadsavgift (kr)</label>
+                <InputNumber class="form-control" @bind-Value="NewMarketProperty.MonthlyFee" />
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">Årlig driftkostnad (kr)</label>
+                <InputNumber class="form-control" @bind-Value="NewMarketProperty.YearlyMaintenanceCost" />
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Byggnadsår</label>
+            <InputNumber class="form-control" @bind-Value="NewMarketProperty.ConstructionYear" />
+        </div>
+
+        <button type="submit" class="btn btn-success w-100 mt-3">Spara bostad</button>
+    </EditForm>
+</div>
+
+@code {
+    private List<MunicipalityDto> allMunicipalities = new();
+    private MarketPropertyCreateDto NewMarketProperty = new();
+    private string? errorMessage;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var result = await municipalityService.GetAllMunicipalities();
+        allMunicipalities = result.Data ?? new List<MunicipalityDto>();
+    }
+
+    private string GetPropertyCategoryDisplayName(PropertyCategory category) =>
+        category switch
+        {
+            PropertyCategory.Villa => "Villa",
+            PropertyCategory.CondominiumApartment => "Lägenhet",
+            PropertyCategory.CondominiumTownhouse => "Radhus",
+            PropertyCategory.VacationHome => "Fritidshus",
+            _ => category.ToString()
+        };
+
+    private async Task HandleValidSubmit()
+    {
+        try
+        {
+            var newId = await propertyService.CreateMarketProperty(NewMarketProperty);
+            navigationManager.NavigateTo($"/marketproperty/details/{newId}");
+        }
+        catch (ApiException ex)
+        {
+            errorMessage = $"Ett fel inträffade: {ex.StatusCode} - {ex.Message}";
+            Console.WriteLine(errorMessage);
+        }
+    }
+}

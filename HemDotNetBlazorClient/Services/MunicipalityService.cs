@@ -15,16 +15,16 @@ namespace HemDotNetBlazorClient.Services
         }
 
         // Author: Allan
-        public async Task<Response<List<MunicipalityNameDto>>> MunicipalitiesSearch(string searchTerm)
+        public async Task<Response<List<MunicipalityDto>>> MunicipalitiesSearch(string searchTerm)
         {
-            Response<List<MunicipalityNameDto>> response;
+            Response<List<MunicipalityDto>> response;
 
             try
             {
                 await GetBearerToken();
 
                 var data = await _client.SearchAsync(searchTerm);
-                response = new Response<List<MunicipalityNameDto>>
+                response = new Response<List<MunicipalityDto>>
                 {
                     Data = data.ToList(),
                     Success = true
@@ -32,7 +32,31 @@ namespace HemDotNetBlazorClient.Services
             }
             catch (ApiException ex)
             {
-                response = ConvertApiExceptions<List<MunicipalityNameDto>>(ex);
+                response = ConvertApiExceptions<List<MunicipalityDto>>(ex);
+            }
+
+            return response;
+        }
+
+        //Co-Author: Johan
+        public async Task<Response<List<MunicipalityDto>>> GetAllMunicipalities()
+        {
+            Response<List<MunicipalityDto>> response;
+
+            try
+            {
+                await GetBearerToken();
+
+                var data = await _client.MunicipalityAsync();
+                response = new Response<List<MunicipalityDto>>
+                {
+                    Data = data.ToList(),
+                    Success = true
+                };
+            }
+            catch (ApiException ex)
+            {
+                response = ConvertApiExceptions<List<MunicipalityDto>>(ex);
             }
 
             return response;

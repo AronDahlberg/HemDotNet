@@ -95,7 +95,7 @@ namespace HemDotNetWebApi.Mapping
 
 
             // Allan
-            CreateMap<Municipality, MunicipalityNameDto>()
+            CreateMap<Municipality, MunicipalityDto>()
             .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.MunicipalityName));
 
             // Allan

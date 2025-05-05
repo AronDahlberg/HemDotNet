@@ -1,0 +1,16 @@
+﻿@page "/MarketProperty/Details/{Id:int}"
+@inject IMarketPropertyService propertyService
+
+<h3>Details</h3>
+
+@code {
+
+    [Parameter] public int id { get; set; }
+    private MarketPropertyDetailsDto? marketProperty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        marketProperty = await propertyService.GetMarketPropertyById(id);
+    }
+
+}
