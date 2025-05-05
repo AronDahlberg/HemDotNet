@@ -1,10 +1,12 @@
 ﻿using AutoMapper;
+using HemDotNetWebApi.Constants;
 using HemDotNetWebApi.Data;
 using HemDotNetWebApi.DTO;
 using HemDotNetWebApi.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace HemDotNetWebApi.Controllers
 {
@@ -68,14 +70,12 @@ namespace HemDotNetWebApi.Controllers
             }
 
 
-            /*
-            placeholder; in future, check ownership
-            later: Get userId from JWT or claims
-            if(await _repo.IsPropertyOwnedByAgency(marketPropertyId, AgencyId)!=true)
+            var userId = User.FindFirstValue(CustomClaimTypes.Uid);
+
+            if (!await _repository.IsPropertyOwnedByAgentAsync(dto.MarketPropertyId, userId))
             {
-                return Forbid(); // or Unauthorized()
+                return Forbid("You do not own this property.");
             }
-            */
 
             try
             {
@@ -87,7 +87,7 @@ namespace HemDotNetWebApi.Controllers
                 var addedImage = await _repository.AddImageAsync(newImage, imageFile);
                 var resultDto = _mapper.Map<PropertyImageDto>(addedImage);
 
-                return CreatedAtAction(nameof(GetPropertyImages), new { marketPropertyId = dto.MarketPropertyId }, resultDto);
+                return Ok(resultDto);
             }
             catch (Exception ex)
             {
@@ -98,7 +98,6 @@ namespace HemDotNetWebApi.Controllers
         // Allan
         [HttpDelete("{imageId}")]
         [Authorize]
-
         public async Task<ActionResult> DeletePropertyImage(int imageId)
         {
             if (!await _repository.ImageExistsAsync(imageId))
@@ -108,10 +107,18 @@ namespace HemDotNetWebApi.Controllers
 
             try
             {
+                var userId = User.FindFirstValue(CustomClaimTypes.Uid);
+                var propertyId = await _repository.GetPropertyIdByImageIdAsync(imageId);
+
+                if (propertyId == null || !await _repository.IsPropertyOwnedByAgentAsync(propertyId.Value, userId))
+                {
+                    return Forbid("You do not own this property or image.");
+                }
+
                 bool result = await _repository.DeleteImageAsync(imageId);
                 if (result)
                 {
-                    return NoContent();
+                    return Ok();
                 }
                 else
                 {

@@ -3,61 +3,61 @@
 @inject IPropertyImageService PropertyImageService
 @inject HttpClient httpClient
 @inject NavigationManager NavigationManager
-@inject IToastService ToastService
+@*@inject IToastService ToastService*@
 
 <style>
 
     .image-container {
-        border-radius: 8px;
-        overflow: hidden;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        margin-bottom: 15px;
-        position: relative;
-        height: 200px;
-    }
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    margin-bottom: 15px;
+    position: relative;
+    height: 200px;
+}
 
-    .property-image {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        transition: transform 0.3s ease;
-    }
+.property-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
 
-    .image-container:hover .property-image {
-        transform: scale(1.02);
-    }
+.image-container:hover .property-image {
+    transform: scale(1.02);
+}
 
-    .image-delete-btn {
-        position: absolute;
-        top: 10px;
-        right: 10px;
-        opacity: 0.7;
-        transition: opacity 0.3s ease;
-        border-radius: 50%;
-        width: 32px;
-        height: 32px;
-        padding: 0;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
+.image-delete-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    opacity: 0.7;
+    transition: opacity 0.3s ease;
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 
-        .image-delete-btn:hover {
-            opacity: 1;
-        }
+.image-delete-btn:hover {
+    opacity: 1;
+}
 
-    /* Style for the file upload button */
-    label[for="imageUpload"] {
-        cursor: pointer;
-        display: inline-flex;
-        align-items: center;
-        padding: 8px 16px;
-        transition: background-color 0.3s;
-    }
+/* Style for the file upload button */
+label[for="imageUpload"] {
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    padding: 8px 16px;
+    transition: background-color 0.3s;
+}
 
-        label[for="imageUpload"]:hover {
-            background-color: #0b5ed7;
-        }
+label[for="imageUpload"]:hover {
+    background-color: #0b5ed7;
+}
 
 </style>
 
@@ -171,14 +171,14 @@
             var file = e.File;
             if (file == null)
             {
-                ToastService.ShowError("No file selected");
+                //ToastService.ShowError("No file selected");
                 return;
             }
 
             // Check file size (5MB)
             if (file.Size > 5 * 1024 * 1024)
             {
-                ToastService.ShowError("File size exceeds 5MB limit");
+                //ToastService.ShowError("File size exceeds 5MB limit");
                 return;
             }
 
@@ -186,7 +186,7 @@
             string extension = Path.GetExtension(file.Name).ToLowerInvariant();
             if (extension != ".jpg" && extension != ".jpeg" && extension != ".png")
             {
-                ToastService.ShowError("Only JPG, JPEG and PNG files are allowed");
+                //ToastService.ShowError("Only JPG, JPEG and PNG files are allowed");
                 return;
             }
 
@@ -198,17 +198,17 @@
 
             if (response.Success)
             {
-                ToastService.ShowSuccess("Image uploaded successfully");
+                //ToastService.ShowSuccess("Image uploaded successfully");
                 await LoadImages();
             }
             else
             {
-                ToastService.ShowError(response.Message ?? "Error uploading image");
+                //ToastService.ShowError(response.Message ?? "Error uploading image");
             }
         }
         catch (Exception ex)
         {
-            ToastService.ShowError($"Error: {ex.Message}");
+            //ToastService.ShowError($"Error: {ex.Message}");
         }
         finally
         {
@@ -232,17 +232,17 @@
 
             if (response.Success)
             {
-                ToastService.ShowSuccess("Image deleted successfully");
+                //ToastService.ShowSuccess("Image deleted successfully");
                 await LoadImages();
             }
             else
             {
-                ToastService.ShowError(response.Message ?? "Error deleting image");
+                //ToastService.ShowError(response.Message ?? "Error deleting image");
             }
         }
         catch (Exception ex)
         {
-            ToastService.ShowError($"Error: {ex.Message}");
+            //ToastService.ShowError($"Error: {ex.Message}");
         }
     }
 

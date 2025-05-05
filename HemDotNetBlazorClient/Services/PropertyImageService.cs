@@ -46,16 +46,13 @@ namespace HemDotNetBlazorClient.Services
             {
                 await GetBearerToken();
 
-                
                 var formData = new MultipartFormDataContent();
 
                 formData.Add(new StringContent(marketPropertyId.ToString()), "MarketPropertyId");
 
                 formData.Add(fileContent, "imageFile", "image" + Path.GetExtension(fileContent.Headers.ContentDisposition?.FileName ?? ".jpg"));
-
                 var fileParameter = new FileParameter(await fileContent.ReadAsStreamAsync(), "image.jpg", fileContent.Headers.ContentType?.MediaType);
                 var data = await _client.PropertyImagePOSTAsync(marketPropertyId, fileParameter);
-
                 response = new Response<PropertyImageDto>
                 {
                     Data = data,

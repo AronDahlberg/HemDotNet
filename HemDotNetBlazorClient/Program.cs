@@ -41,6 +41,7 @@ namespace HemDotNetBlazorClient
             builder.Services.AddScoped<IMunicipalityService, MunicipalityService>();
             builder.Services.AddScoped<IRealEstateAgentService, RealEstateAgentService>();
             builder.Services.AddScoped<IPropertyImageService, PropertyImageService>();
+            builder.Services.AddScoped<IToastService, ToastService>();
 
             // Load configuration
             builder.Services.AddScoped<IConfiguration>(_ => builder.Configuration);
