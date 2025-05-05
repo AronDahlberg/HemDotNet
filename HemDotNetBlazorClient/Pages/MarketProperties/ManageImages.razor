@@ -1,0 +1,197 @@
+﻿@page "/property/{MarketPropertyId:int}/manageimages"
+@using System.IO
+@inject IPropertyImageService PropertyImageService
+@inject HttpClient httpClient
+@inject NavigationManager NavigationManager
+@inject IToastService ToastService
+
+<div class="container my-4">
+    <h3>Property Images</h3>
+
+    @if (loading)
+    {
+        <div class="text-center">
+            <div class="spinner-border" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
+    }
+    else if (errorMessage != null)
+    {
+        <div class="alert alert-danger">@errorMessage</div>
+    }
+    else
+    {
+        @if (images != null && images.Any())
+        {
+            <div class="row g-3">
+                @foreach (var image in images)
+                {
+                    <div class="col-md-4 col-lg-3">
+                        <div class="position-relative image-container">
+                            <img src="@($"{httpClient.BaseAddress}{image.ImageUrl}")" class="img-fluid rounded property-image" alt="Property image" />
+                            <button class="btn btn-sm btn-danger image-delete-btn" @onclick="() => DeleteImage(image.PropertyImageId)">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <div class="alert alert-info">No images available for this property.</div>
+        }
+    }
+
+    <div class="mt-4">
+        <InputFile OnChange="OnInputFileChange" class="d-none" id="imageUpload" />
+        <label for="imageUpload" class="btn btn-primary">
+            <i class="fas fa-plus me-2"></i>Add Image
+        </label>
+
+        @if (uploadLoading)
+        {
+            <div class="spinner-border spinner-border-sm ms-2" role="status">
+                <span class="visually-hidden">Uploading...</span>
+            </div>
+        }
+    </div>
+
+    <div class="mt-3">
+        <button class="btn btn-secondary" @onclick="GoBack">Back</button>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public int MarketPropertyId { get; set; }
+
+    private List<PropertyImageDto> images;
+    private bool loading = true;
+    private bool uploadLoading = false;
+    private string errorMessage;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadImages();
+    }
+
+    private async Task LoadImages()
+    {
+        loading = true;
+        errorMessage = null;
+
+        try
+        {
+            var response = await PropertyImageService.GetPropertyImages(MarketPropertyId);
+
+            if (response.Success)
+            {
+                images = response.Data;
+            }
+            else
+            {
+                errorMessage = response.Message;
+            }
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Error loading images: {ex.Message}";
+        }
+        finally
+        {
+            loading = false;
+            StateHasChanged();
+        }
+    }
+
+    private async Task OnInputFileChange(InputFileChangeEventArgs e)
+    {
+        try
+        {
+            uploadLoading = true;
+
+            var file = e.File;
+            if (file == null)
+            {
+                ToastService.ShowError("No file selected");
+                return;
+            }
+
+            // Check file size (5MB)
+            if (file.Size > 5 * 1024 * 1024)
+            {
+                ToastService.ShowError("File size exceeds 5MB limit");
+                return;
+            }
+
+            // Check file type
+            string extension = Path.GetExtension(file.Name).ToLowerInvariant();
+            if (extension != ".jpg" && extension != ".jpeg" && extension != ".png")
+            {
+                ToastService.ShowError("Only JPG, JPEG and PNG files are allowed");
+                return;
+            }
+
+            // Convert file to stream for upload
+            var fileContent = new StreamContent(file.OpenReadStream(5 * 1024 * 1024));
+            fileContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(file.ContentType);
+
+            var response = await PropertyImageService.AddPropertyImage(MarketPropertyId, fileContent);
+
+            if (response.Success)
+            {
+                ToastService.ShowSuccess("Image uploaded successfully");
+                await LoadImages();
+            }
+            else
+            {
+                ToastService.ShowError(response.Message ?? "Error uploading image");
+            }
+        }
+        catch (Exception ex)
+        {
+            ToastService.ShowError($"Error: {ex.Message}");
+        }
+        finally
+        {
+            uploadLoading = false;
+            StateHasChanged();
+        }
+    }
+
+    private async Task DeleteImage(int imageId)
+    {
+        /*
+        if (!await JSRuntime.InvokeAsync<bool>("confirm", "Are you sure you want to delete this image?"))
+        {
+            return;
+        }
+        */
+
+        try
+        {
+            var response = await PropertyImageService.DeletePropertyImage(imageId);
+
+            if (response.Success)
+            {
+                ToastService.ShowSuccess("Image deleted successfully");
+                await LoadImages();
+            }
+            else
+            {
+                ToastService.ShowError(response.Message ?? "Error deleting image");
+            }
+        }
+        catch (Exception ex)
+        {
+            ToastService.ShowError($"Error: {ex.Message}");
+        }
+    }
+
+    private void GoBack()
+    {
+        NavigationManager.NavigateTo($"/property/{MarketPropertyId}");
+    }
+}
