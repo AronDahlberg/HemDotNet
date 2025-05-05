@@ -4,6 +4,7 @@ using HemDotNetBlazorClient.Services.Base;
 
 namespace HemDotNetBlazorClient.Services
 {
+    // Author: Allan
     public class PropertyImageService : BaseHttpService, IPropertyImageService
     {
         private readonly IClient _client;
@@ -14,6 +15,7 @@ namespace HemDotNetBlazorClient.Services
             _client = client;
         }
 
+        // Allan
         public async Task<Response<List<PropertyImageDto>>> GetPropertyImages(int marketPropertyId)
         {
             Response<List<PropertyImageDto>> response;
@@ -38,6 +40,7 @@ namespace HemDotNetBlazorClient.Services
             return response;
         }
 
+        // Allan
         public async Task<Response<PropertyImageDto>> AddPropertyImage(int marketPropertyId, StreamContent fileContent)
         {
             Response<PropertyImageDto> response;
@@ -67,6 +70,7 @@ namespace HemDotNetBlazorClient.Services
             return response;
         }
 
+        // Allan
         public async Task<Response<bool>> DeletePropertyImage(int imageId)
         {
             Response<bool> response;

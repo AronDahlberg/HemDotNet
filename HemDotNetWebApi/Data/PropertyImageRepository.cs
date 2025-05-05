@@ -89,12 +89,14 @@ namespace HemDotNetWebApi.Data
             return await _context.MarketProperties.AnyAsync(m => m.MarketPropertyId == marketPropertyId);
         }
 
+        // Allan
         public async Task<bool> IsPropertyOwnedByAgentAsync(int marketPropertyId, string agentUserId)
         {
             return await _context.MarketProperties
                 .AnyAsync(p => p.MarketPropertyId == marketPropertyId && p.RealEstateAgent.Id == agentUserId);
         }
 
+        // Allan
         public async Task<int?> GetPropertyIdByImageIdAsync(int imageId)
         {
             var image = await _context.PropertyImages
