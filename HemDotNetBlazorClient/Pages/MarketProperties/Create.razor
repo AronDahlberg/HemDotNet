@@ -2,6 +2,10 @@
 @inject NavigationManager navigationManager
 @inject IMarketPropertyService propertyService
 @inject IMunicipalityService municipalityService
+@inject ApiAuthenticationStateProvider authStateProvider
+@using HemDotNetBlazorClient.Providers
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize]
 
 @* Author: Allan *@
 
@@ -62,11 +66,15 @@
         <div class="row mb-3">
             <div class="col-md-6">
                 <label class="form-label">Boarea (m²)</label>
-                <InputNumber class="form-control" @bind-Value="NewMarketProperty.AncillaryArea" />
+                <InputNumber class="form-control" @bind-Value="NewMarketProperty.LivingArea" />
             </div>
             <div class="col-md-6">
                 <label class="form-label">Tomtarea (m²)</label>
                 <InputNumber class="form-control" @bind-Value="NewMarketProperty.LotArea" />
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">Biyta (m²)</label>
+                <InputNumber class="form-control" @bind-Value="NewMarketProperty.AncillaryArea" />
             </div>
         </div>
 
@@ -113,6 +121,12 @@
     {
         var result = await municipalityService.GetAllMunicipalities();
         allMunicipalities = result.Data ?? new List<MunicipalityDto>();
+
+        var authState = await authStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        var userId = user.FindFirst("uid")?.Value;
+        NewMarketProperty.RealEstateAgentId = userId;
     }
 
     private string GetPropertyCategoryDisplayName(PropertyCategory category) =>

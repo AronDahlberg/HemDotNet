@@ -91,7 +91,7 @@ namespace HemDotNetBlazorClient.Services
         {
             try
             {
-                //await GetBearerToken(); ??????
+                await GetBearerToken();
 
                 var marketPropertyId = await _client.MarketPropertyPOSTAsync(newMarketProperty);
                 return marketPropertyId;
