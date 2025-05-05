@@ -3,66 +3,65 @@
 @inject IPropertyImageService PropertyImageService
 @inject HttpClient httpClient
 @inject NavigationManager NavigationManager
-@*@inject IToastService ToastService*@
 
 <style>
-
     .image-container {
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    margin-bottom: 15px;
-    position: relative;
-    height: 200px;
-}
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        margin-bottom: 15px;
+        position: relative;
+        height: 200px;
+    }
 
-.property-image {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 0.3s ease;
-}
+    .property-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.3s ease;
+    }
 
-.image-container:hover .property-image {
-    transform: scale(1.02);
-}
+    .image-container:hover .property-image {
+        transform: scale(1.02);
+    }
 
-.image-delete-btn {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    opacity: 0.7;
-    transition: opacity 0.3s ease;
-    border-radius: 50%;
-    width: 32px;
-    height: 32px;
-    padding: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
+    .image-delete-btn {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        opacity: 0.7;
+        transition: opacity 0.3s ease;
+        border-radius: 5%;
+        width: 32px;
+        height: 32px;
+        padding: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
 
-.image-delete-btn:hover {
-    opacity: 1;
-}
+        .image-delete-btn:hover {
+            opacity: 1;
+        }
 
-/* Style for the file upload button */
-label[for="imageUpload"] {
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    padding: 8px 16px;
-    transition: background-color 0.3s;
-}
-
-label[for="imageUpload"]:hover {
-    background-color: #0b5ed7;
-}
-
+    .trash-icon {
+        width: 16px;
+        height: 16px;
+    }
 </style>
 
 <div class="container my-4">
     <h3>Property Images</h3>
+
+    <!-- Notification area with fixed height to prevent jumping -->
+    <div id="notificationArea" style="min-height: 60px;">
+        @if (!string.IsNullOrEmpty(notificationMessage))
+        {
+            <div class="alert @notificationClass alert-dismissible fade show" role="alert">
+                @notificationMessage
+            </div>
+        }
+    </div>
 
     @if (loading)
     {
@@ -84,10 +83,10 @@ label[for="imageUpload"]:hover {
                 @foreach (var image in images)
                 {
                     <div class="col-md-4 col-lg-3">
-                        <div class="position-relative image-container">
-                            <img src="@($"{httpClient.BaseAddress}{image.ImageUrl}")" class="img-fluid rounded property-image" alt="Property image" />
+                        <div class="image-container">
+                            <img src="@($"{httpClient.BaseAddress}{image.ImageUrl}")" class="property-image" alt="Property image" />
                             <button class="btn btn-sm btn-danger image-delete-btn" @onclick="() => DeleteImage(image.PropertyImageId)">
-                                <i class="fas fa-trash"></i>
+                                <img src="trash.svg" alt="Delete" class="trash-icon" />
                             </button>
                         </div>
                     </div>
@@ -108,9 +107,9 @@ label[for="imageUpload"]:hover {
 
         @if (uploadLoading)
         {
-            <div class="spinner-border spinner-border-sm ms-2" role="status">
+            <span class="spinner-border spinner-border-sm ms-2" role="status">
                 <span class="visually-hidden">Uploading...</span>
-            </div>
+            </span>
         }
     </div>
 
@@ -127,6 +126,11 @@ label[for="imageUpload"]:hover {
     private bool loading = true;
     private bool uploadLoading = false;
     private string errorMessage;
+
+    // Notification properties
+    private string notificationMessage;
+    private string notificationClass;
+    private System.Threading.Timer notificationTimer;
 
     protected override async Task OnInitializedAsync()
     {
@@ -171,14 +175,14 @@ label[for="imageUpload"]:hover {
             var file = e.File;
             if (file == null)
             {
-                //ToastService.ShowError("No file selected");
+                ShowNotification("No file selected", "error"); // Changed back to "error" to match your original type
                 return;
             }
 
             // Check file size (5MB)
             if (file.Size > 5 * 1024 * 1024)
             {
-                //ToastService.ShowError("File size exceeds 5MB limit");
+                ShowNotification("File size exceeds 5MB limit", "error");
                 return;
             }
 
@@ -186,7 +190,7 @@ label[for="imageUpload"]:hover {
             string extension = Path.GetExtension(file.Name).ToLowerInvariant();
             if (extension != ".jpg" && extension != ".jpeg" && extension != ".png")
             {
-                //ToastService.ShowError("Only JPG, JPEG and PNG files are allowed");
+                ShowNotification("Only JPG, JPEG and PNG files are allowed", "error");
                 return;
             }
 
@@ -198,17 +202,17 @@ label[for="imageUpload"]:hover {
 
             if (response.Success)
             {
-                //ToastService.ShowSuccess("Image uploaded successfully");
+                ShowNotification("Image uploaded successfully", "success");
                 await LoadImages();
             }
             else
             {
-                //ToastService.ShowError(response.Message ?? "Error uploading image");
+                ShowNotification(response.Message ?? "Error uploading image", "error");
             }
         }
         catch (Exception ex)
         {
-            //ToastService.ShowError($"Error: {ex.Message}");
+            ShowNotification($"Error: {ex.Message}", "error");
         }
         finally
         {
@@ -232,22 +236,58 @@ label[for="imageUpload"]:hover {
 
             if (response.Success)
             {
-                //ToastService.ShowSuccess("Image deleted successfully");
+                ShowNotification("Image deleted successfully", "success");
                 await LoadImages();
             }
             else
             {
-                //ToastService.ShowError(response.Message ?? "Error deleting image");
+                ShowNotification(response.Message ?? "Error deleting image", "error");
             }
         }
         catch (Exception ex)
         {
-            //ToastService.ShowError($"Error: {ex.Message}");
+            ShowNotification($"Error: {ex.Message}", "error");
         }
+    }
+
+    private void ShowNotification(string message, string type)
+    {
+        notificationMessage = message;
+
+        // Map notification types to Bootstrap alert classes
+        notificationClass = type.ToLower() switch
+        {
+            "success" => "alert-success",
+            "error" => "alert-danger", // Map your original "error" to Bootstrap's "danger"
+            "danger" => "alert-danger",
+            "info" => "alert-info",
+            "warning" => "alert-warning",
+            _ => "alert-info"
+        };
+
+        // Dispose the previous timer if it exists
+        notificationTimer?.Dispose();
+
+        // Create a new timer to clear the notification after 5 seconds
+        notificationTimer = new System.Threading.Timer(_ =>
+        {
+            InvokeAsync(() =>
+            {
+                notificationMessage = null;
+                StateHasChanged();
+            });
+        }, null, 5000, Timeout.Infinite);
+
+        StateHasChanged();
     }
 
     private void GoBack()
     {
         NavigationManager.NavigateTo($"/property/{MarketPropertyId}");
+    }
+
+    public void Dispose()
+    {
+        notificationTimer?.Dispose();
     }
 }
