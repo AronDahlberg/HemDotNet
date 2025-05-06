@@ -8,52 +8,52 @@
 
 <style>
     .image-container {
-        border-radius: 8px;
-        overflow: hidden;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        margin-bottom: 15px;
-        position: relative;
-        height: 200px;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    margin-bottom: 15px;
+    position: relative;
+    height: 200px;
     }
 
     .property-image {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        transition: transform 0.3s ease;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
     }
 
     .image-container:hover .property-image {
-        transform: scale(1.02);
+    transform: scale(1.02);
     }
 
     .image-delete-btn {
-        position: absolute;
-        top: 10px;
-        right: 10px;
-        opacity: 0.7;
-        transition: opacity 0.3s ease;
-        border-radius: 10%;
-        width: 32px;
-        height: 32px;
-        padding: 0;
-        display: flex;
-        align-items: center;
-        justify-content: center;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    opacity: 0.7;
+    transition: opacity 0.3s ease;
+    border-radius: 10%;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     }
 
-        .image-delete-btn:hover {
-            opacity: 1;
-        }
+    .image-delete-btn:hover {
+    opacity: 1;
+    }
 
     .trash-icon {
-        width: 16px;
-        height: 16px;
+    width: 16px;
+    height: 16px;
     }
 </style>
 
 <div class="container my-4">
-    <h3>Property Images</h3>
+    <h3>Lägg till eller ta bort bilder.</h3>
     <div id="notificationArea" style="min-height: 60px;">
         @if (!string.IsNullOrEmpty(notificationMessage))
         {
@@ -152,7 +152,8 @@
             }
             else
             {
-                errorMessage = response.Message;
+                //errorMessage = response.Message;
+                errorMessage = "Bara inloggade användare som har tillgång till objektet får lägga till eller ta bort bilder.";
             }
         }
         catch (Exception ex)
@@ -175,26 +176,23 @@
             var file = e.File;
             if (file == null)
             {
-                ShowNotification("No file selected", "error");
+                ShowNotification("Ingen fil har valts.", "error");
                 return;
             }
 
-            // Check file size (5MB)
             if (file.Size > 5 * 1024 * 1024)
             {
-                ShowNotification("File size exceeds 5MB limit", "error");
+                ShowNotification("Filstorleken överstiger gränsen på 5 MB", "error");
                 return;
             }
 
-            // Check file type
             string extension = Path.GetExtension(file.Name).ToLowerInvariant();
             if (extension != ".jpg" && extension != ".jpeg" && extension != ".png")
             {
-                ShowNotification("Only JPG, JPEG and PNG files are allowed", "error");
+                ShowNotification("Endast JPG-, JPEG- och PNG-filer är tillåtna", "error");
                 return;
             }
 
-            // Convert file to stream for upload
             var fileContent = new StreamContent(file.OpenReadStream(5 * 1024 * 1024));
             fileContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(file.ContentType);
 
@@ -202,12 +200,12 @@
 
             if (response.Success)
             {
-                ShowNotification("Image uploaded successfully", "success");
+                ShowNotification("Bilden har laddats upp", "success");
                 await LoadImages();
             }
             else
             {
-                ShowNotification(response.Message ?? "Error uploading image", "error");
+                ShowNotification(response.Message ?? "Fel vid uppladdning av bild", "error");
             }
         }
         catch (Exception ex)
@@ -229,12 +227,12 @@
 
             if (response.Success)
             {
-                ShowNotification("Image deleted successfully", "success");
+                ShowNotification("Bilden har raderats", "success");
                 await LoadImages();
             }
             else
             {
-                ShowNotification(response.Message ?? "Error deleting image", "error");
+                ShowNotification(response.Message ?? "Fel vid borttagning av bild", "error");
             }
         }
         catch (Exception ex)
