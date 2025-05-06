@@ -27,6 +27,7 @@ namespace HemDotNetWebApi
                     opt.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
                 });
 
+
             builder.Services.AddAutoMapper(typeof(Program));
 
             builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(

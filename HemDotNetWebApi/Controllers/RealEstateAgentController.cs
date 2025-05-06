@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using HemDotNetWebApi.Data;
+using HemDotNetWebApi.DTO;
 using HemDotNetWebApi.DTOs;
+using HemDotNetWebApi.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -22,9 +24,8 @@ namespace HemDotNetWebApi.Controllers
 
         // Chris
         // GET: RealEstateAgent/5
-        [Authorize]
         [HttpGet("{agentId}")]
-        public async Task<IActionResult> GetAgent(string agentId)
+        public async Task<ActionResult<RealEstateAgent>> GetAgent(string agentId)
         {
             var agent = await _realEstateAgentRepository.GetAsync(agentId);
 
@@ -34,6 +35,20 @@ namespace HemDotNetWebApi.Controllers
             }
 
             return Ok(agent);
+        }
+
+        // Allan
+        [HttpGet("/GetProfile/{agentId}")]
+        public async Task<ActionResult<RealEstateAgentDto>> GetAgentProfile(string agentId)
+        {
+            var agent = await _realEstateAgentRepository.GetAsync(agentId);
+
+            if (agent == null)
+                return NotFound($"Agent with ID {agentId} not found.");
+
+            var dto = _mapper.Map<RealEstateAgentDto>(agent);
+
+            return Ok(dto);
         }
 
         // Chris

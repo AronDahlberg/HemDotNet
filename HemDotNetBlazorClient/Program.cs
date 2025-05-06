@@ -39,6 +39,8 @@ namespace HemDotNetBlazorClient
             builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
             builder.Services.AddScoped<IMarketPropertyService, MarketPropertyService>();
             builder.Services.AddScoped<IMunicipalityService, MunicipalityService>();
+            builder.Services.AddScoped<IRealEstateAgentService, RealEstateAgentService>();
+            builder.Services.AddScoped<IPropertyImageService, PropertyImageService>();
 
             // Load configuration
             builder.Services.AddScoped<IConfiguration>(_ => builder.Configuration);

@@ -1,0 +1,200 @@
+﻿@page "/users/profile/{Id}"
+@inject IRealEstateAgentService realEstateAgentService
+@inject IMarketPropertyService marketPropertyService
+@inject NavigationManager NavigationManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject HttpClient httpClient
+
+@using Microsoft.AspNetCore.Components.Authorization
+
+
+@*Author: Allan *@
+
+
+@*Navigate to this page from another with the right id through:
+
+string id = "";
+var escapedId = Uri.EscapeDataString(id);
+NavigationManager.NavigateTo($"/users/profile/{escapedId}");
+
+The id is "escaped" beforehand because it will contain "-"
+*@
+
+
+
+@if (agent == null)
+{
+    <div class="d-flex justify-content-center align-items-center" style="height: 300px;">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Laddar...</span>
+        </div>
+        <span class="ms-3 text-muted">Laddar mäklarinformation...</span>
+    </div>
+}
+else
+{
+    <div class="container my-5 py-4">
+        <div class="card border-0 shadow-sm mb-4">
+            <div class="card-body p-0">
+                <div class="row g-0">
+                    <div class="col-md-4 text-center p-4 bg-light">
+                        <div class="position-relative mb-4">
+                            <img src="@($"{httpClient.BaseAddress}{agent.RealEstateAgentImageUrl}")"
+                                 class="img-fluid rounded-circle shadow border border-3 border-white"
+                                 alt="@agent.RealEstateAgentFirstName @agent.RealEstateAgentLastName"
+                                 style="width: 180px; height: 180px; object-fit: cover;" />
+                        </div>
+                        <h4 class="fw-bold mb-1">@agent.RealEstateAgentFirstName @agent.RealEstateAgentLastName</h4>
+                        <p class="text-muted mb-3">Fastighetsmäklare</p>
+
+                        @if (isCurrentUser)
+                        {
+                            <button class="btn btn-primary w-100 mb-3" @onclick="NavigateToEdit">
+                                <i class="bi bi-pencil-square me-2"></i>Redigera profil
+                            </button>
+                        }
+                    </div>
+                    <div class="col-md-8 p-4">
+                        <h5 class="text-primary mb-4">Kontaktinformation</h5>
+
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="bg-light p-2 rounded-circle me-3">
+                                <i class="bi bi-building text-primary"></i>
+                            </div>
+                            <div>
+                                <div class="text-muted small">Mäklarbyrå</div>
+                                <div class="fw-medium">@agent.RealEstateAgentAgencyName</div>
+                            </div>
+                        </div>
+
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="bg-light p-2 rounded-circle me-3">
+                                <i class="bi bi-telephone text-primary"></i>
+                            </div>
+                            <div>
+                                <div class="text-muted small">Telefon</div>
+                                <div class="fw-medium">@agent.RealEstateAgentPhoneNumber</div>
+                            </div>
+                        </div>
+
+                        <div class="d-flex align-items-center">
+                            <div class="bg-light p-2 rounded-circle me-3">
+                                <i class="bi bi-envelope text-primary"></i>
+                            </div>
+                            <div>
+                                <div class="text-muted small">E-post</div>
+                                <div class="fw-medium">@agent.RealEstateAgentEmail</div>
+                            </div>
+                        </div>
+
+                        <hr class="my-4">
+
+                        <div class="d-flex gap-2">
+                            <a href="mailto:@agent.RealEstateAgentEmail?subject=Intresse%20för%20bostad&body=Hej%20@agent.RealEstateAgentFirstName,%0D%0A%0D%0AJag%20är%20intresserad%20av%20att%20veta%20mer%20om%20dina%20tjänster.%0D%0A%0D%0AMed%20vänliga%20hälsningar,"
+                               class="btn btn-sm btn-outline-secondary">
+                                <i class="bi bi-envelope-open me-1"></i>Kontakta mig
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="propertyListings">
+            @if (isLoadingProperties)
+            {
+                <div class="text-center py-5">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Laddar objekt...</span>
+                    </div>
+                    <p class="mt-2 text-muted">Laddar mäklarens objekt...</p>
+                </div>
+            }
+            else if (agentProperties == null || !agentProperties.Any())
+            {
+                <div class="alert alert-info">
+                    <i class="bi bi-info-circle me-2"></i>Mäklaren har inga aktiva objekt för tillfället.
+                </div>
+            }
+            else
+            {
+                <h3 class="fw-bold">@agentProperties.Count objekt till salu</h3>
+                <div class="container">
+                    <div class="d-flex flex-column align-items-center my-5">
+                        @foreach (var property in agentProperties)
+                        {
+                            <PropertyCard Property="property" />
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter] public string Id { get; set; }
+
+    private RealEstateAgentDto agent;
+    private List<PartialMarketPropertyDTO> agentProperties;
+    private bool isCurrentUser = false;
+    private bool isLoadingProperties = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+        var response = await realEstateAgentService.GetAgentByIdAsync(Id);
+
+        if (response?.Success == true)
+        {
+            agent = response.Data;
+            isCurrentUser = user.Identity?.IsAuthenticated == true &&
+                           user.Identity.Name == agent.RealEstateAgentEmail;
+
+            await LoadAgentProperties();
+        }
+    }
+
+    private async Task LoadAgentProperties()
+    {
+        isLoadingProperties = true;
+
+        try
+        {
+            if (agent?.PropertyIds != null && agent.PropertyIds.Any())
+            {
+                var propertiesResponse = await marketPropertyService.GetMarketPropertiesByAgent(agent.Id);
+
+                if (propertiesResponse?.Success == true)
+                {
+                    agentProperties = propertiesResponse.Data;
+                }
+                else
+                {
+                    agentProperties = new List<PartialMarketPropertyDTO>();
+                }
+            }
+            else
+            {
+                agentProperties = new List<PartialMarketPropertyDTO>();
+            }
+        }
+        catch (Exception ex)
+        {
+            agentProperties = new List<PartialMarketPropertyDTO>();
+        }
+        finally
+        {
+            isLoadingProperties = false;
+
+            // this re-renders the component
+            StateHasChanged();
+        }
+    }
+
+    private void NavigateToEdit()
+    {
+        NavigationManager.NavigateTo($"/users/profile/edit/{Id}");
+    }
+}
