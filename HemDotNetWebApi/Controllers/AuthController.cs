@@ -56,7 +56,7 @@ namespace HemDotNetWebApi.Controllers
                     NormalizedUserName = registerDto.Email.ToUpperInvariant(),
                     EmailConfirmed = true,
                     RealEstateAgentEmail = registerDto.Email,
-                    RealEstateAgentImageUrl = "/Images/DefaultProfilePicture.png",
+                    RealEstateAgentImageUrl = "Images/DefaultProfilePicture.png",
                     RealEstateAgentAgency = agency
                 };
 
