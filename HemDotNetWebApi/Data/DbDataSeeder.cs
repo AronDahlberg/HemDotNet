@@ -275,20 +275,26 @@ namespace HemDotNetWebApi.Data
             if (context != null && !context.RealEstateAgencies.Any())
             {
                 var agencies = new List<RealEstateAgency>
-            {
-                new RealEstateAgency
                 {
-                    RealEstateAgencyName = "Nordic Homes",
-                    RealEstateAgencyPresentation = "Vi tar skandinavisk design till fastighetsbranschen.",
-                    RealEstateAgencyLogoUrl = "Images/PlaceholderLogo.png"
-                },
-                new RealEstateAgency
-                {
-                    RealEstateAgencyName = "Nordhs Mäklarbyrå",
-                    RealEstateAgencyPresentation = "Letar du efter en pålitlig fastighetsmäklare? Våra mäklare levererar expertis och resultat för ditt bostadsköp eller -försäljning.",
-                    RealEstateAgencyLogoUrl = "Images/PlaceholderLogo.png"
-                }
-            };
+                    new RealEstateAgency
+                    {
+                        RealEstateAgencyName = "Wait list",
+                        RealEstateAgencyPresentation = "Vänta tills administrationen godkänner ditt konto.",
+                        RealEstateAgencyLogoUrl = "Images/PlaceholderLogo.png"
+                    },
+                    new RealEstateAgency
+                    {
+                        RealEstateAgencyName = "Nordic Homes",
+                        RealEstateAgencyPresentation = "Vi tar skandinavisk design till fastighetsbranschen.",
+                        RealEstateAgencyLogoUrl = "Images/PlaceholderLogo.png"
+                    },
+                    new RealEstateAgency
+                    {
+                        RealEstateAgencyName = "Nordhs Mäklarbyrå",
+                        RealEstateAgencyPresentation = "Letar du efter en pålitlig fastighetsmäklare? Våra mäklare levererar expertis och resultat för ditt bostadsköp eller -försäljning.",
+                        RealEstateAgencyLogoUrl = "Images/PlaceholderLogo.png"
+                    }
+                };
 
                 context.RealEstateAgencies.AddRange(agencies);
                 await context.SaveChangesAsync();
