@@ -35,7 +35,7 @@ namespace HemDotNetWebApi.Data
             string fileExtension = Path.GetExtension(file.FileName);
             string fileName = $"{Guid.NewGuid()}{fileExtension}";
             string filePath = Path.Combine(_imageDirectory, fileName);
-            string relativePath = $"/Images/PropertyImages/{fileName}";
+            string relativePath = $"Images/PropertyImages/{fileName}";
 
             using (var stream = new FileStream(filePath, FileMode.Create))
             {
@@ -87,6 +87,23 @@ namespace HemDotNetWebApi.Data
         public async Task<bool> PropertyExistsAsync(int marketPropertyId)
         {
             return await _context.MarketProperties.AnyAsync(m => m.MarketPropertyId == marketPropertyId);
+        }
+
+        // Allan
+        public async Task<bool> IsPropertyOwnedByAgentAsync(int marketPropertyId, string agentUserId)
+        {
+            return await _context.MarketProperties
+                .AnyAsync(p => p.MarketPropertyId == marketPropertyId && p.RealEstateAgent.Id == agentUserId);
+        }
+
+        // Allan
+        public async Task<int?> GetPropertyIdByImageIdAsync(int imageId)
+        {
+            var image = await _context.PropertyImages
+                .Include(pi => pi.MarketProperty)
+                .FirstOrDefaultAsync(pi => pi.PropertyImageId == imageId);
+
+            return image?.MarketPropertyId;
         }
     }
 }
