@@ -1,0 +1,21 @@
+﻿<div class="mt-4">
+    <InputFile OnChange="OnFileSelected" class="d-none" id="imageUpload" />
+    <label for="imageUpload" class="btn btn-primary">
+        <img src="plusicon.svg" alt="Add" class="mx-1" style="width: 1em; height: 1em; vertical-align: middle;" />
+        Add Image
+    </label>
+
+    @if (IsLoading)
+    {
+        <span class="spinner-border" role="status">
+        </span>
+    }
+</div>
+
+@code {
+    [Parameter]
+    public bool IsLoading { get; set; }
+
+    [Parameter]
+    public EventCallback<InputFileChangeEventArgs> OnFileSelected { get; set; }
+}

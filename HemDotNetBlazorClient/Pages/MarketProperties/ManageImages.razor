@@ -1,4 +1,4 @@
-﻿@page "/property/{MarketPropertyId:int}/manageimages"
+﻿@page "/MarketProperty/{MarketPropertyId:int}/Images"
 @using System.IO
 @inject IPropertyImageService PropertyImageService
 @inject HttpClient httpClient
@@ -67,7 +67,6 @@
     {
         <div class="text-center">
             <div class="spinner-border" role="status">
-                <span class="visually-hidden">Loading...</span>
             </div>
         </div>
     }
@@ -100,21 +99,13 @@
     }
 
     <div class="mt-4">
-        <InputFile OnChange="OnInputFileChange" class="d-none" id="imageUpload" />
-        <label for="imageUpload" class="btn btn-primary">
-            <i class="fas fa-plus me-2"></i>Add Image
-        </label>
-
-        @if (uploadLoading)
-        {
-            <span class="spinner-border spinner-border-sm ms-2" role="status">
-                <span class="visually-hidden">Uploading...</span>
-            </span>
-        }
+        <ImageUploadComponent 
+        IsLoading="@uploadLoading" 
+        OnFileSelected="@OnInputFileChange" />
     </div>
 
     <div class="mt-3">
-        <button class="btn btn-secondary" @onclick="GoBack">Back</button>
+        <button class="btn btn-secondary" @onclick="GoBack">Tillbaka</button>
     </div>
 </div>
 
@@ -132,11 +123,13 @@
     private string notificationClass;
     private System.Threading.Timer notificationTimer;
 
+    // Allan
     protected override async Task OnInitializedAsync()
     {
         await LoadImages();
     }
 
+    // Allan
     private async Task LoadImages()
     {
         loading = true;
@@ -167,6 +160,7 @@
         }
     }
 
+    // Allan
     private async Task OnInputFileChange(InputFileChangeEventArgs e)
     {
         try
@@ -219,6 +213,7 @@
         }
     }
 
+    // Allan
     private async Task DeleteImage(int imageId)
     {
         try
@@ -241,6 +236,7 @@
         }
     }
 
+    // Allan
     private void ShowNotification(string message, string type)
     {
         notificationMessage = message;
@@ -269,11 +265,13 @@
         StateHasChanged();
     }
 
+    // Allan
     private void GoBack()
     {
-        NavigationManager.NavigateTo($"/property/{MarketPropertyId}");
+        NavigationManager.NavigateTo($"/MarketProperty/{MarketPropertyId}");
     }
 
+    // Allan
     public void Dispose()
     {
         notificationTimer?.Dispose();
