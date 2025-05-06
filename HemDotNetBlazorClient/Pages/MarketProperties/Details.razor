@@ -1,0 +1,35 @@
+﻿@page "/MarketProperty/Details/{Id:int}"
+@inject IMarketPropertyService propertyService
+@inject NavigationManager navigationManager
+@using Microsoft.AspNetCore.WebUtilities
+
+<h3>Details</h3>
+
+@if (!string.IsNullOrEmpty(successMessage))
+{
+    <div class="alert alert-success">
+        @successMessage
+    </div>
+}
+
+@code {
+    [Parameter] public int id { get; set; }
+    private Response<MarketPropertyDetailsDto>? marketProperty;
+    private string successMessage;
+
+    //Co-Author: Johan
+    protected override async Task OnInitializedAsync()
+    {
+        marketProperty = await propertyService.GetMarketPropertyById(id);
+
+        var uri = navigationManager.ToAbsoluteUri(navigationManager.Uri);
+        if (QueryHelpers.ParseQuery(uri.Query).TryGetValue("successMessage", out var message))
+        {
+            successMessage = message;
+
+            var cleanUri = uri.GetLeftPart(UriPartial.Path);
+            navigationManager.NavigateTo(cleanUri, forceLoad: false);
+        }
+    }
+
+}

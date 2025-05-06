@@ -1,5 +1,6 @@
 ﻿using Blazored.LocalStorage;
 using HemDotNetBlazorClient.Services.Base;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace HemDotNetBlazorClient.Services
 {
@@ -83,6 +84,54 @@ namespace HemDotNetBlazorClient.Services
             catch (ApiException ex)
             {
                 response = ConvertApiExceptions<List<PartialMarketPropertyDTO>>(ex);
+            }
+
+            return response;
+        }
+
+        //Author: Johan
+        public async Task<Response<int>> CreateMarketProperty(MarketPropertyCreateDto newMarketProperty)
+        {
+            Response<int> response;
+            try
+            {
+                //await GetBearerToken();
+
+                var marketPropertyId = await _client.MarketPropertyPOSTAsync(newMarketProperty);
+                response = new Response<int>
+                {
+                    Data = marketPropertyId,
+                    Success = true
+                };
+            }
+            catch (ApiException ex)
+            {
+                return response = ConvertApiExceptions<int>(ex);
+            }
+
+            return response;
+        }
+
+        //Author: Johan
+        public async Task<Response<MarketPropertyDetailsDto>> GetMarketPropertyById(int marketPropertyId)
+        {
+            Response<MarketPropertyDetailsDto> response;
+
+            try
+            {
+                //await GetBearerToken();
+
+                var marketProperty = await _client.MarketPropertyGETAsync(marketPropertyId);
+                response = new Response<MarketPropertyDetailsDto>
+                {
+                    Data = marketProperty,
+                    Success = true
+                };
+
+            }
+            catch (ApiException ex)
+            {
+                response = ConvertApiExceptions<MarketPropertyDetailsDto>(ex);
             }
 
             return response;

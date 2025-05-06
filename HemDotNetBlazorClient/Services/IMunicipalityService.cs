@@ -5,6 +5,9 @@ namespace HemDotNetBlazorClient.Services
     // Allan
     public interface IMunicipalityService
     {
-        Task<Response<List<MunicipalityNameDto>>> MunicipalitiesSearch(string searchTerm);
+        Task<Response<List<MunicipalityDto>>> MunicipalitiesSearch(string searchTerm);
+
+        //Co-Author: Johan
+        Task<Response<List<MunicipalityDto>>> GetAllMunicipalities();
     }
 }

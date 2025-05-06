@@ -107,8 +107,9 @@ namespace HemDotNetWebApi.Controllers
         }
 
         // Katarina
+        //Co-Author: Johan. Updated return type explicitly to MarketPropertyDetailsDto so NSwag could map properly.
         [HttpGet("{MarketPropertyId}")]
-        public async Task<IActionResult> GetMarketPropertyById(int MarketPropertyId)
+        public async Task<ActionResult<MarketPropertyDetailsDto>> GetMarketPropertyById(int MarketPropertyId)
         {
             var marketProperty = await _marketPropertyRepository.GetMarketPropertyById(MarketPropertyId);
 
@@ -122,9 +123,11 @@ namespace HemDotNetWebApi.Controllers
         }
 
         // Katarina
+        //Co-Author: Johan. Updated to only return the Id of created object, which is all that is required Client side.
+        //Also made the return type more explicit (int) for the purpose of NSwag mapping.
         [Authorize]
-        [HttpPost("{MarketProperty}")]
-        public async Task<IActionResult> CreateMarketProperty([FromBody] MarketPropertyCreateDto createDto)
+        [HttpPost]
+        public async Task<ActionResult<int>> CreateMarketProperty(MarketPropertyCreateDto createDto)
         {
             var marketProperty = _mapper.Map<MarketProperty>(createDto);
 
@@ -135,9 +138,10 @@ namespace HemDotNetWebApi.Controllers
                 return BadRequest("Invalid MunicipalityId or RealEstateAgentId.");
             }
 
-            var resultDto = _mapper.Map<MarketPropertyDetailsDto>(createdProperty);
+            //var resultDto = _mapper.Map<MarketPropertyDetailsDto>(createdProperty);
+            //return CreatedAtAction(nameof(GetMarketPropertyById), new { MarketPropertyId = createdProperty.MarketPropertyId }, resultDto);
 
-            return CreatedAtAction(nameof(GetMarketPropertyById), new { MarketPropertyId = createdProperty.MarketPropertyId }, resultDto);
+            return Ok(createdProperty.MarketPropertyId);
         }
 
         // Allan

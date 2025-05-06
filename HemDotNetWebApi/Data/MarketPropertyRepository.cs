@@ -109,12 +109,16 @@ namespace HemDotNetWebApi.Data
        // Katarina
         public async Task<MarketProperty?> CreateMarketPropertyAsync(MarketProperty marketProperty)
         {
- 
+            //Co-Author: Johan. Assigned local variables for municipalityId and agentId, and edited linq expressions to use them.
+            //EF Core seems to have issues populating the keys otherwise, since MarketProperty lacks MunicipalityId and RealEstateAgentId.
+            var municipalityId = marketProperty.Municipality.MunicipalityId;
+            var agentId = marketProperty.RealEstateAgent.Id;
+
             var municipality = await _context.Municipalities
-                .FirstOrDefaultAsync(m => m.MunicipalityId == marketProperty.Municipality.MunicipalityId);
+                .FirstOrDefaultAsync(m => m.MunicipalityId == municipalityId);
 
             var agent = await _context.RealEstateAgents
-                .FirstOrDefaultAsync(a => a.Id == marketProperty.RealEstateAgent.Id);
+                .FirstOrDefaultAsync(a => a.Id == agentId);
 
             if (municipality == null || agent == null)
             {
@@ -174,7 +178,7 @@ namespace HemDotNetWebApi.Data
             {
                 if (searchDto.NewProduction.Value)
                 {
-                    query = query.Where(mp => mp.ContructionYear >= DateTime.UtcNow.Year - 5);
+                    query = query.Where(mp => mp.ConstructionYear >= DateTime.UtcNow.Year - 5);
                 }
             }
            
