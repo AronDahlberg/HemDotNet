@@ -78,6 +78,7 @@
             {
                 NavigateToLogin();
             }
+            //message = GetCustomErrorMessage(aex.Response);
             message = aex.Response;
         }
     }
@@ -86,4 +87,25 @@
     {
         navManager.NavigateTo("/users/login");
     }
+
+    // Allan
+    // This is an ugly, ugly hack. But lack of time, and I don't know how to make the error messages
+    // more user friendly otherwise.
+    private string GetCustomErrorMessage(string apiErrorMessage)
+    {
+
+        if (apiErrorMessage.Contains("username", StringComparison.OrdinalIgnoreCase))
+        {
+            return "E-postadressen används redan. Vänligen använd en annan e-postadress eller logga in.";
+        }
+
+        if (apiErrorMessage.Contains("password", StringComparison.OrdinalIgnoreCase))
+        {
+            return "Lösenordet uppfyller inte säkerhetskraven. Vänligen välj ett starkare lösenord.";
+        }
+
+        return "Det uppstod ett fel. Vänligen kontrollera alla fält och försök igen.";
+    }
+}
+
 }
