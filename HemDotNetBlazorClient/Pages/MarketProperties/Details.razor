@@ -6,7 +6,7 @@
 @code {
 
     [Parameter] public int id { get; set; }
-    private MarketPropertyDetailsDto? marketProperty;
+    private Response<MarketPropertyDetailsDto>? marketProperty;
 
     protected override async Task OnInitializedAsync()
     {

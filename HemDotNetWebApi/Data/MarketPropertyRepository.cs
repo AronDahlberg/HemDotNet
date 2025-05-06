@@ -178,7 +178,7 @@ namespace HemDotNetWebApi.Data
             {
                 if (searchDto.NewProduction.Value)
                 {
-                    query = query.Where(mp => mp.ContructionYear >= DateTime.UtcNow.Year - 5);
+                    query = query.Where(mp => mp.ConstructionYear >= DateTime.UtcNow.Year - 5);
                 }
             }
            

@@ -10,12 +10,15 @@
 @* Author: Allan *@
 
 <style>
-    .position-absolute {
-        position: absolute;
-        background-color: white;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    .form-select:hover,
+    .form-control:hover {
+        background-color: #f9f9f9;
+    }
+
+    .form-select:focus,
+    .form-control:focus {
+        box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+        border-color: #86b7fe;
     }
 </style>
 
@@ -28,7 +31,7 @@
     </div>
 } *@
 
-<div class="border rounded py-4 px-4 shadow">
+<div class="border rounded py-3 px-3 shadow">
     <h4 class="mb-4">Lägg till ny bostad</h4>
 
     <EditForm Model="@NewMarketProperty" OnValidSubmit="@HandleValidSubmit">
@@ -36,21 +39,19 @@
         <ValidationSummary />
 
         <div class="mb-3">
-
             <label class="form-label">Kommun</label>
-            <select class="form-select" @bind="NewMarketProperty.MunicipalityId">
+            <select class="form-select shadow-sm border-primary rounded-3 fw-semibold text-dark" @bind="NewMarketProperty.MunicipalityId">
                 <option value="">Välj kommun</option>
                 @foreach (var municipality in allMunicipalities)
                 {
                     <option value="@municipality.MunicipalityId">@municipality.Name</option>
                 }
             </select>
-
         </div>
 
         <div class="mb-3">
             <label class="form-label">Typ av bostad</label>
-            <select class="form-select" @bind="NewMarketProperty.Category">
+            <select class="form-select shadow-sm border-primary rounded-3 fw-semibold text-dark" @bind="NewMarketProperty.Category">
                 @foreach (PropertyCategory category in Enum.GetValues(typeof(PropertyCategory)))
                 {
                     <option value="@category">@GetPropertyCategoryDisplayName(category)</option>
@@ -60,55 +61,55 @@
 
         <div class="mb-3">
             <label class="form-label">Pris</label>
-            <InputNumber class="form-control" @bind-Value="NewMarketProperty.Price" />
+            <InputNumber class="form-control shadow-sm border-primary rounded-3 fw-semibold text-dark" @bind-Value="NewMarketProperty.Price" />
         </div>
 
         <div class="row mb-3">
             <div class="col-md-6">
                 <label class="form-label">Boarea (m²)</label>
-                <InputNumber class="form-control" @bind-Value="NewMarketProperty.LivingArea" />
+                <InputNumber class="form-control shadow-sm border-primary rounded-3 fw-semibold text-dark" @bind-Value="NewMarketProperty.LivingArea" />
             </div>
             <div class="col-md-6">
                 <label class="form-label">Tomtarea (m²)</label>
-                <InputNumber class="form-control" @bind-Value="NewMarketProperty.LotArea" />
+                <InputNumber class="form-control shadow-sm border-primary rounded-3 fw-semibold text-dark" @bind-Value="NewMarketProperty.LotArea" />
             </div>
-            <div class="col-md-6">
-                <label class="form-label">Biyta (m²)</label>
-                <InputNumber class="form-control" @bind-Value="NewMarketProperty.AncillaryArea" />
+            <div class="col-md-6 mt-3">
+                <label class="form-label">Biarea (m²)</label>
+                <InputNumber class="form-control shadow-sm border-primary rounded-3 fw-semibold text-dark" @bind-Value="NewMarketProperty.AncillaryArea" />
             </div>
         </div>
 
         <div class="mb-3">
             <label class="form-label">Adress</label>
-            <InputText class="form-control" @bind-Value="NewMarketProperty.PropertyAddress" />
+            <InputText class="form-control shadow-sm border-primary rounded-3 fw-semibold text-dark" @bind-Value="NewMarketProperty.PropertyAddress" />
         </div>
 
         <div class="mb-3">
             <label class="form-label">Beskrivning</label>
-            <InputTextArea class="form-control" @bind-Value="NewMarketProperty.Description" />
+            <InputTextArea class="form-control shadow-sm border-primary rounded-3 fw-semibold text-dark" @bind-Value="NewMarketProperty.Description" />
         </div>
 
         <div class="row mb-3">
             <div class="col-md-4">
                 <label class="form-label">Antal rum</label>
-                <InputNumber class="form-control" @bind-Value="NewMarketProperty.AmountOfRooms" />
+                <InputNumber class="form-control shadow-sm border-primary rounded-3 fw-semibold text-dark" @bind-Value="NewMarketProperty.AmountOfRooms" />
             </div>
             <div class="col-md-4">
                 <label class="form-label">Månadsavgift (kr)</label>
-                <InputNumber class="form-control" @bind-Value="NewMarketProperty.MonthlyFee" />
+                <InputNumber class="form-control shadow-sm border-primary rounded-3 fw-semibold text-dark" @bind-Value="NewMarketProperty.MonthlyFee" />
             </div>
             <div class="col-md-4">
                 <label class="form-label">Årlig driftkostnad (kr)</label>
-                <InputNumber class="form-control" @bind-Value="NewMarketProperty.YearlyMaintenanceCost" />
+                <InputNumber class="form-control shadow-sm border-primary rounded-3 fw-semibold text-dark" @bind-Value="NewMarketProperty.YearlyMaintenanceCost" />
             </div>
         </div>
 
         <div class="mb-3">
             <label class="form-label">Byggnadsår</label>
-            <InputNumber class="form-control" @bind-Value="NewMarketProperty.ConstructionYear" />
+            <InputNumber class="form-control shadow-sm border-primary rounded-3 fw-semibold text-dark" @bind-Value="NewMarketProperty.ConstructionYear" />
         </div>
 
-        <button type="submit" class="btn btn-success w-100 mt-3">Spara bostad</button>
+        <button type="submit" class="btn btn-primary w-100 mt-3">Spara bostad</button>
     </EditForm>
 </div>
 
@@ -143,8 +144,18 @@
     {
         try
         {
-            var newId = await propertyService.CreateMarketProperty(NewMarketProperty);
-            navigationManager.NavigateTo($"/marketproperty/details/{newId}");
+            var response = await propertyService.CreateMarketProperty(NewMarketProperty);
+
+            if (response.Success)
+            {
+                var newId = response.Data;
+                navigationManager.NavigateTo($"/marketproperty/details/{newId}");
+            }
+            else
+            {
+                errorMessage = response.Message;
+                Console.WriteLine(errorMessage);
+            }
         }
         catch (ApiException ex)
         {

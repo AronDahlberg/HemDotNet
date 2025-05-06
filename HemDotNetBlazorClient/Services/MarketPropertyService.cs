@@ -1,5 +1,6 @@
 ﻿using Blazored.LocalStorage;
 using HemDotNetBlazorClient.Services.Base;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace HemDotNetBlazorClient.Services
 {
@@ -87,40 +88,51 @@ namespace HemDotNetBlazorClient.Services
         }
 
         //Author: Johan
-        public async Task<int> CreateMarketProperty(MarketPropertyCreateDto newMarketProperty)
+        public async Task<Response<int>> CreateMarketProperty(MarketPropertyCreateDto newMarketProperty)
         {
+            Response<int> response;
             try
             {
-                await GetBearerToken();
+                //await GetBearerToken();
 
                 var marketPropertyId = await _client.MarketPropertyPOSTAsync(newMarketProperty);
-                return marketPropertyId;
+                response = new Response<int>
+                {
+                    Data = marketPropertyId,
+                    Success = true
+                };
             }
             catch (ApiException ex)
             {
-                //Fix this?
-                int error = 0;
-                return error;
+                return response = ConvertApiExceptions<int>(ex);
             }
+
+            return response;
         }
 
         //Author: Johan
-        public async Task<MarketPropertyDetailsDto> GetMarketPropertyById(int marketPropertyId)
+        public async Task<Response<MarketPropertyDetailsDto>> GetMarketPropertyById(int marketPropertyId)
         {
+            Response<MarketPropertyDetailsDto> response;
+
             try
             {
-                //await GetBearerToken(); ??????
+                //await GetBearerToken();
 
                 var marketProperty = await _client.MarketPropertyGETAsync(marketPropertyId);
+                response = new Response<MarketPropertyDetailsDto>
+                {
+                    Data = marketProperty,
+                    Success = true
+                };
 
-                return marketProperty;
             }
             catch (ApiException ex)
             {
-                //Fix this?
-                var emptyDto = new MarketPropertyDetailsDto();
-                return emptyDto;
+                response = ConvertApiExceptions<MarketPropertyDetailsDto>(ex);
             }
+
+            return response;
         }
     }
 }
