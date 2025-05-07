@@ -31,7 +31,7 @@ namespace HemDotNetWebApi.DTO
         [Required]
         public decimal YearlyMaintenanceCost { get; set; }
         [Required]
-        public int ContructionYear { get; set; }
+        public int ConstructionYear { get; set; }
     }
 
 }

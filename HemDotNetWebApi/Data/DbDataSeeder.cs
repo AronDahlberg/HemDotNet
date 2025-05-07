@@ -101,7 +101,7 @@ namespace HemDotNetWebApi.Data
                         RealEstateAgentLastName = "Svensson",
                         PasswordHash = hasher.HashPassword(null, "password"),
                         EmailConfirmed = true,
-                        RealEstateAgentEmail = "anna@nordichomes.com",
+                        RealEstateAgentEmail = "anna@nordichomes.se",
                         RealEstateAgentPhoneNumber = "+46 70 123 45 67",
                         RealEstateAgentImageUrl = "Images/RealEstateAgentWoman.jpg",
                         RealEstateAgentAgency = nordicHomes
@@ -118,7 +118,7 @@ namespace HemDotNetWebApi.Data
                         RealEstateAgentLastName = "Strand",
                         PasswordHash = hasher.HashPassword(null, "password"),
                         EmailConfirmed = true,
-                        RealEstateAgentEmail = "mikael@nordichomes.com",
+                        RealEstateAgentEmail = "mikael@nordichomes.se",
                         RealEstateAgentPhoneNumber = "+46 70 123 45 67",
                         RealEstateAgentImageUrl = "Images/RealEstateAgentMan.jpg",
                         RealEstateAgentAgency = nordicHomes
@@ -127,15 +127,15 @@ namespace HemDotNetWebApi.Data
                     {
                         //Id = Guid.NewGuid().ToString(),
                         //RealEstateAgentId = agentIdCounter++,
-                        Email = "maria@nordichomes.com",
-                        NormalizedEmail = "MARIA@NORDICHOMES.COM",
-                        UserName = "maria@nordichomes.com",
-                        NormalizedUserName = "MARIA@NORDICHOMES.COM",
+                        Email = "maria@nordichomes.se",
+                        NormalizedEmail = "MARIA@NORDICHOMES.SE",
+                        UserName = "maria@nordichomes.se",
+                        NormalizedUserName = "MARIA@NORDICHOMES.SE",
                         RealEstateAgentFirstName = "Maria",
                         RealEstateAgentLastName = "Olsson",
                         PasswordHash = hasher.HashPassword(null, "password"),
                         EmailConfirmed = true,
-                        RealEstateAgentEmail = "maria@nordichomes.com",
+                        RealEstateAgentEmail = "maria@nordichomes.se",
                         RealEstateAgentPhoneNumber = "+46 70 123 45 67",
                         RealEstateAgentImageUrl = "Images/RealEstateAgentWoman.jpg",
                         RealEstateAgentAgency = nordicHomes
@@ -275,20 +275,26 @@ namespace HemDotNetWebApi.Data
             if (context != null && !context.RealEstateAgencies.Any())
             {
                 var agencies = new List<RealEstateAgency>
-            {
-                new RealEstateAgency
                 {
-                    RealEstateAgencyName = "Nordic Homes",
-                    RealEstateAgencyPresentation = "Vi tar skandinavisk design till fastighetsbranschen.",
-                    RealEstateAgencyLogoUrl = "Images/PlaceholderLogo.png"
-                },
-                new RealEstateAgency
-                {
-                    RealEstateAgencyName = "Nordhs Mäklarbyrå",
-                    RealEstateAgencyPresentation = "Letar du efter en pålitlig fastighetsmäklare? Våra mäklare levererar expertis och resultat för ditt bostadsköp eller -försäljning.",
-                    RealEstateAgencyLogoUrl = "Images/PlaceholderLogo.png"
-                }
-            };
+                    new RealEstateAgency
+                    {
+                        RealEstateAgencyName = "Wait list",
+                        RealEstateAgencyPresentation = "Vänta tills administrationen godkänner ditt konto.",
+                        RealEstateAgencyLogoUrl = "Images/PlaceholderLogo.png"
+                    },
+                    new RealEstateAgency
+                    {
+                        RealEstateAgencyName = "Nordic Homes",
+                        RealEstateAgencyPresentation = "Vi tar skandinavisk design till fastighetsbranschen.",
+                        RealEstateAgencyLogoUrl = "Images/PlaceholderLogo.png"
+                    },
+                    new RealEstateAgency
+                    {
+                        RealEstateAgencyName = "Nordhs Mäklarbyrå",
+                        RealEstateAgencyPresentation = "Letar du efter en pålitlig fastighetsmäklare? Våra mäklare levererar expertis och resultat för ditt bostadsköp eller -försäljning.",
+                        RealEstateAgencyLogoUrl = "Images/PlaceholderLogo.png"
+                    }
+                };
 
                 context.RealEstateAgencies.AddRange(agencies);
                 await context.SaveChangesAsync();
@@ -309,9 +315,9 @@ namespace HemDotNetWebApi.Data
                 var umea = municipalities.First(m => m.MunicipalityName == "Umeå");
 
                 var agents = await context.RealEstateAgents.Include(a => a.RealEstateAgentAgency).ToListAsync();
-                var agent1 = agents.First(a => a.RealEstateAgentEmail == "anna@nordichomes.com");
-                var agent2 = agents.First(a => a.RealEstateAgentEmail == "mikael@nordichomes.com");
-                var agent3 = agents.First(a => a.RealEstateAgentEmail == "maria@nordichomes.com");
+                var agent1 = agents.First(a => a.RealEstateAgentEmail == "anna@nordichomes.se");
+                var agent2 = agents.First(a => a.RealEstateAgentEmail == "mikael@nordichomes.se");
+                var agent3 = agents.First(a => a.RealEstateAgentEmail == "maria@nordichomes.se");
                 var agent4 = agents.First(a => a.RealEstateAgentEmail == "lars@nordhsmaklarbyra.com");
                 var agent5 = agents.First(a => a.RealEstateAgentEmail == "vendela@nordhsmaklarbyra.com");
                 var agent6 = agents.First(a => a.RealEstateAgentEmail == "erik@nordhsmaklarbyra.com");
@@ -331,7 +337,7 @@ namespace HemDotNetWebApi.Data
                     AmountOfRooms = 5,
                     MonthlyFee = 1500,
                     YearlyMaintenanceCost = 18000,
-                    ContructionYear = 1995,
+                    ConstructionYear = 1995,
                     RealEstateAgent = agent1,
                     IsActive = true,
                     IsSold = false,
@@ -350,7 +356,7 @@ namespace HemDotNetWebApi.Data
                     AmountOfRooms = 1,
                     MonthlyFee = 4000,
                     YearlyMaintenanceCost = 10000,
-                    ContructionYear = 2003,
+                    ConstructionYear = 2003,
                     RealEstateAgent = agent6,
                     IsActive = true,
                     IsSold = false,
@@ -369,7 +375,7 @@ namespace HemDotNetWebApi.Data
                     AmountOfRooms = 1,
                     MonthlyFee = 4100,
                     YearlyMaintenanceCost = 10100,
-                    ContructionYear = 2003,
+                    ConstructionYear = 2003,
                     RealEstateAgent = agent6,
                     IsActive = true,
                     IsSold = true,
@@ -388,7 +394,7 @@ namespace HemDotNetWebApi.Data
                     AmountOfRooms = 3,
                     MonthlyFee = 3900,
                     YearlyMaintenanceCost = 8500,
-                    ContructionYear = 2010,
+                    ConstructionYear = 2010,
                     RealEstateAgent = agent2,
                     IsActive = true,
                     IsSold = false,
@@ -407,7 +413,7 @@ namespace HemDotNetWebApi.Data
                     AmountOfRooms = 4,
                     MonthlyFee = 2700,
                     YearlyMaintenanceCost = 15000,
-                    ContructionYear = 2005,
+                    ConstructionYear = 2005,
                     RealEstateAgent = agent3,
                     IsActive = true,
                     IsSold = false,
@@ -426,7 +432,7 @@ namespace HemDotNetWebApi.Data
                     AmountOfRooms = 6,
                     MonthlyFee = 0,
                     YearlyMaintenanceCost = 22000,
-                    ContructionYear = 2018,
+                    ConstructionYear = 2018,
                     RealEstateAgent = agent4,
                     IsActive = true,
                     IsSold = false,
@@ -445,7 +451,7 @@ namespace HemDotNetWebApi.Data
                     AmountOfRooms = 2,
                     MonthlyFee = 3200,
                     YearlyMaintenanceCost = 5000,
-                    ContructionYear = 1905,
+                    ConstructionYear = 1905,
                     RealEstateAgent = agent5,
                     IsActive = true,
                     IsSold = false,
@@ -464,7 +470,7 @@ namespace HemDotNetWebApi.Data
                     AmountOfRooms = 3,
                     MonthlyFee = 0,
                     YearlyMaintenanceCost = 10000,
-                    ContructionYear = 1985,
+                    ConstructionYear = 1985,
                     RealEstateAgent = agent6,
                     IsActive = true,
                     IsSold = false,

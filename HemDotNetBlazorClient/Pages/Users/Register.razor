@@ -1,58 +1,69 @@
 ﻿@page "/users/register"
 @inject IClient httpClient
 @inject NavigationManager navManager
-<h3>Register new account</h3>
 
 @* Coder: Adam, Participants: All *@
+@* Co-author: Allan (style, error messages, no real estate agency selection) *@
 
-@if(string.IsNullOrEmpty(message) == false)
-{
-    <div class="alert alert-danger">
-        <p>@message</p>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="mb-0">Registrera nytt konto</h3>
+                </div>
+                <div class="card-body">
+                    @if (!string.IsNullOrEmpty(message))
+                    {
+                        <div class="alert alert-danger" role="alert">
+                            @message
+                        </div>
+                    }
+
+                    <EditForm Model="RegistrationModel" OnValidSubmit="HandleRegistration">
+                        <DataAnnotationsValidator />
+                        <ValidationSummary />
+                        <div class="form-group mb-3">
+                            <label for="email" class="form-label">E-postadress</label>
+                            <InputText id="email" class="form-control" @bind-Value="RegistrationModel.Email" />
+                            <ValidationMessage For="@(() => RegistrationModel.Email)" class="text-danger" />
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="phoneNumber" class="form-label">Telefonnummer</label>
+                            <InputText id="phoneNumber" class="form-control" @bind-Value="RegistrationModel.PhoneNumber" />
+                            <ValidationMessage For="@(() => RegistrationModel.PhoneNumber)" class="text-danger" />
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="firstName" class="form-label">Förnamn</label>
+                            <InputText id="firstName" class="form-control" @bind-Value="RegistrationModel.FirstName" />
+                            <ValidationMessage For="@(() => RegistrationModel.FirstName)" class="text-danger" />
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="lastName" class="form-label">Efternamn</label>
+                            <InputText id="lastName" class="form-control" @bind-Value="RegistrationModel.LastName" />
+                            <ValidationMessage For="@(() => RegistrationModel.LastName)" class="text-danger" />
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="password" class="form-label">Lösenord</label>
+                            <InputText id="password" class="form-control" type="password" @bind-Value="RegistrationModel.Password" />
+                            <ValidationMessage For="@(() => RegistrationModel.Password)" class="text-danger" />
+                        </div>
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary">Registrera dig</button>
+                        </div>
+                    </EditForm>
+                </div>
+                <div class="card-footer text-center">
+                    <a href="/users/login">Har du redan ett konto? Logga in här</a>
+                </div>
+            </div>
+        </div>
     </div>
-}
-
-<div>
-    <EditForm Model="RegistrationModel" OnValidSubmit="HandleRegistration">
-        <DataAnnotationsValidator />
-        <ValidationSummary />
-        <div class="form-group">
-            <label for="PhoneNumber">Phone Number</label>
-            <InputText class="form-control" @bind-Value="RegistrationModel.PhoneNumber" />
-            <ValidationMessage For="@(() => RegistrationModel.PhoneNumber)" />
-        </div>
-        <div class="form-group">
-            <label for="RealEstateAgency">RealEstateAgency</label>
-            <InputNumber class="form-control" @bind-Value="RegistrationModel.RealEstateAgencyId" />
-            <ValidationMessage For="@(() => RegistrationModel.RealEstateAgencyId)" />
-        </div>
-        <div class="form-group">
-            <label for="email">Email Address</label>
-            <InputText class="form-control" @bind-Value="RegistrationModel.Email" />
-            <ValidationMessage For="@(() => RegistrationModel.Email)" />
-        </div>
-        <div class="form-group">
-            <label for="email">First Name</label>
-            <InputText class="form-control" @bind-Value="RegistrationModel.FirstName" />
-            <ValidationMessage For="@(() => RegistrationModel.FirstName)" />
-        </div>
-        <div class="form-group">
-            <label for="email">Last Name</label>
-            <InputText class="form-control" @bind-Value="RegistrationModel.LastName" />
-            <ValidationMessage For="@(() => RegistrationModel.LastName)" />
-        </div>
-        <div class="form-group">
-            <label for="email">Password</label>
-            <InputText class="form-control" type="password" @bind-Value="RegistrationModel.Password" />
-            <ValidationMessage For="@(() => RegistrationModel.Password)" />
-        </div>
-        <button type="submit" class="btn btn-primary btn-block mt-3">Register</button>
-    </EditForm>
 </div>
 
 @code {
     RealEstateAgentRegisterDto RegistrationModel = new RealEstateAgentRegisterDto();
-    string message = string.Empty;
+    private string message = string.Empty;
 
     private async Task HandleRegistration()
     {
@@ -63,11 +74,11 @@
         }
         catch (ApiException aex)
         {
-            if(aex.StatusCode >= 200 && aex.StatusCode <= 299)
+            if (aex.StatusCode >= 200 && aex.StatusCode <= 299)
             {
                 NavigateToLogin();
             }
-            message = aex.Response;
+            message = GetCustomErrorMessage(aex.Response);
         }
     }
 
@@ -75,4 +86,25 @@
     {
         navManager.NavigateTo("/users/login");
     }
+
+    // Allan
+    // This is an ugly, ugly hack. But lack of time, and I don't know how to make the error messages
+    // more user friendly otherwise.
+    private string GetCustomErrorMessage(string apiErrorMessage)
+    {
+
+        if (apiErrorMessage.Contains("username", StringComparison.OrdinalIgnoreCase))
+        {
+            return "E-postadressen används redan. Vänligen använd en annan e-postadress eller logga in.";
+        }
+
+        if (apiErrorMessage.Contains("password", StringComparison.OrdinalIgnoreCase))
+        {
+            return "Lösenordet uppfyller inte säkerhetskraven. Vänligen välj ett starkare lösenord.";
+        }
+
+        return "Det uppstod ett fel. Vänligen kontrollera alla fält och försök igen.";
+    }
+}
+
 }

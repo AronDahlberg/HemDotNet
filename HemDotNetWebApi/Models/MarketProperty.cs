@@ -45,7 +45,7 @@ namespace HemDotNetWebApi.Models
         public decimal? YearlyMaintenanceCost { get; set; }
 
         [Required]
-        public int ContructionYear { get; set; }
+        public int ConstructionYear { get; set; }
 
         [Required]
         [ForeignKey("RealEstateAgentId")]

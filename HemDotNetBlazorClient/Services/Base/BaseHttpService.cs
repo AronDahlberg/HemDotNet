@@ -39,8 +39,13 @@ namespace HemDotNetBlazorClient.Services.Base
             {
                 client.HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", token);
             }*/
+
             var token = await localStorage.GetItemAsync<string>("accessToken");
-            client.HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            if (token != null)
+            {
+                client.HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            }
+            
         }
     }
 }
