@@ -1,61 +1,149 @@
-﻿<!--
+﻿@using HemDotNetBlazorClient.Providers
+@using Microsoft.AspNetCore.Components.Authorization
+@inject HttpClient httpClient
+@inject ApiAuthenticationStateProvider AuthStateProvider
+@inject IRealEstateAgentService agentService
+
+<!--
 
 Author: Allan
 
 -->
+
+<CascadingAuthenticationState>
+    @if (!isLoading)
+    {
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary w-100 shadow-sm align-text-baseline align-items-baseline">
+            <div class="container">
+                <a class="navbar-brand d-flex align-items-baseline" href="#">
+                    <img src="logo.svg" alt="Logo" style="height: 36px; padding-bottom: 2px;" />
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain"
+                        aria-controls="navbarMain" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse justify-content-between" id="navbarMain">
+                    <!-- left -->
+                    <ul class="navbar-nav">
+                        <li class="nav-item"><a class="nav-link text-white" href="#">Sök bostad</a></li>
+                        <li class="nav-item"><a class="nav-link text-white" href="#">Sök mäklare</a></li>
+                        <li class="nav-item"><a class="nav-link text-white" href="#">Sök mäklarbyrå</a></li>
+                    </ul>
+                    <!-- right -->
+                    <ul class="navbar-nav">
+                        @if (isAuthenticated)
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <img src="@($"{httpClient.BaseAddress}{userProfileImage}")" class="rounded-circle me-2" width="32" height="32" alt="Profile" />
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end">
+                                    <li><a class="dropdown-item" href="/agent/manage-properties">Hantera objekt</a></li>
+                                    <li><a class="dropdown-item" href="@($"users/profile/{userId}")">Visa/Redigera profil</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item" href="users/logout">Logga ut</a></li>
+                                </ul>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <a href="users/login" class="btn btn-outline-light me-2">Logga in</a>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    }
+    else
+    {
+        // With blazor the pages load instantly, but often we don't have time to
+        // Get an answer from db before the page is loaded. In that case, we want to display
+        // something so we dont see flicker
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary w-100 shadow-sm align-text-baseline align-items-baseline">
+            <div class="container">
+                <a class="navbar-brand d-flex align-items-baseline" href="#">
+                    <img src="logo.svg" alt="Logo" style="height: 36px; padding-bottom: 2px;" />
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain"
+                        aria-controls="navbarMain" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse justify-content-between" id="navbarMain">
+                    <ul class="navbar-nav">
+                        <li class="nav-item"><a class="nav-link text-white" href="#">Sök bostad</a></li>
+                        <li class="nav-item"><a class="nav-link text-white" href="#">Sök mäklare</a></li>
+                        <li class="nav-item"><a class="nav-link text-white" href="#">Sök mäklarbyrå</a></li>
+                    </ul>
+                    <ul class="navbar-nav">
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    }
+</CascadingAuthenticationState>
+
 @code {
-    // placeholder!
-    private bool isLoggedIn = true;
+    private bool isLoading = true;
+    private bool isAuthenticated = false;
+    private string userId;
+    private string defaultProfileImage = "Images/DefaultProfilePicture.png";
+    private string userProfileImage;
+    private AuthenticationStateChangedHandler _authHandler;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadUserData();
+    }
+
+    // Allan
+    protected override void OnInitialized()
+    {
+        _authHandler = async (taskAuthState) =>
+        {
+            isLoading = true;
+            StateHasChanged();
+
+            await LoadUserData();
+
+            isLoading = false;
+            StateHasChanged();
+        };
+
+        // Here, we subscribe to auth state changes. Otherwise, at login, navbar doesnt know
+        // that it has to update
+        AuthStateProvider.AuthenticationStateChanged += _authHandler;
+    }
+
+    // Allan
+    private async Task LoadUserData()
+    {
+        var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        isAuthenticated = user.Identity?.IsAuthenticated ?? false;
+        userId = user.FindFirst("uid")?.Value;
+
+        if (isAuthenticated && userId != null)
+        {
+            var response = await agentService.GetProfileImageUrl(userId);
+            userProfileImage = response.Data ?? defaultProfileImage;
+        }
+        else
+        {
+            userProfileImage = defaultProfileImage;
+        }
+
+        isLoading = false;
+    }
+
+    // Allan
+    public void Dispose()
+    {
+        if (_authHandler != null)
+        {
+            AuthStateProvider.AuthenticationStateChanged -= _authHandler;
+        }
+    }
 }
-
-
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary w-100 shadow-sm align-text-baseline align-items-baseline">
-    <div class="container">
-        <a class="navbar-brand d-flex align-items-baseline" href="#">
-            <img src="logo.svg" alt="Logo" style="height: 36px; padding-bottom: 2px;" />
-            <!--Can't get it to align properly witht he rest of the menu without padding-botton!-->
-        </a>
-
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain"
-                aria-controls="navbarMain" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-
-        <div class="collapse navbar-collapse justify-content-between" id="navbarMain">
-            <!-- left -->
-            <ul class="navbar-nav">
-                <li class="nav-item">
-                    <a class="nav-link text-white" href="#">Sök bostad</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link text-white" href="#">Sök mäklare</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link text-white" href="#">Sök mäklarbyrå</a>
-                </li>
-            </ul>
-
-            <!-- right -->
-            <ul class="navbar-nav">
-                @if (!isLoggedIn)
-                {
-                    <li class="nav-item">
-                        <button type="button" class="btn btn-outline-light me-2">Logga in</button>
-                    </li>
-                }
-                else
-                {
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle text-white" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            Min profil
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-end">
-                            <li><a class="dropdown-item" href="#">Min profil</a></li>
-                            <li><a class="dropdown-item" href="#">Logga ut</a></li>
-                        </ul>
-                    </li>
-                }
-            </ul>
-        </div>
-    </div>
-</nav>

@@ -12,6 +12,7 @@ namespace HemDotNetBlazorClient.Services
         {
             _client = client;
         }
+
         // Author: Allan
         public async Task<Response<RealEstateAgentDto>> GetAgentByIdAsync(string agentId)
         {
@@ -33,6 +34,27 @@ namespace HemDotNetBlazorClient.Services
 
             return response;
         }
-    }
 
+        // Allan
+        public async Task<Response<string>> GetProfileImageUrl(string agentId)
+        {
+            Response<string> response;
+
+            try
+            {
+                var data = await _client.GetProfileAsync(agentId);
+                response = new Response<string>
+                {
+                    Data = data.RealEstateAgentImageUrl,
+                    Success = true
+                };
+            }
+            catch (ApiException ex)
+            {
+                response = ConvertApiExceptions<string>(ex);
+            }
+
+            return response;
+        }
+    }
 }

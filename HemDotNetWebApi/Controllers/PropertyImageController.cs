@@ -26,13 +26,20 @@ namespace HemDotNetWebApi.Controllers
         }
 
         // Allan
-        [Authorize]
         [HttpGet("{marketPropertyId}")]
+        [Authorize]
         public async Task<ActionResult<IEnumerable<PropertyImageDto>>> GetPropertyImages(int marketPropertyId)
         {
             if (!await _repository.PropertyExistsAsync(marketPropertyId))
             {
                 return NotFound($"Market property with ID {marketPropertyId} was not found");
+            }
+
+            var userId = User.FindFirstValue(CustomClaimTypes.Uid);
+
+            if (!await _repository.IsPropertyOwnedByAgentAsync(marketPropertyId, userId))
+            {
+                return Forbid("Du har inte tillgång till det här objektet");
             }
 
             var images = await _repository.GetImagesByPropertyIdAsync(marketPropertyId);
@@ -43,7 +50,6 @@ namespace HemDotNetWebApi.Controllers
         [HttpPost]
         [Consumes("multipart/form-data")]
         [Authorize]
-
         public async Task<ActionResult<PropertyImageDto>> AddPropertyImage([FromForm] AddPropertyImageDto dto, IFormFile imageFile)
         {
             if (imageFile == null || imageFile.Length == 0)
