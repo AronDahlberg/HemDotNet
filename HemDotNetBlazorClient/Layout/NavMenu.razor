@@ -76,3 +76,40 @@ Author: Allan
     }
 }
 
+@implements IDisposable
+@code {.
+
+    private AuthenticationStateChangedHandler _authHandler;
+
+    protected override void OnInitialized()
+    {
+        _authHandler = (Task<AuthenticationState> task) =>
+        {
+            InvokeAsync(async () =>
+            {
+                // Re-check authentication and update state
+                var authState = await task;
+                var user = authState.User;
+                userId = user.FindFirst("uid")?.Value;
+                isLoggedIn = userId != null;
+
+                // Force UI update
+                StateHasChanged();
+            });
+
+            return Task.CompletedTask;
+        };
+
+        // Subscribe to authentication state changes
+        AuthStateProvider.AuthenticationStateChanged += _authHandler;
+    }
+
+    public void Dispose()
+    {
+        // Unsubscribe when component is disposed
+        if (_authHandler != null)
+        {
+            AuthStateProvider.AuthenticationStateChanged -= _authHandler;
+        }
+    }
+}
