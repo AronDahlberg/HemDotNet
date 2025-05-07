@@ -35,6 +35,7 @@ namespace HemDotNetBlazorClient.Services
             return response;
         }
 
+        // Allan
         public async Task<Response<string>> GetProfileImageUrl(string agentId)
         {
             Response<string> response;

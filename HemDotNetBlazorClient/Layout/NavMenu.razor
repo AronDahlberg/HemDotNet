@@ -1,12 +1,14 @@
-﻿<!--
+﻿@using HemDotNetBlazorClient.Providers
+@using Microsoft.AspNetCore.Components.Authorization
+@inject HttpClient httpClient
+@inject ApiAuthenticationStateProvider AuthStateProvider
+@inject IRealEstateAgentService agentService
+
+<!--
 
 Author: Allan
 
 -->
-@using HemDotNetBlazorClient.Providers
-@using Microsoft.AspNetCore.Components.Authorization
-@inject HttpClient httpClient
-@inject ApiAuthenticationStateProvider AuthStateProvider
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary w-100 shadow-sm align-text-baseline align-items-baseline">
     <div class="container">
@@ -43,10 +45,9 @@ Author: Allan
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             <img src="@($"{httpClient.BaseAddress}{userProfileImage}")" class="rounded-circle me-2" width="32" height="32" alt="Profile" />
-                            <span class="text-white">Min profil</span>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end">
-                            <li><a class="dropdown-item" href="/agent/manage-properties">Hantera MarketProperties</a></li>
+                            <li><a class="dropdown-item" href="/agent/manage-properties">Hantera objekt</a></li>
                             <li><a class="dropdown-item" href="@($"users/profile/{userId}")">Visa/Redigera profil</a></li>
                             <li><hr class="dropdown-divider"></li>
                             <li><a class="dropdown-item" href="users/logout">Logga ut</a></li>
@@ -59,10 +60,11 @@ Author: Allan
 </nav>
 
 
+
 @code {
     private bool isLoggedIn = false;
     private string userId;
-    private string userProfileImage = "Images/DefaultProfilePicture.png"; // Default profile image path
+    private string userProfileImage = "Images/DefaultProfilePicture.png";
 
     protected override async Task OnInitializedAsync()
     {
@@ -72,7 +74,12 @@ Author: Allan
 
         isLoggedIn = userId != null;
 
-        userProfileImage = await userService.GetProfileImageUrl(userId);
+        if (isLoggedIn)
+        {
+            var response = await agentService.GetProfileImageUrl(userId);
+            userProfileImage = response.Data;
+        }
+
     }
 }
 
@@ -92,18 +99,23 @@ Author: Allan
                 userId = user.FindFirst("uid")?.Value;
                 isLoggedIn = userId != null;
 
-                // Force UI update
+                if (isLoggedIn)
+                {
+                    var response = await agentService.GetProfileImageUrl(userId);
+                    userProfileImage = response.Data;
+                }
+
                 StateHasChanged();
             });
         };
 
-        // Subscribe to authentication state changes
+        // Here, we subscribe to auth state changes. Otherwise, at login, navbar doesnt know
+        // that it has to update
         AuthStateProvider.AuthenticationStateChanged += _authHandler;
     }
 
     public void Dispose()
     {
-        // Unsubscribe when component is disposed
         if (_authHandler != null)
         {
             AuthStateProvider.AuthenticationStateChanged -= _authHandler;
