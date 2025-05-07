@@ -39,7 +39,11 @@ namespace HemDotNetWebApi.Controllers
                 var hasher = new PasswordHasher<RealEstateAgent>();
 
                 var agencies = await _context.RealEstateAgencies.ToListAsync();
-                var agency = agencies.First(a => a.RealEstateAgencyId == registerDto.RealEstateAgencyId);
+                //var agency = agencies.First(a => a.RealEstateAgencyId == registerDto.RealEstateAgencyId);
+                
+                // When users register, they are instead put on a wait list. It is admin
+                // who later can add them to the correct real estate agency.
+                var agency = agencies.First(a => a.RealEstateAgencyName == "Wait list");
 
                 RealEstateAgent user = new RealEstateAgent()
                 {
@@ -52,7 +56,7 @@ namespace HemDotNetWebApi.Controllers
                     NormalizedUserName = registerDto.Email.ToUpperInvariant(),
                     EmailConfirmed = true,
                     RealEstateAgentEmail = registerDto.Email,
-                    RealEstateAgentImageUrl = "/images/RealEstateAgentWoman.jpg",
+                    RealEstateAgentImageUrl = "Images/DefaultProfilePicture.png",
                     RealEstateAgentAgency = agency
                 };
 
