@@ -4,6 +4,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 
 //Coder: Johan, Participants: All
+// Co-Author: Allan (bug fixes)
 
 namespace HemDotNetBlazorClient.Providers
 {
@@ -23,11 +24,11 @@ namespace HemDotNetBlazorClient.Providers
 
             var savedToken = await _localStorage.GetItemAsync<string>("accessToken");
 
-            if (savedToken == null)
+            if (string.IsNullOrWhiteSpace(savedToken))
             {
                 return new AuthenticationState(user);
             }
-            
+
             var tokenContent = jwtSecurityTokenHandler.ReadJwtToken(savedToken);
 
             if (tokenContent.ValidTo < DateTime.UtcNow)
@@ -60,6 +61,12 @@ namespace HemDotNetBlazorClient.Providers
         private async Task<List<Claim>> GetClaims()
         {
             var savedToken = await _localStorage.GetItemAsync<string>("accessToken");
+
+            if (string.IsNullOrWhiteSpace(savedToken))
+            {
+                return new List<Claim>();
+            }
+
             var tokenContent = jwtSecurityTokenHandler.ReadJwtToken(savedToken);
             var claims = tokenContent.Claims.ToList();
             claims.Add(new Claim(ClaimTypes.Name, tokenContent.Subject));
