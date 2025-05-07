@@ -4,6 +4,12 @@
 @inject ApiAuthenticationStateProvider AuthStateProvider
 @inject IRealEstateAgentService agentService
 
+<!--
+
+Author: Allan
+
+-->
+
 <CascadingAuthenticationState>
     @if (!isLoading)
     {
@@ -52,12 +58,27 @@
     }
     else
     {
-        <!-- Optional: Render a skeleton navbar or nothing -->
-        <nav class="navbar navbar-expand-lg navbar-dark bg-primary w-100 shadow-sm">
+        // With blazor the pages load instantly, but often we don't have time to
+        // Get an answer from db before the page is loaded. In that case, we want to display
+        // something so we dont see flicker
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary w-100 shadow-sm align-text-baseline align-items-baseline">
             <div class="container">
-                <a class="navbar-brand" href="#">
+                <a class="navbar-brand d-flex align-items-baseline" href="#">
                     <img src="logo.svg" alt="Logo" style="height: 36px; padding-bottom: 2px;" />
                 </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain"
+                        aria-controls="navbarMain" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse justify-content-between" id="navbarMain">
+                    <ul class="navbar-nav">
+                        <li class="nav-item"><a class="nav-link text-white" href="#">Sök bostad</a></li>
+                        <li class="nav-item"><a class="nav-link text-white" href="#">Sök mäklare</a></li>
+                        <li class="nav-item"><a class="nav-link text-white" href="#">Sök mäklarbyrå</a></li>
+                    </ul>
+                    <ul class="navbar-nav">
+                    </ul>
+                </div>
             </div>
         </nav>
     }
@@ -68,7 +89,7 @@
     private bool isAuthenticated = false;
     private string userId;
     private string defaultProfileImage = "Images/DefaultProfilePicture.png";
-    private string userProfileImage = "Images/DefaultProfilePicture.png";
+    private string userProfileImage;
     private AuthenticationStateChangedHandler _authHandler;
 
     protected override async Task OnInitializedAsync()
@@ -76,6 +97,7 @@
         await LoadUserData();
     }
 
+    // Allan
     protected override void OnInitialized()
     {
         _authHandler = async (taskAuthState) =>
@@ -89,9 +111,12 @@
             StateHasChanged();
         };
 
+        // Here, we subscribe to auth state changes. Otherwise, at login, navbar doesnt know
+        // that it has to update
         AuthStateProvider.AuthenticationStateChanged += _authHandler;
     }
 
+    // Allan
     private async Task LoadUserData()
     {
         var authState = await AuthStateProvider.GetAuthenticationStateAsync();
@@ -113,6 +138,7 @@
         isLoading = false;
     }
 
+    // Allan
     public void Dispose()
     {
         if (_authHandler != null)
