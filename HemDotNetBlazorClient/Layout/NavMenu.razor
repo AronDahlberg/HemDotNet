@@ -4,65 +4,72 @@
 @inject ApiAuthenticationStateProvider AuthStateProvider
 @inject IRealEstateAgentService agentService
 
-<!--
-
-Author: Allan
-
--->
-
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary w-100 shadow-sm align-text-baseline align-items-baseline">
-    <div class="container">
-        <a class="navbar-brand d-flex align-items-baseline" href="#">
-            <img src="logo.svg" alt="Logo" style="height: 36px; padding-bottom: 2px;" />
-        </a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain"
-                aria-controls="navbarMain" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse justify-content-between" id="navbarMain">
-            <!-- left -->
-            <ul class="navbar-nav">
-                <li class="nav-item">
-                    <a class="nav-link text-white" href="#">Sök bostad</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link text-white" href="#">Sök mäklare</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link text-white" href="#">Sök mäklarbyrå</a>
-                </li>
-            </ul>
-            <!-- right -->
-            <ul class="navbar-nav">
-                @if (!isLoggedIn)
-                {
-                    <li class="nav-item">
-                        <a href="users/login" class="btn btn-outline-light me-2">Logga in</a>
-                    </li>
-                }
-                else
-                {
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <img src="@($"{httpClient.BaseAddress}{userProfileImage}")" class="rounded-circle me-2" width="32" height="32" alt="Profile" />
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-end">
-                            <li><a class="dropdown-item" href="/agent/manage-properties">Hantera objekt</a></li>
-                            <li><a class="dropdown-item" href="@($"users/profile/{userId}")">Visa/Redigera profil</a></li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="users/logout">Logga ut</a></li>
-                        </ul>
-                    </li>
-                }
-            </ul>
-        </div>
-    </div>
-</nav>
-
-
+<CascadingAuthenticationState>
+    @if (!isLoading)
+    {
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary w-100 shadow-sm align-text-baseline align-items-baseline">
+            <div class="container">
+                <a class="navbar-brand d-flex align-items-baseline" href="#">
+                    <img src="logo.svg" alt="Logo" style="height: 36px; padding-bottom: 2px;" />
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain"
+                        aria-controls="navbarMain" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse justify-content-between" id="navbarMain">
+                    <!-- left -->
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link text-white" href="#">Sök bostad</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-white" href="#">Sök mäklare</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-white" href="#">Sök mäklarbyrå</a>
+                        </li>
+                    </ul>
+                    <!-- right -->
+                    <ul class="navbar-nav">
+                        <AuthorizeView>
+                            <Authorized>
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <img src="@($"{httpClient.BaseAddress}{userProfileImage}")" class="rounded-circle me-2" width="32" height="32" alt="Profile" />
+                                    </a>
+                                    <ul class="dropdown-menu dropdown-menu-end">
+                                        <li><a class="dropdown-item" href="/agent/manage-properties">Hantera objekt</a></li>
+                                        <li><a class="dropdown-item" href="@($"users/profile/{userId}")">Visa/Redigera profil</a></li>
+                                        <li><hr class="dropdown-divider"></li>
+                                        <li><a class="dropdown-item" href="users/logout">Logga ut</a></li>
+                                    </ul>
+                                </li>
+                            </Authorized>
+                            <NotAuthorized>
+                                <li class="nav-item">
+                                    <a href="users/login" class="btn btn-outline-light me-2">Logga in</a>
+                                </li>
+                            </NotAuthorized>
+                        </AuthorizeView>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    }
+    else
+    {
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary w-100 shadow-sm">
+            <div class="container">
+                <a class="navbar-brand" href="#">
+                    <img src="logo.svg" alt="Logo" style="height: 36px; padding-bottom: 2px;" />
+                </a>
+            </div>
+        </nav>
+    }
+</CascadingAuthenticationState>
 
 @code {
-    private bool isLoggedIn = false;
+    private bool isLoading = true;
     private string userId;
     private string userProfileImage = "Images/DefaultProfilePicture.png";
 
@@ -72,19 +79,16 @@ Author: Allan
         var user = authState.User;
         userId = user.FindFirst("uid")?.Value;
 
-        isLoggedIn = userId != null;
-
-        if (isLoggedIn)
+        if (userId != null)
         {
             var response = await agentService.GetProfileImageUrl(userId);
             userProfileImage = response.Data;
         }
 
+        isLoading = false;
     }
-}
 
-@implements IDisposable
-@code {
+    @implements IDisposable
     private AuthenticationStateChangedHandler _authHandler;
 
     protected override void OnInitialized()
@@ -93,18 +97,20 @@ Author: Allan
         {
             InvokeAsync(async () =>
             {
-                // Re-check authentication and update state
+                isLoading = true;
+                StateHasChanged();
+
                 var authState = await taskAuthState;
                 var user = authState.User;
                 userId = user.FindFirst("uid")?.Value;
-                isLoggedIn = userId != null;
 
-                if (isLoggedIn)
+                if (userId != null)
                 {
                     var response = await agentService.GetProfileImageUrl(userId);
                     userProfileImage = response.Data;
                 }
 
+                isLoading = false;
                 StateHasChanged();
             });
         };
