@@ -7,71 +7,82 @@
 
 
 @* TODO: Chris fulhack *@
-<div class="mx-auto" style="width:1000px">
+<div class="mx-auto" style="width:1000px; margin-bottom:5rem;">
 
     <h3 class="pt-4 text-center">Hitta mäklare i ditt område</h3>
 
-    <EditForm Model="@searchCriteria" OnValidSubmit="OnSearchSubmit" class="py-4 row g-3 align-items-center">
+    
+
+    <EditForm Model="@searchCriteria" OnValidSubmit="OnSearchSubmit" class="py-4">
         <DataAnnotationsValidator />
         <ValidationSummary />
 
-        <div class="form-group col-auto">
-            <label class="" for="firstName">Kommun</label>
-            <InputText id="firstName" class="form-control" @bind-Value="searchCriteria.Municipality" />
+        <div class="row">
+            <div class="form-group pb-4 text-center">
+                <label class="" for="firstName">Kommun</label>
+                <InputText id="firstName" class="form-control" @bind-Value="searchCriteria.Municipality" />
+            </div>
         </div>
 
-        <div class="form-group col-auto">
-            <label class=""  for="firstName">Förnamn</label>
-            <InputText id="firstName" class="form-control" @bind-Value="searchCriteria.FirstName" />
+        <div id="collapseExample" class="collapse row px-4 justify-content-center pb-2">
+
+            <div class="form-group col-auto text-center">
+                <label class="" for="firstName">Förnamn</label>
+                <InputText id="firstName" class="form-control" @bind-Value="searchCriteria.FirstName" />
+            </div>
+
+            <div class="form-group col-auto text-center">
+                <label class="" for="lastName">Efternamn</label>
+                <InputText id="lastName" class="form-control" @bind-Value="searchCriteria.LastName" />
+            </div>
+
+            <div class="form-group col-auto text-center">
+                <label class="" for="agencyName">Mäklarbyrå</label>
+                <InputText id="agencyName" class="form-control" @bind-Value="searchCriteria.AgencyName" />
+            </div>
+
+            <div class="form-group col-auto text-center">
+                <label class="" for="email">Epost</label>
+                <InputText id="email" class="form-control" @bind-Value="searchCriteria.Email" />
+            </div>
+
+            <div class="form-group col-auto text-center">
+                <label class="" for="phoneNumber">Telefon</label>
+                <InputText id="phoneNumber" class="form-control" @bind-Value="searchCriteria.PhoneNumber" />
+            </div>
         </div>
 
-        <div class="form-group col-auto">
-            <label class="" for="lastName">Efternamn</label>
-            <InputText id="lastName" class="form-control" @bind-Value="searchCriteria.LastName" />
-        </div>
-
-        <div class="form-group col-auto">
-            <label class="" for="agencyName">Mäklarbyrå</label>
-            <InputText id="agencyName" class="form-control" @bind-Value="searchCriteria.AgencyName" />
-        </div>
-
-        <div class="form-group col-auto">
-            <label class="" for="email">Epost</label>
-            <InputText id="email" class="form-control" @bind-Value="searchCriteria.Email" />
-        </div>
-
-        <div class="form-group col-auto">
-            <label class="" for="phoneNumber">Telefon</label>
-            <InputText id="phoneNumber" class="form-control" @bind-Value="searchCriteria.PhoneNumber" />
-        </div>
-
-        <div class="col-auto d-flex flex-column align-self-end">     
-            <button type="submit" class="btn btn-primary ">Sök mäklare</button>
+        <div class="row justify-content-center">
+            <div class="col-3 d-flex flex-column align-self-end">
+                <button type="submit" class="btn btn-primary ">Sök</button>
+            </div>
+                <button class="col-3 btn btn-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                Fler filter
+            </button>
         </div>
     </EditForm>
 
     @if (!response.Success)
     {
-            <div class="alert alert-danger">
-                <h4>@response.Message</h4>
-            </div>
+        <div class="alert alert-danger">
+            <h4>@response.Message</h4>
+        </div>
     }
     else if (realEstateAgents == null)
     {
-            <div class="alert alert-info">
-                <h4>Loading data...</h4>
-            </div>
+        <div class="alert alert-info">
+            <h4>Loading data...</h4>
+        </div>
     }
     else
     {
-        <div 
-            class="col-auto agentCards vstack "
-            style="gap:1rem;">
+        <div class="col-auto agentCards vstack"
+             style="gap:1rem;">
             @foreach (var property in realEstateAgents)
             {
-                <div class="card mb-3">
+                <div class="agentCard card mb-3">
                     <div class="card-body d-flex justify-content-between align-items-center gap-4">
-                        
+
                         <!-- User Info Section -->
                         <div class="userInfo d-flex gap-4 align-items-center col-6">
                             <img class="img-thumbnail rounded-circle" style="width: 150px;"
@@ -80,7 +91,10 @@
 
                             <div class="vstack justify-content-center">
                                 <h5 class="card-title">@property.RealEstateAgentFirstName @property.RealEstateAgentLastName</h5>
-                                <small>@property.RealEstateAgencyMunicipality</small>
+                                <div>@property.RealEstateAgencyMunicipality</div>
+                                <small>@property.RealEstateAgentEmail</small>
+                                <small>@property.RealEstateAgentPhoneNumber</small>
+
                             </div>
                         </div>
 
@@ -92,7 +106,7 @@
                             <div class="font-weight-bold">@property.RealEstateAgentAgencyName</div>
                         </div>
                     </div>
-                </div>                
+                </div>
             }
         </div>
     }
@@ -118,11 +132,10 @@
     protected override async Task OnInitializedAsync()
     {
 
-        response = await realEstateAgentService.GetAgentsAsync("","", "", "", "", "");
+        response = await realEstateAgentService.GetAgentsAsync("", "", "", "", "", "");
         if (response.Success)
         {
             realEstateAgents = response.Data;
-            Console.WriteLine(realEstateAgents);
         }
     }
 
@@ -139,7 +152,6 @@
         if (response.Success)
         {
             realEstateAgents = response.Data;
-            Console.WriteLine(realEstateAgents);
         }
     }
 }
