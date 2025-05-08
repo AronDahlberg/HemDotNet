@@ -1,0 +1,137 @@
+﻿@*Made by Chris*@
+@using HemDotNetBlazorClient.Components
+@using HemDotNetBlazorClient.Services
+@page "/find-agents"
+@inject IRealEstateAgentService realEstateAgentService
+@inject HttpClient httpClient
+
+
+@* TODO: Chris fulhack *@
+<div class="mx-auto" style="width:1000px">
+
+<h3 class="pt-4 text-center">Find Agents</h3>
+
+<EditForm Model="@searchCriteria" OnValidSubmit="OnSearchSubmit" class="py-4 row g-3 align-items-center">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+        <div class="form-group col-auto">
+            <label class=""  for="firstName">First Name</label>
+        <InputText id="firstName" class="form-control" @bind-Value="searchCriteria.FirstName" />
+    </div>
+
+        <div class="form-group col-auto">
+            <label class="" for="lastName">Last Name</label>
+        <InputText id="lastName" class="form-control" @bind-Value="searchCriteria.LastName" />
+    </div>
+
+        <div class="form-group col-auto">
+            <label class="" for="agencyName">Agency Name</label>
+        <InputText id="agencyName" class="form-control" @bind-Value="searchCriteria.AgencyName" />
+    </div>
+
+        <div class="form-group col-auto">
+            <label class="" for="email">Email</label>
+        <InputText id="email" class="form-control" @bind-Value="searchCriteria.Email" />
+    </div>
+
+        <div class="form-group col-auto">
+            <label class="" for="phoneNumber">PhoneNumber</label>
+        <InputText id="phoneNumber" class="form-control" @bind-Value="searchCriteria.PhoneNumber" />
+    </div>
+        <div class="col-auto d-flex flex-column align-self-end">
+     
+    <button type="submit" class="btn btn-primary ">Search</button>
+    </div>
+</EditForm>
+
+@if (!response.Success)
+{
+        <div class="alert alert-danger">
+            <h4>@response.Message</h4>
+        </div>
+}
+else if (realEstateAgents == null)
+{
+        <div class="alert alert-info">
+            <h4>Loading data...</h4>
+        </div>
+}
+else
+{
+        <div 
+            class="col-auto agentCards"
+             style="gap:1rem;">
+        @foreach (var property in realEstateAgents)
+        {               
+                <div class="card mb-3" style="">
+
+                        <div class="card-body justify-content-between d-flex flex-row align-items-center gap-5 align-content-center">
+                            <div class="list-group-item userInfo d-flex flex-row align-items-center gap-5">
+                                <img class="img-thumbnail" style="width:150px; border-radius: 50%"
+                                    src="@($"{httpClient.BaseAddress}{property.RealEstateAgentImageUrl}")"
+                                     alt="@($"{property.RealEstateAgentFirstName} profilepic")" />
+
+                                <h5 class="card-title p-4"> @property.RealEstateAgentFirstName @property.RealEstateAgentLastName</h5>
+                            </div>
+                            
+                            <div class="list-group-item agencyInfo" style="width:300px">
+                                <img class="img" style="width:100px;"
+                                     src="@($"{httpClient.BaseAddress}{property.RealEstateAgencyLogoUrl}")"
+                                     alt="@($"{property.RealEstateAgentAgencyName} profilepic")" />
+                                <div style="font-weight:bold" class="">@property.RealEstateAgentAgencyName</div>
+                            <div class="text-truncate" style="width:300px">@property.RealEstateAgencyPresentation</div>
+                            </div>
+                        </div>
+                    </div>
+                
+
+        }
+        </div>
+}
+</div>
+@code {
+
+    private SearchCriteria searchCriteria = new SearchCriteria();
+
+
+    public class SearchCriteria
+    {
+        public string? FirstName { get; set; }
+        public string? LastName { get; set; }
+        public string? AgencyName { get; set; }
+        public string? Email { get; set; }
+        public string? PhoneNumber { get; set; }
+
+    }
+
+    private IEnumerable<RealEstateAgentDto> realEstateAgents;
+    private Response<IEnumerable<RealEstateAgentDto>> response = new Response<IEnumerable<RealEstateAgentDto>> { Success = true };
+
+    protected override async Task OnInitializedAsync()
+    {
+
+        response = await realEstateAgentService.GetAgentsAsync("", "", "", "", "");
+        if (response.Success)
+        {
+            realEstateAgents = response.Data;
+            Console.WriteLine(realEstateAgents);
+        }
+    }
+
+    // Method called when the form is submitted
+    private async Task OnSearchSubmit()
+    {
+        response = await realEstateAgentService.GetAgentsAsync(
+            searchCriteria.FirstName,
+            searchCriteria.LastName,
+            searchCriteria.AgencyName,
+            searchCriteria.Email,
+            searchCriteria.PhoneNumber);
+        if (response.Success)
+        {
+            realEstateAgents = response.Data;
+            Console.WriteLine(realEstateAgents);
+        }
+    }
+}
