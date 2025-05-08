@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HemDotNetWebApi.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250425090641_ChangeToStringsYes")]
-    partial class ChangeToStringsYes
+    [Migration("20250508121431_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -42,7 +42,7 @@ namespace HemDotNetWebApi.Migrations
                     b.Property<int>("Category")
                         .HasColumnType("int");
 
-                    b.Property<int>("ContructionYear")
+                    b.Property<int>("ConstructionYear")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreationDate")
@@ -148,10 +148,14 @@ namespace HemDotNetWebApi.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("RealEstateAgencyMunicipality")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("RealEstateAgencyName")
                         .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("RealEstateAgencyPresentation")
                         .IsRequired()
