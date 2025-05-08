@@ -9,7 +9,7 @@ namespace HemDotNetBlazorClient.Services
         Task<Response<RealEstateAgentDto>> GetAgentByIdAsync(string agentId);
 
         // Chris
-        Task<Response<IEnumerable<RealEstateAgentDto>>> GetAgentsAsync(string? firstName, string? lastName, string? agencyName, string? email, string? phoneNumber);
+        Task<Response<IEnumerable<RealEstateAgentDto>>> GetAgentsAsync(string? municipality, string? firstName, string? lastName, string? agencyName, string? email, string? phoneNumber);
 
         Task<Response<string>> GetProfileImageUrl(string agentId);
 

@@ -36,14 +36,15 @@ namespace HemDotNetBlazorClient.Services
             return response;
         }
 
+
         // Author: Chris
-        public async Task<Response<IEnumerable<RealEstateAgentDto>>> GetAgentsAsync(string? firstName, string? lastName, string? agencyName, string? email, string? phoneNumber)
+        public async Task<Response<IEnumerable<RealEstateAgentDto>>> GetAgentsAsync(string? municipality, string? firstName, string? lastName, string? agencyName, string? email, string? phoneNumber)
         {
             Response<IEnumerable<RealEstateAgentDto>> response;
 
             try
             {
-                var data = await _client.RealEstateAgentAllAsync(firstName, lastName, agencyName, email, phoneNumber);
+                var data = await _client.RealEstateAgentAllAsync(municipality, firstName, lastName, agencyName, email, phoneNumber);
                 response = new Response<IEnumerable<RealEstateAgentDto>>
                 {
                     Data = data,
@@ -57,8 +58,6 @@ namespace HemDotNetBlazorClient.Services
 
             return response;
         }
-
-
 
         // Allan
         public async Task<Response<string>> GetProfileImageUrl(string agentId)
