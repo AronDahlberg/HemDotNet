@@ -1,6 +1,5 @@
 ﻿@*Made by Chris*@
 @*Co-author: Allan (edit, delete, add, sold buttons, their functionality and styling)*@
-
 @using HemDotNetBlazorClient.Components
 @using HemDotNetBlazorClient.Providers
 @using HemDotNetBlazorClient.Services
@@ -8,11 +7,9 @@
 @inject IMarketPropertyService marketPropertyService
 @inject ApiAuthenticationStateProvider authStateProvider
 @inject HttpClient httpClient
+@inject IJSRuntime JSRuntime
 
 <h3 class="py-4 text-center">Lägg till, redigera eller ta bort objekt</h3>
-
-<ConfirmDialog @ref="confirmDialog" OnConfirm="DeleteConfirmed" OnCancel="CancelDelete" />
-
 @if (!response.Success)
 {
     <div class="alert alert-danger">
@@ -27,55 +24,157 @@ else if (marketProperties == null)
 }
 else
 {
-    <div class="d-flex flex-column align-items-center py-5">
-        @foreach (var property in marketProperties)
-        {
-            <PropertyCard Property="property" />
-            <div class="mt-0 d-flex gap-2">
-                <button class="btn btn-primary text-white">Redigera</button>
-                <!--Temporary, until we have the details page where we can add or delete pics?-->
-                
-                <a class="btn btn-primary text-white" href="/MarketProperty/@property.MarketPropertyId/Images">
-                    Lägg till eller ta bort bilder
-                </a>
-                
-                <button class="btn btn-danger text-white">Radera</button>
-                <button class="btn btn-outline-success">Markera som såld</button>
-            </div>
-        }
-        <div class="mt-5">
-            <a class="btn btn-primary" href="/MarketProperty/Create">
-                <img src="plusicon.svg" alt="Add" class="mx-1" style="width: 1.2em; height: 1.2em; vertical-align: middle;" />
-                Lägg till ett nytt objekt
-            </a>
+    <div class="container py-5">
+        <div class="row">
+            @foreach (var property in marketProperties)
+            {
+                <div class="col-12 d-flex flex-column align-items-center mb-5">
+                    <PropertyCard Property="property" />
+                    <div class="mt-2 d-flex gap-2">
+                        <button class="btn btn-primary text-white">Redigera</button>
+                        <a class="btn btn-primary text-white" href="/MarketProperty/@property.MarketPropertyId/Images">
+                            Lägg till eller ta bort bilder
+                        </a>
+                        <button class="btn btn-danger text-white" @onclick="() => ShowDeleteConfirmation(property.MarketPropertyId)">Radera</button>
+                        <button class="btn btn-outline-success">Markera som såld</button>
+                    </div>
+                </div>
+            }
+        </div>
 
+        <div class="row">
+            <div class="col-12 d-flex justify-content-center mt-3">
+                <a class="btn btn-primary" href="/MarketProperty/Create">
+                    <img src="plusicon.svg" alt="Add" class="mx-1" style="width: 1.2em; height: 1.2em; vertical-align: middle;" />
+                    Lägg till ett nytt objekt
+                </a>
+            </div>
+        </div>
+    </div>
+}
+
+<!-- Delete Confirmation Modal -->
+@if (showDeleteModal)
+{
+    <div class="modal fade show" style="display: block; background-color: rgba(0,0,0,0.5);" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title">Bekräfta borttagning</h5>
+                    <button type="button" class="btn-close bg-white" @onclick="CancelDelete" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Är du säker på att du vill radera detta objekt? Denna åtgärd kan inte ångras.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" @onclick="CancelDelete">Avbryt</button>
+                    <button type="button" class="btn btn-danger" @onclick="ConfirmDelete">Ja, radera</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@if (showSuccessAlert)
+{
+    <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 5">
+        <div class="toast show bg-success text-white" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header bg-success text-white">
+                <strong class="me-auto">Bekräftelse</strong>
+                <button type="button" class="btn-close bg-white" @onclick="() => showSuccessAlert = false"></button>
+            </div>
+            <div class="toast-body">
+                Objektet har raderats.
+            </div>
+        </div>
+    </div>
+}
+
+<!-- Error Message -->
+@if (!string.IsNullOrEmpty(errorMessage))
+{
+    <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 5">
+        <div class="toast show bg-danger text-white" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header bg-danger text-white">
+                <strong class="me-auto">Fel</strong>
+                <button type="button" class="btn-close bg-white" @onclick="() => errorMessage = null"></button>
+            </div>
+            <div class="toast-body">
+                @errorMessage
+            </div>
         </div>
     </div>
 }
 
 @code {
-
     [Parameter]
     public string? AgentId { get; set; }
-
     private List<PartialMarketPropertyDTO> marketProperties;
     private Response<List<PartialMarketPropertyDTO>> response = new Response<List<PartialMarketPropertyDTO>> { Success = true };
+    private bool showDeleteModal = false;
+    private bool showSuccessAlert = false;
+    private string? errorMessage = null;
+    private int? propertyIdToDelete;
 
     protected override async Task OnInitializedAsync()
     {
         var authState = await authStateProvider.GetAuthenticationStateAsync();
         var user = authState.User;
-
         var userId = user.FindFirst("uid")?.Value;
-
-
         response = await marketPropertyService.GetMarketPropertiesByAgent(userId);
-
         if (response.Success)
         {
             marketProperties = response.Data;
         }
+    }
 
+    private void ShowDeleteConfirmation(int propertyId)
+    {
+        propertyIdToDelete = propertyId;
+        showDeleteModal = true;
+    }
 
+    private void CancelDelete()
+    {
+        showDeleteModal = false;
+        propertyIdToDelete = null;
+    }
+
+    private async Task ConfirmDelete()
+    {
+        try
+        {
+            var authState = await authStateProvider.GetAuthenticationStateAsync();
+            var user = authState.User;
+            var userId = user.FindFirst("uid")?.Value;
+
+            var result = await marketPropertyService.DeleteMarketPropertyById((int) propertyIdToDelete, userId);
+
+            showDeleteModal = false;
+
+            if (result.Success)
+            {
+                // Remove the deleted property from the list
+                marketProperties = marketProperties.Where(p => p.MarketPropertyId != propertyIdToDelete).ToList();
+                showSuccessAlert = true;
+
+                // Auto-hide success message after 3 seconds
+                await Task.Delay(3000);
+                showSuccessAlert = false;
+                StateHasChanged();
+            }
+            else
+            {
+                errorMessage = result.Message ?? "Något gick fel vid borttagning av objektet.";
+            }
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Ett fel uppstod: {ex.Message}";
+        }
+        finally
+        {
+            propertyIdToDelete = null;
+        }
     }
 }
