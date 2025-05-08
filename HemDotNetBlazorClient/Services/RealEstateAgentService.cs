@@ -43,7 +43,7 @@ namespace HemDotNetBlazorClient.Services
 
             try
             {
-                var data = await _client.RealEstateAgentAllAsync(firstName, lastName, agencyName,email, phoneNumber);
+                var data = await _client.RealEstateAgentAllAsync(firstName, lastName, agencyName, email, phoneNumber);
                 response = new Response<IEnumerable<RealEstateAgentDto>>
                 {
                     Data = data,
@@ -58,7 +58,7 @@ namespace HemDotNetBlazorClient.Services
             return response;
         }
 
-    }
+
 
         // Allan
         public async Task<Response<string>> GetProfileImageUrl(string agentId)
