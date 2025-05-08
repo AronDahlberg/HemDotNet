@@ -11,6 +11,8 @@
 
 <h3 class="py-4 text-center">Lägg till, redigera eller ta bort objekt</h3>
 
+<ConfirmDialog @ref="confirmDialog" OnConfirm="DeleteConfirmed" OnCancel="CancelDelete" />
+
 @if (!response.Success)
 {
     <div class="alert alert-danger">
