@@ -1,8 +1,11 @@
 ﻿@*Made by Chris*@
+
 @using HemDotNetBlazorClient.Components
+@using HemDotNetBlazorClient.Providers
 @using HemDotNetBlazorClient.Services
-@page "/MarketPropertiesByAgent/{agentId}"
+@page "/agent/manage-properties/"
 @inject IMarketPropertyService marketPropertyService
+@inject ApiAuthenticationStateProvider authStateProvider
 @inject HttpClient httpClient
 
 <h3 class="py-4 text-center">Market Properties by @AgentId</h3>
@@ -26,6 +29,9 @@ else
         {
             <PropertyCard Property="property" />
         }
+        <button>Edit</button>
+        <button>Delete</button>
+        <button>Mark as sold</button>
     </div>
 }
 
@@ -39,10 +45,19 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        response = await marketPropertyService.GetMarketPropertiesByAgent(AgentId);
+        var authState = await authStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        var userId = user.FindFirst("uid")?.Value;
+
+
+        response = await marketPropertyService.GetMarketPropertiesByAgent(userId);
+
         if (response.Success)
         {
             marketProperties = response.Data;
         }
+
+
     }
 }
