@@ -1,29 +1,29 @@
 ﻿@* Author: Adam *@
-<footer class="footer">
-    <div class="footer-content">
-        <p>© 2025 HemDotNet AB</p>
-        <p>PLACEHOLDER, SLOGAN HÄR</p>
+@* Co-Author: Allan (styling, making the footer stick to the bottom instead of flying up)*@
+
+
+@* Footer.razor *@
+
+<footer class="footer bg-primary py-3">
+    <div class="container text-center">
+        <span class="text-white">© 2025 HemDotNet AB - PLACEHOLDER, SLOGAN HÄR</span>
     </div>
 </footer>
 
 <style>
+    /* making sure the footer always stays at the bottom */
+    :root {
+        position: relative;
+        min-height: 100vh;
+    }
+
     .footer {
-        padding: 1.5rem 1rem;
-        background-color: #00409E;
-        color: white;
-        font-size: 0.9rem;
-        text-align: center;
-        margin-top: 4rem;
+        position: absolute;
+        bottom: 0;
         width: 100%;
     }
 
-    .footer-content a {
-        color: #ffffff;
-        text-decoration: underline;
+    ::deep body {
+        padding-bottom: 56px; /* adjust based on footer height */
     }
-
-        .footer-content a:hover {
-            color: #dbe9ff;
-        }
 </style>
-
