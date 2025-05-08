@@ -12,6 +12,7 @@
         public string RealEstateAgentAgencyName { get; set; }
         public string RealEstateAgencyPresentation { get; set; }
         public string RealEstateAgencyLogoUrl { get; set; }
+        public string RealEstateAgencyMunicipality { get; set; }
         public int RealEstateAgentAgencyId { get; set; }
         public List<int>? PropertyIds { get; set; }
     }
