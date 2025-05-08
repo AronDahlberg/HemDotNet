@@ -11,7 +11,7 @@ namespace HemDotNetWebApi.Models
         public int RealEstateAgencyId { get; set; }
 
         [Required]
-        [MaxLength(30)]
+        [MaxLength(100)]
         public string RealEstateAgencyName { get; set; }
 
         [Required]
@@ -19,6 +19,9 @@ namespace HemDotNetWebApi.Models
 
         [Required]
         public string RealEstateAgencyLogoUrl { get; set; }
+
+        [Required]
+        public string RealEstateAgencyMunicipality { get; set; }
 
         [NotMapped]
         public virtual List<RealEstateAgent> RealEstateAgencyAgents { get; set; }
