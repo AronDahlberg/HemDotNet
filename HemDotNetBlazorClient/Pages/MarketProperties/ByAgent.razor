@@ -63,44 +63,12 @@ else
     OnCancel="CancelDelete"
     OnConfirm="ConfirmDelete" />
 
-@if (showSuccessAlert)
-{
-    <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 5">
-        <div class="toast show bg-success text-white" role="alert" aria-live="assertive" aria-atomic="true">
-            <div class="toast-header bg-success text-white">
-                <strong class="me-auto">Bekräftelse</strong>
-                <button type="button" class="btn-close bg-white" @onclick="() => showSuccessAlert = false"></button>
-            </div>
-            <div class="toast-body">
-                Objektet har raderats.
-            </div>
-        </div>
-    </div>
-}
-
-<!-- Error Message -->
-@if (!string.IsNullOrEmpty(errorMessage))
-{
-    <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 5">
-        <div class="toast show bg-danger text-white" role="alert" aria-live="assertive" aria-atomic="true">
-            <div class="toast-header bg-danger text-white">
-                <strong class="me-auto">Fel</strong>
-                <button type="button" class="btn-close bg-white" @onclick="() => errorMessage = null"></button>
-            </div>
-            <div class="toast-body">
-                @errorMessage
-            </div>
-        </div>
-    </div>
-}
-
 @code {
     [Parameter]
     public string? AgentId { get; set; }
     private List<PartialMarketPropertyDTO> marketProperties;
     private Response<List<PartialMarketPropertyDTO>> response = new Response<List<PartialMarketPropertyDTO>> { Success = true };
     private bool showDeleteModal = false;
-    private bool showSuccessAlert = false;
     private string? errorMessage = null;
     private int? propertyIdToDelete;
 
@@ -142,13 +110,7 @@ else
 
             if (result.Success)
             {
-                // Remove the deleted property from the list
                 marketProperties = marketProperties.Where(p => p.MarketPropertyId != propertyIdToDelete).ToList();
-                showSuccessAlert = true;
-
-                // Auto-hide success message after 3 seconds
-                await Task.Delay(3000);
-                showSuccessAlert = false;
                 StateHasChanged();
             }
             else
