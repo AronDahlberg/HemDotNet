@@ -8,7 +8,7 @@
 @inject ApiAuthenticationStateProvider authStateProvider
 @inject HttpClient httpClient
 
-<h3 class="py-4 text-center">Market Properties by @AgentId</h3>
+<h3 class="py-4 text-center">Lägg till, redigera eller ta bort objekt</h3>
 
 @if (!response.Success)
 {
@@ -28,10 +28,19 @@ else
         @foreach (var property in marketProperties)
         {
             <PropertyCard Property="property" />
+            <div class="mt-0 d-flex gap-2">
+                <button class="btn btn-primary text-white">Redigera</button>
+                <button class="btn btn-danger text-white">Radera</button>
+                <button class="btn btn-outline-success">Markera som såld</button>
+            </div>
         }
-        <button>Edit</button>
-        <button>Delete</button>
-        <button>Mark as sold</button>
+        <div class="mt-5">
+            <button class="btn btn-primary">
+                <img src="plusicon.svg" alt="Add" class="mx-1" style="width: 1.2em; height: 1.2em; vertical-align: middle;" />
+                Lägg till ett nytt objekt
+            </button>
+
+        </div>
     </div>
 }
 
