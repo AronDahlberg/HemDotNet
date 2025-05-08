@@ -92,7 +92,6 @@ namespace HemDotNetWebApi.Controllers
         // Adam
         [HttpDelete("{propertyId}/{agentId}")]
         [Authorize]
-
         public async Task<IActionResult> AgentDelete(int propertyId, string agentId)
         {
             var result = await _marketPropertyRepository.AgentDelete(propertyId, agentId);
