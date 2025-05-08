@@ -1,4 +1,5 @@
 ﻿@*Made by Chris*@
+@*Co-author: Allan (edit, delete, add, sold buttons, their functionality and styling)*@
 
 @using HemDotNetBlazorClient.Components
 @using HemDotNetBlazorClient.Providers
@@ -30,15 +31,21 @@ else
             <PropertyCard Property="property" />
             <div class="mt-0 d-flex gap-2">
                 <button class="btn btn-primary text-white">Redigera</button>
+                <!--Temporary, until we have the details page where we can add or delete pics?-->
+                
+                <a class="btn btn-primary text-white" href="/MarketProperty/@property.MarketPropertyId/Images">
+                    Lägg till eller ta bort bilder
+                </a>
+                
                 <button class="btn btn-danger text-white">Radera</button>
                 <button class="btn btn-outline-success">Markera som såld</button>
             </div>
         }
         <div class="mt-5">
-            <button class="btn btn-primary">
+            <a class="btn btn-primary" href="/MarketProperty/Create">
                 <img src="plusicon.svg" alt="Add" class="mx-1" style="width: 1.2em; height: 1.2em; vertical-align: middle;" />
                 Lägg till ett nytt objekt
-            </button>
+            </a>
 
         </div>
     </div>
