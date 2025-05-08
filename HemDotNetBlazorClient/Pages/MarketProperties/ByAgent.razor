@@ -1,5 +1,5 @@
 ﻿@*Made by Chris*@
-@*Co-author: Allan (edit, delete, add, sold buttons, their functionality and styling)*@
+@*Co-author: Allan (edit, delete, add, sold buttons, their functionality and styling, delete confirmation message)*@
 @using HemDotNetBlazorClient.Components
 @using HemDotNetBlazorClient.Providers
 @using HemDotNetBlazorClient.Services
@@ -53,27 +53,15 @@ else
     </div>
 }
 
-<!-- Delete Confirmation Modal -->
-@if (showDeleteModal)
-{
-    <div class="modal fade show" style="display: block; background-color: rgba(0,0,0,0.5);" tabindex="-1" role="dialog">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header bg-danger text-white">
-                    <h5 class="modal-title">Bekräfta borttagning</h5>
-                    <button type="button" class="btn-close bg-white" @onclick="CancelDelete" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <p>Är du säker på att du vill radera detta objekt? Denna åtgärd kan inte ångras.</p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" @onclick="CancelDelete">Avbryt</button>
-                    <button type="button" class="btn btn-danger" @onclick="ConfirmDelete">Ja, radera</button>
-                </div>
-            </div>
-        </div>
-    </div>
-}
+<!-- Delete Confirmation Modal Component -->
+<ConfirmationModalComponent 
+    IsVisible="showDeleteModal"
+    Title="Bekräfta borttagning"
+    Message="Är du säker på att du vill radera detta objekt? Denna åtgärd kan inte ångras."
+    CancelText="Avbryt"
+    ConfirmText="Ja, radera"
+    OnCancel="CancelDelete"
+    OnConfirm="ConfirmDelete" />
 
 @if (showSuccessAlert)
 {

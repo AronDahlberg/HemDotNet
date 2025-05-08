@@ -1,28 +1,42 @@
-﻿@* Author: Allan *@
+﻿@*Author: Allan*@
 
-<div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);" @onclick="OnBackdropClick">
-    <div class="modal-dialog modal-dialog-centered">
+<div class="modal fade @(IsVisible ? "show" : "")" style="display: @(IsVisible ? "block" : "none"); background-color: rgba(0,0,0,0.5);" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header bg-danger text-white">
-                <h5 class="modal-title">Bekräfta radering</h5>
-                <button type="button" class="btn-close" @onclick="Cancel"></button>
+                <h5 class="modal-title">@Title</h5>
+                <button type="button" class="btn-close bg-white" @onclick="OnCancel" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <p>Är du säker på att du vill radera detta objekt?</p>
+                <p>@Message</p>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-secondary" @onclick="Cancel">Avbryt</button>
-                <button class="btn btn-danger" @onclick="Confirm">Radera</button>
+                <button type="button" class="btn btn-secondary" @onclick="OnCancel">@CancelText</button>
+                <button type="button" class="btn btn-danger" @onclick="OnConfirm">@ConfirmText</button>
             </div>
         </div>
     </div>
 </div>
 
 @code {
-    [Parameter] public EventCallback OnConfirm { get; set; }
-    [Parameter] public EventCallback OnCancel { get; set; }
+    [Parameter]
+    public bool IsVisible { get; set; }
 
-    private async Task Confirm() => await OnConfirm.InvokeAsync();
-    private async Task Cancel() => await OnCancel.InvokeAsync();
-    private void OnBackdropClick() => Cancel();
+    [Parameter]
+    public string Title { get; set; } = "Bekräfta borttagning";
+
+    [Parameter]
+    public string Message { get; set; } = "Är du säker på att du vill radera detta objekt? Denna åtgärd kan inte ångras.";
+
+    [Parameter]
+    public string CancelText { get; set; } = "Avbryt";
+
+    [Parameter]
+    public string ConfirmText { get; set; } = "Ja, radera";
+
+    [Parameter]
+    public EventCallback OnCancel { get; set; }
+
+    [Parameter]
+    public EventCallback OnConfirm { get; set; }
 }
