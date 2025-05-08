@@ -1,4 +1,6 @@
-﻿using HemDotNetWebApi.Models;
+﻿using AutoMapper;
+using HemDotNetWebApi.DTO;
+using HemDotNetWebApi.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace HemDotNetWebApi.Data
@@ -6,10 +8,25 @@ namespace HemDotNetWebApi.Data
     public class RealEstateAgentRepository : IRealEstateAgentRepository
     {
         private readonly ApplicationDbContext _context;
+        private readonly IMapper _mapper;
 
-        public RealEstateAgentRepository(ApplicationDbContext context)
+        public RealEstateAgentRepository(ApplicationDbContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
+        }
+
+        // CHRIS
+        public async Task<IEnumerable<RealEstateAgentDto>> GetAllAsync()
+        {
+            var agents = await _context.RealEstateAgents
+                .Include(a => a.RealEstateAgentAgency)
+                .Include(a => a.RealEstateAgentProperties)
+                .ToListAsync();
+
+            var agentDtos = _mapper.Map<IEnumerable<RealEstateAgentDto>>(agents);
+
+            return agentDtos;
         }
 
         // CHRIS

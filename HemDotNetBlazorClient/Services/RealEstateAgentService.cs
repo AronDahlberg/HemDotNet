@@ -12,10 +12,12 @@ namespace HemDotNetBlazorClient.Services
         {
             _client = client;
         }
+
         // Author: Allan
         public async Task<Response<RealEstateAgentDto>> GetAgentByIdAsync(string agentId)
         {
             Response<RealEstateAgentDto> response;
+
 
             try
             {
@@ -33,6 +35,50 @@ namespace HemDotNetBlazorClient.Services
 
             return response;
         }
-    }
 
+
+        // Author: Chris
+        public async Task<Response<IEnumerable<RealEstateAgentDto>>> GetAgentsAsync(string? municipality, string? firstName, string? lastName, string? agencyName, string? email, string? phoneNumber)
+        {
+            Response<IEnumerable<RealEstateAgentDto>> response;
+
+            try
+            {
+                var data = await _client.RealEstateAgentAllAsync(municipality, firstName, lastName, agencyName, email, phoneNumber);
+                response = new Response<IEnumerable<RealEstateAgentDto>>
+                {
+                    Data = data,
+                    Success = true
+                };
+            }
+            catch (ApiException ex)
+            {
+                response = ConvertApiExceptions<IEnumerable<RealEstateAgentDto>>(ex);
+            }
+
+            return response;
+        }
+
+        // Allan
+        public async Task<Response<string>> GetProfileImageUrl(string agentId)
+        {
+            Response<string> response;
+
+            try
+            {
+                var data = await _client.GetProfileAsync(agentId);
+                response = new Response<string>
+                {
+                    Data = data.RealEstateAgentImageUrl,
+                    Success = true
+                };
+            }
+            catch (ApiException ex)
+            {
+                response = ConvertApiExceptions<string>(ex);
+            }
+
+            return response;
+        }
+    }
 }

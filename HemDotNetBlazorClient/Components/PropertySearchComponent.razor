@@ -16,13 +16,18 @@
         border: 1px solid #ccc;
         border-radius: 4px;
         box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        width: 100%;
+        max-width: 100%;
+        left: 0;
+        right: 0;
+        z-index: 100;
     }
 </style>
 
 <!--Allan-->
 <div class="border rounded py-3 px-3 shadow">
     <h4 class="mb-4">Sök bostäder</h4>
-    <div class="mb-3">
+    <div class="mb-3 position-relative">
         <label for="areaInput" class="form-label">Område</label>
         <input type="text"
                class="form-control"
@@ -32,7 +37,7 @@
                @oninput="OnSearchTermChanged" />
         @if (suggestions.Any())
         {
-            <ul class="list-group mt-2 position-absolute w-100" style="max-height: 300px; overflow-y: auto; z-index: 100;">
+            <ul class="list-group mt-2 position-absolute" style="max-height: 300px; overflow-y: auto;">
                 @foreach (var suggestion in suggestions)
                 {
                     <li class="list-group-item" @onclick="() => SelectSuggestion(suggestion)">

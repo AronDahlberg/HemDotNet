@@ -367,3 +367,5 @@ appsettings.Development.json
 
 # Folder where PropertyImages are added
 HemDotNetWebApi/Images/PropertyImages/
+/HemDotNetBlazorClient/Properties/launchSettings.json
+/HemDotNetWebApi/Properties/launchSettings.json

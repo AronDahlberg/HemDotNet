@@ -1,4 +1,5 @@
-﻿using HemDotNetWebApi.Models;
+﻿using HemDotNetWebApi.DTO;
+using HemDotNetWebApi.Models;
 
 namespace HemDotNetWebApi.Data
 {
@@ -9,5 +10,9 @@ namespace HemDotNetWebApi.Data
         
         // CHRIS
         Task<RealEstateAgent> GetAsync(string agentId);
+
+        // CHRIS
+        Task<IEnumerable<RealEstateAgentDto>> GetAllAsync();
+
     }
 }
