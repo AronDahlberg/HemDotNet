@@ -1,4 +1,4 @@
-﻿@page "/MarketProperty/Details/{Id:int}"
+﻿@page "/property/details/{MarketPropertyId:int}"
 @inject IMarketPropertyService propertyService
 @inject NavigationManager navigationManager
 @using Microsoft.AspNetCore.WebUtilities
@@ -11,16 +11,65 @@
         @successMessage
     </div>
 }
+@if (marketProperty == null)
+{
+    <p>Loading property details...</p>
+}
+else
+{
+    <div class="property-details-container">
+        <!-- Hero Image Carousel -->
+        <div class="image-carousel">
+            @foreach (var img in marketProperty.Images)
+            {
+                <img src="@img.ImageUrl" alt="Property Image" class="carousel-image" />
+            }
+        </div>
+
+        <!-- Property Summary -->
+        <div class="property-summary">
+            <h1>@marketProperty.Price.ToString("C")</h1>
+            <p>@marketProperty.AmountOfRooms rooms | @marketProperty.LivingArea m² | @marketProperty.PropertyAddress, @marketProperty.MunicipalityName</p>
+        </div>
+
+        <!-- Detailed Description -->
+        <div class="property-description">
+            <h2>Description</h2>
+            <p>@marketProperty.Description</p>
+        </div>
+
+        <!-- Additional Information -->
+        <div class="additional-info">
+            <h2>Additional Information</h2>
+            <ul>
+                <li>Construction Year: @marketProperty.ContructionYear</li>
+                <li>Ancillary Area: @marketProperty.AncillaryArea m²</li>
+                <li>Lot Area: @marketProperty.LotArea m²</li>
+                <li>Monthly Fee: @(marketProperty.MonthlyFee.HasValue ? marketProperty.MonthlyFee.Value.ToString("C") : "N/A")</li>
+                <li>Yearly Maintenance Cost: @(marketProperty.YearlyMaintenanceCost.HasValue ? marketProperty.YearlyMaintenanceCost.Value.ToString("C") : "N/A")</li>
+            </ul>
+        </div>
+
+        <!-- Contact Information -->
+        <div class="contact-info">
+            <h2>Contact</h2>
+            <p>Real Estate Agent: @marketProperty.RealEstateAgentFullName</p>
+            <!-- Add contact form or links as needed -->
+        </div>
+    </div>
+}
 
 @code {
-    [Parameter] public int id { get; set; }
-    private Response<MarketPropertyDetailsDto>? marketProperty;
+    [Parameter] public int MarketPropertyId { get; set; }
+    private Response<MarketPropertyDetailsDto>? responseProperty;
+    private MarketPropertyDetailsDto marketProperty;
     private string successMessage;
 
     //Co-Author: Johan
     protected override async Task OnInitializedAsync()
     {
-        marketProperty = await propertyService.GetMarketPropertyById(id);
+        responseProperty = await propertyService.GetMarketPropertyById(MarketPropertyId);
+        marketProperty = responseProperty.Data;
 
         var uri = navigationManager.ToAbsoluteUri(navigationManager.Uri);
         if (QueryHelpers.ParseQuery(uri.Query).TryGetValue("successMessage", out var message))
