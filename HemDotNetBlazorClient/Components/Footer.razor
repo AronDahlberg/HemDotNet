@@ -9,19 +9,8 @@
 </footer>
 
 <style>
-    /* making sure the footer always stays at the bottom */
-    :root {
-        position: relative;
-        min-height: 100vh;
-    }
-
+    /* Footer styling */
     .footer {
-        position: absolute;
-        bottom: 0;
-        width: 100%;
-    }
-
-    ::deep body {
-        padding-bottom: 56px; /* adjust based on footer height */
+        flex-shrink: 0; /* Prevents the footer from shrinking */
     }
 </style>
