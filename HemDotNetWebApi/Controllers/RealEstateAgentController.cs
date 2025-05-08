@@ -76,6 +76,7 @@ namespace HemDotNetWebApi.Controllers
         //GET: RealEstateAgent?{searchParams}
         [HttpGet]
         public async Task<ActionResult<List<RealEstateAgentDto>>> GetAgents(
+            [FromQuery] string? municipality,
             [FromQuery] string? firstName, 
             [FromQuery] string? lastName, 
             [FromQuery] string? agencyName,
@@ -87,7 +88,8 @@ namespace HemDotNetWebApi.Controllers
         {
             var filteredAgents = await _realEstateAgentRepository.GetAllAsync();
 
-            //var dtoAgents = _mapper.Map(, filteredAgents);
+            if (!string.IsNullOrWhiteSpace(municipality))
+                filteredAgents = filteredAgents.Where(a => a.RealEstateAgencyMunicipality.ToLower().Contains(municipality.ToLowerInvariant()));
 
             if (!string.IsNullOrWhiteSpace(firstName))
                 filteredAgents = filteredAgents.Where(a => a.RealEstateAgentFirstName.ToLower().Contains(firstName.ToLowerInvariant()));

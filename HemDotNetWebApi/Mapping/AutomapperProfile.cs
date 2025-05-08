@@ -115,6 +115,8 @@ namespace HemDotNetWebApi.Mapping
                 opt => opt.MapFrom(src => src.RealEstateAgentAgency.RealEstateAgencyLogoUrl))
             .ForMember(dest => dest.RealEstateAgencyPresentation,
                 opt => opt.MapFrom(src => src.RealEstateAgentAgency.RealEstateAgencyPresentation))
+            .ForMember(dest => dest.RealEstateAgencyMunicipality,
+                opt => opt.MapFrom(src => src.RealEstateAgentAgency.RealEstateAgencyMunicipality))
             .ForMember(dest => dest.PropertyIds,
                 opt => opt.MapFrom(src => src.RealEstateAgentProperties.Select(p => p.MarketPropertyId)));
         }

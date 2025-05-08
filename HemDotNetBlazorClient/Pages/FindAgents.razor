@@ -9,91 +9,97 @@
 @* TODO: Chris fulhack *@
 <div class="mx-auto" style="width:1000px">
 
-<h3 class="pt-4 text-center">Find Agents</h3>
+    <h3 class="pt-4 text-center">Hitta mäklare i ditt område</h3>
 
-<EditForm Model="@searchCriteria" OnValidSubmit="OnSearchSubmit" class="py-4 row g-3 align-items-center">
-    <DataAnnotationsValidator />
-    <ValidationSummary />
-
-        <div class="form-group col-auto">
-            <label class=""  for="firstName">First Name</label>
-        <InputText id="firstName" class="form-control" @bind-Value="searchCriteria.FirstName" />
-    </div>
+    <EditForm Model="@searchCriteria" OnValidSubmit="OnSearchSubmit" class="py-4 row g-3 align-items-center">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
 
         <div class="form-group col-auto">
-            <label class="" for="lastName">Last Name</label>
-        <InputText id="lastName" class="form-control" @bind-Value="searchCriteria.LastName" />
-    </div>
-
-        <div class="form-group col-auto">
-            <label class="" for="agencyName">Agency Name</label>
-        <InputText id="agencyName" class="form-control" @bind-Value="searchCriteria.AgencyName" />
-    </div>
-
-        <div class="form-group col-auto">
-            <label class="" for="email">Email</label>
-        <InputText id="email" class="form-control" @bind-Value="searchCriteria.Email" />
-    </div>
-
-        <div class="form-group col-auto">
-            <label class="" for="phoneNumber">PhoneNumber</label>
-        <InputText id="phoneNumber" class="form-control" @bind-Value="searchCriteria.PhoneNumber" />
-    </div>
-        <div class="col-auto d-flex flex-column align-self-end">
-     
-    <button type="submit" class="btn btn-primary ">Search</button>
-    </div>
-</EditForm>
-
-@if (!response.Success)
-{
-        <div class="alert alert-danger">
-            <h4>@response.Message</h4>
+            <label class="" for="firstName">Kommun</label>
+            <InputText id="firstName" class="form-control" @bind-Value="searchCriteria.Municipality" />
         </div>
-}
-else if (realEstateAgents == null)
-{
-        <div class="alert alert-info">
-            <h4>Loading data...</h4>
+
+        <div class="form-group col-auto">
+            <label class=""  for="firstName">Förnamn</label>
+            <InputText id="firstName" class="form-control" @bind-Value="searchCriteria.FirstName" />
         </div>
-}
-else
-{
+
+        <div class="form-group col-auto">
+            <label class="" for="lastName">Efternamn</label>
+            <InputText id="lastName" class="form-control" @bind-Value="searchCriteria.LastName" />
+        </div>
+
+        <div class="form-group col-auto">
+            <label class="" for="agencyName">Mäklarbyrå</label>
+            <InputText id="agencyName" class="form-control" @bind-Value="searchCriteria.AgencyName" />
+        </div>
+
+        <div class="form-group col-auto">
+            <label class="" for="email">Epost</label>
+            <InputText id="email" class="form-control" @bind-Value="searchCriteria.Email" />
+        </div>
+
+        <div class="form-group col-auto">
+            <label class="" for="phoneNumber">Telefon</label>
+            <InputText id="phoneNumber" class="form-control" @bind-Value="searchCriteria.PhoneNumber" />
+        </div>
+
+        <div class="col-auto d-flex flex-column align-self-end">     
+            <button type="submit" class="btn btn-primary ">Sök mäklare</button>
+        </div>
+    </EditForm>
+
+    @if (!response.Success)
+    {
+            <div class="alert alert-danger">
+                <h4>@response.Message</h4>
+            </div>
+    }
+    else if (realEstateAgents == null)
+    {
+            <div class="alert alert-info">
+                <h4>Loading data...</h4>
+            </div>
+    }
+    else
+    {
         <div 
-            class="col-auto agentCards"
-             style="gap:1rem;">
-        @foreach (var property in realEstateAgents)
-        {               
-                <div class="card mb-3" style="">
+            class="col-auto agentCards vstack "
+            style="gap:1rem;">
+            @foreach (var property in realEstateAgents)
+            {
+                <div class="card mb-3">
+                    <div class="card-body d-flex justify-content-between align-items-center gap-4">
+                        
+                        <!-- User Info Section -->
+                        <div class="userInfo d-flex gap-4 align-items-center col-6">
+                            <img class="img-thumbnail rounded-circle" style="width: 150px;"
+                                 src="@($"{httpClient.BaseAddress}{property.RealEstateAgentImageUrl}")"
+                                 alt="@($"{property.RealEstateAgentFirstName} profilepic")" />
 
-                        <div class="card-body justify-content-between d-flex flex-row align-items-center gap-5 align-content-center">
-                            <div class="list-group-item userInfo d-flex flex-row align-items-center gap-5">
-                                <img class="img-thumbnail" style="width:150px; border-radius: 50%"
-                                    src="@($"{httpClient.BaseAddress}{property.RealEstateAgentImageUrl}")"
-                                     alt="@($"{property.RealEstateAgentFirstName} profilepic")" />
-
-                                <h5 class="card-title p-4"> @property.RealEstateAgentFirstName @property.RealEstateAgentLastName</h5>
-                            </div>
-                            
-                            <div class="list-group-item agencyInfo" style="width:300px">
-                                <img class="img" style="width:100px;"
-                                     src="@($"{httpClient.BaseAddress}{property.RealEstateAgencyLogoUrl}")"
-                                     alt="@($"{property.RealEstateAgentAgencyName} profilepic")" />
-                                <div style="font-weight:bold" class="">@property.RealEstateAgentAgencyName</div>
-                            <div class="text-truncate" style="width:300px">@property.RealEstateAgencyPresentation</div>
+                            <div class="vstack justify-content-center">
+                                <h5 class="card-title">@property.RealEstateAgentFirstName @property.RealEstateAgentLastName</h5>
+                                <small>@property.RealEstateAgencyMunicipality</small>
                             </div>
                         </div>
-                    </div>
-                
 
-        }
+                        <!-- Agency Info Section -->
+                        <div class="agencyInfo text-center d-flex flex-column align-items-center col-4">
+                            <img class="img" style="width: 100px;"
+                                 src="@($"{httpClient.BaseAddress}{property.RealEstateAgencyLogoUrl}")"
+                                 alt="@($"{property.RealEstateAgentAgencyName} logo")" />
+                            <div class="font-weight-bold">@property.RealEstateAgentAgencyName</div>
+                        </div>
+                    </div>
+                </div>                
+            }
         </div>
-}
+    }
 </div>
 @code {
 
     private SearchCriteria searchCriteria = new SearchCriteria();
-
 
     public class SearchCriteria
     {
@@ -102,6 +108,7 @@ else
         public string? AgencyName { get; set; }
         public string? Email { get; set; }
         public string? PhoneNumber { get; set; }
+        public string? Municipality { get; set; }
 
     }
 
@@ -111,7 +118,7 @@ else
     protected override async Task OnInitializedAsync()
     {
 
-        response = await realEstateAgentService.GetAgentsAsync("", "", "", "", "");
+        response = await realEstateAgentService.GetAgentsAsync("","", "", "", "", "");
         if (response.Success)
         {
             realEstateAgents = response.Data;
@@ -123,6 +130,7 @@ else
     private async Task OnSearchSubmit()
     {
         response = await realEstateAgentService.GetAgentsAsync(
+            searchCriteria.Municipality,
             searchCriteria.FirstName,
             searchCriteria.LastName,
             searchCriteria.AgencyName,

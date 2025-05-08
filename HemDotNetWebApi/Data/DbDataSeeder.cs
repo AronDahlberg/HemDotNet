@@ -63,8 +63,11 @@ namespace HemDotNetWebApi.Data
                 var agencies = await context.RealEstateAgencies.ToListAsync();
                 var nordicHomes = agencies.First(a => a.RealEstateAgencyName == "Nordic Homes");
                 var nordhsMaklarbyra = agencies.First(a => a.RealEstateAgencyName == "Nordhs Mäklarbyrå");
-
-                int agentIdCounter = 1;
+                var agency3 = agencies.First(a => a.RealEstateAgencyName == "VästkustMäklarna");
+                var agency4 = agencies.First(a => a.RealEstateAgencyName == "Östergötlands Fastighetsförmedling");
+                var agency5 = agencies.First(a => a.RealEstateAgencyName == "NorrMäklare");
+                var agency6 = agencies.First(a => a.RealEstateAgencyName == "Trygga Tak");
+                var agency7 = agencies.First(a => a.RealEstateAgencyName == "Svenska Hem");
 
                 /* Coder: Johan, Participants: All */
 
@@ -74,8 +77,6 @@ namespace HemDotNetWebApi.Data
                 {
                     new RealEstateAgent
                     {
-                        //Id = Guid.NewGuid().ToString(),
-                        //RealEstateAgentId = agentIdCounter++,
                         Email = "admin@hemdotnet.se",
                         NormalizedEmail = "ADMIN@HEMDOTNET.SE",
                         UserName = "admin@hemdotnet.se",
@@ -91,8 +92,6 @@ namespace HemDotNetWebApi.Data
                     },
                     new RealEstateAgent
                     {
-                        //Id = Guid.NewGuid().ToString(),
-                        //RealEstateAgentId = agentIdCounter++,
                         Email = "anna@nordichomes.se",
                         NormalizedEmail = "ANNA@NORDICHOMES.SE",
                         UserName = "anna@nordichomes.se",
@@ -103,13 +102,11 @@ namespace HemDotNetWebApi.Data
                         EmailConfirmed = true,
                         RealEstateAgentEmail = "anna@nordichomes.se",
                         RealEstateAgentPhoneNumber = "+46 70 123 45 67",
-                        RealEstateAgentImageUrl = "Images/RealEstateAgentWoman.jpg",
+                        RealEstateAgentImageUrl = "Images/RealEstateAgentWoman2.png",
                         RealEstateAgentAgency = nordicHomes
                     },
                     new RealEstateAgent
                     {
-                        //Id = Guid.NewGuid().ToString(),
-                        //RealEstateAgentId = agentIdCounter++,
                         Email = "mikael@nordichomes.se",
                         NormalizedEmail = "MIKAEL@NORDICHOMES.SE",
                         UserName = "mikael@nordichomes.se",
@@ -120,13 +117,11 @@ namespace HemDotNetWebApi.Data
                         EmailConfirmed = true,
                         RealEstateAgentEmail = "mikael@nordichomes.se",
                         RealEstateAgentPhoneNumber = "+46 70 123 45 67",
-                        RealEstateAgentImageUrl = "Images/RealEstateAgentMan.jpg",
-                        RealEstateAgentAgency = nordicHomes
+                        RealEstateAgentImageUrl = "Images/RealEstateAgentMan3.png",
+                        RealEstateAgentAgency = nordhsMaklarbyra
                     },
                     new RealEstateAgent
                     {
-                        //Id = Guid.NewGuid().ToString(),
-                        //RealEstateAgentId = agentIdCounter++,
                         Email = "maria@nordichomes.se",
                         NormalizedEmail = "MARIA@NORDICHOMES.SE",
                         UserName = "maria@nordichomes.se",
@@ -137,13 +132,11 @@ namespace HemDotNetWebApi.Data
                         EmailConfirmed = true,
                         RealEstateAgentEmail = "maria@nordichomes.se",
                         RealEstateAgentPhoneNumber = "+46 70 123 45 67",
-                        RealEstateAgentImageUrl = "Images/RealEstateAgentWoman.jpg",
-                        RealEstateAgentAgency = nordicHomes
+                        RealEstateAgentImageUrl = "Images/RealEstateAgentWoman4.png",
+                        RealEstateAgentAgency = agency4
                     },
                     new RealEstateAgent
                     {
-                        //Id = Guid.NewGuid().ToString(),
-                        //RealEstateAgentId = agentIdCounter++,
                         Email = "lars@nordhsmaklarbyra.com",
                         NormalizedEmail = "LARS@NORDHSMAKLARBYRA.COM",
                         UserName = "lars@nordhsmaklarbyra.com",
@@ -154,13 +147,11 @@ namespace HemDotNetWebApi.Data
                         EmailConfirmed = true,
                         RealEstateAgentEmail = "lars@nordhsmaklarbyra.com",
                         RealEstateAgentPhoneNumber = "+46 70 123 45 67",
-                        RealEstateAgentImageUrl = "Images/RealEstateAgentMan.jpg",
-                        RealEstateAgentAgency = nordhsMaklarbyra
+                        RealEstateAgentImageUrl = "Images/RealEstateAgentMan2.png",
+                        RealEstateAgentAgency = agency5
                     },
                     new RealEstateAgent
                     {
-                        //Id = Guid.NewGuid().ToString(),
-                        //RealEstateAgentId = agentIdCounter++,
                         Email = "vendela@nordhsmaklarbyra.com",
                         NormalizedEmail = "VENDELA@NORDHSMAKLARBYRA.COM",
                         UserName = "vendela@nordhsmaklarbyra.com",
@@ -171,13 +162,11 @@ namespace HemDotNetWebApi.Data
                         EmailConfirmed = true,
                         RealEstateAgentEmail = "vendela@nordhsmaklarbyra.com",
                         RealEstateAgentPhoneNumber = "+46 70 123 45 67",
-                        RealEstateAgentImageUrl = "Images/RealEstateAgentWoman.jpg",
-                        RealEstateAgentAgency = nordhsMaklarbyra
+                        RealEstateAgentImageUrl = "Images/RealEstateAgentWoman3.png",
+                        RealEstateAgentAgency = agency6
                     },
                     new RealEstateAgent
                     {
-                        //Id = Guid.NewGuid().ToString(),
-                        //RealEstateAgentId = agentIdCounter++,
                         Email = "erik@nordhsmaklarbyra.com",
                         NormalizedEmail = "ERIK@NORDHSMAKLARBYRA.COM",
                         UserName = "erik@nordhsmaklarbyra.com",
@@ -188,13 +177,11 @@ namespace HemDotNetWebApi.Data
                         EmailConfirmed = true,
                         RealEstateAgentEmail = "erik@nordhsmaklarbyra.com",
                         RealEstateAgentPhoneNumber = "+46 70 123 45 67",
-                        RealEstateAgentImageUrl = "Images/RealEstateAgentMan.jpg",
-                        RealEstateAgentAgency = nordhsMaklarbyra
+                        RealEstateAgentImageUrl = "Images/RealEstateAgentMan6.png",
+                        RealEstateAgentAgency = agency7
                     },
                     new RealEstateAgent
                     {
-                        //Id = Guid.NewGuid().ToString(),
-                        //RealEstateAgentId = agentIdCounter++,
                         Email = "lisa@nordhsmaklarbyra.com",
                         NormalizedEmail = "LISA@NORDHSMAKLARBYRA.COM",
                         UserName = "lisa@nordhsmaklarbyra.com",
@@ -206,7 +193,7 @@ namespace HemDotNetWebApi.Data
                         RealEstateAgentEmail = "lisa@nordhsmaklarbyra.com",
                         RealEstateAgentPhoneNumber = "+46 70 123 45 67",
                         RealEstateAgentImageUrl = "Images/RealEstateAgentWoman.jpg",
-                        RealEstateAgentAgency = nordhsMaklarbyra
+                        RealEstateAgentAgency = agency3
                     }
                 };
 
@@ -280,19 +267,57 @@ namespace HemDotNetWebApi.Data
                     {
                         RealEstateAgencyName = "Wait list",
                         RealEstateAgencyPresentation = "Vänta tills administrationen godkänner ditt konto.",
-                        RealEstateAgencyLogoUrl = "Images/PlaceholderLogo.png"
+                        RealEstateAgencyLogoUrl = "Images/PlaceholderLogo.png",
+                        RealEstateAgencyMunicipality = "Stockholm"
                     },
                     new RealEstateAgency
                     {
                         RealEstateAgencyName = "Nordic Homes",
                         RealEstateAgencyPresentation = "Vi tar skandinavisk design till fastighetsbranschen.",
-                        RealEstateAgencyLogoUrl = "Images/PlaceholderLogo.png"
+                        RealEstateAgencyLogoUrl = "Images/logoipsum-248.svg",
+                        RealEstateAgencyMunicipality = "Göteborg"
                     },
                     new RealEstateAgency
                     {
                         RealEstateAgencyName = "Nordhs Mäklarbyrå",
                         RealEstateAgencyPresentation = "Letar du efter en pålitlig fastighetsmäklare? Våra mäklare levererar expertis och resultat för ditt bostadsköp eller -försäljning.",
-                        RealEstateAgencyLogoUrl = "Images/PlaceholderLogo.png"
+                        RealEstateAgencyLogoUrl = "Images/logoipsum-283.svg",
+                        RealEstateAgencyMunicipality = "Malmö"
+                    },
+                    new RealEstateAgency
+                    {
+                        RealEstateAgencyName = "Svenska Hem",
+                        RealEstateAgencyPresentation = "Vi förverkligar dina bostadsdrömmar med personligt engagemang och lokalkännedom.",
+                        RealEstateAgencyLogoUrl = "Images/logoipsum-293.svg",
+                        RealEstateAgencyMunicipality = "Helsingborg"
+                    },
+                    new RealEstateAgency
+                    {
+                        RealEstateAgencyName = "VästkustMäklarna",
+                        RealEstateAgencyPresentation = "Din lokala mäklare längs västkusten – vi hittar rätt köpare till ditt hem.",
+                        RealEstateAgencyLogoUrl = "Images/logoipsum-355.svg",
+                        RealEstateAgencyMunicipality = "Halmstad"
+                    },
+                    new RealEstateAgency
+                    {
+                        RealEstateAgencyName = "Trygga Tak",
+                        RealEstateAgencyPresentation = "Trygghet, transparens och toppresultat – det är vår filosofi i varje bostadsaffär.",
+                        RealEstateAgencyLogoUrl = "Images/logoipsum-370.svg",
+                        RealEstateAgencyMunicipality = "Uppsala"
+                    },
+                    new RealEstateAgency
+                    {
+                        RealEstateAgencyName = "Östergötlands Fastighetsförmedling",
+                        RealEstateAgencyPresentation = "Vi kan marknaden i Östergötland och hjälper dig från värdering till försäljning.",
+                        RealEstateAgencyLogoUrl = "Images/logoipsum-249.svg",
+                        RealEstateAgencyMunicipality = "Linköping"
+                    },
+                    new RealEstateAgency
+                    {
+                        RealEstateAgencyName = "NorrMäklare",
+                        RealEstateAgencyPresentation = "Vi kombinerar lokal expertis med smart teknik för att maximera värdet på din bostad.",
+                        RealEstateAgencyLogoUrl = "Images/logoipsum-298.svg",
+                        RealEstateAgencyMunicipality = "Umeå"
                     }
                 };
 

@@ -191,12 +191,12 @@ namespace HemDotNetBlazorClient.Services.Base
 
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task<System.Collections.Generic.ICollection<RealEstateAgentDto>> RealEstateAgentAllAsync(string firstName, string lastName, string agencyName, string email, string phonenumber);
+        System.Threading.Tasks.Task<System.Collections.Generic.ICollection<RealEstateAgentDto>> RealEstateAgentAllAsync(string municipality, string firstName, string lastName, string agencyName, string email, string phonenumber);
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task<System.Collections.Generic.ICollection<RealEstateAgentDto>> RealEstateAgentAllAsync(string firstName, string lastName, string agencyName, string email, string phonenumber, System.Threading.CancellationToken cancellationToken);
+        System.Threading.Tasks.Task<System.Collections.Generic.ICollection<RealEstateAgentDto>> RealEstateAgentAllAsync(string municipality, string firstName, string lastName, string agencyName, string email, string phonenumber, System.Threading.CancellationToken cancellationToken);
 
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
@@ -216,9 +216,9 @@ namespace HemDotNetBlazorClient.Services.Base
         private static System.Lazy<Newtonsoft.Json.JsonSerializerSettings> _settings = new System.Lazy<Newtonsoft.Json.JsonSerializerSettings>(CreateSerializerSettings, true);
         private Newtonsoft.Json.JsonSerializerSettings _instanceSettings;
 
-    #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         public Client(System.Net.Http.HttpClient httpClient)
-    #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         {
             _httpClient = httpClient;
             Initialize();
@@ -266,7 +266,7 @@ namespace HemDotNetBlazorClient.Services.Base
                     request_.Method = new System.Net.Http.HttpMethod("POST");
 
                     var urlBuilder_ = new System.Text.StringBuilder();
-                
+
                     // Operation Path: "Auth/register"
                     urlBuilder_.Append("Auth/register");
 
@@ -343,7 +343,7 @@ namespace HemDotNetBlazorClient.Services.Base
                     request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("text/plain"));
 
                     var urlBuilder_ = new System.Text.StringBuilder();
-                
+
                     // Operation Path: "Auth/login"
                     urlBuilder_.Append("Auth/login");
 
@@ -425,7 +425,7 @@ namespace HemDotNetBlazorClient.Services.Base
                     request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("text/plain"));
 
                     var urlBuilder_ = new System.Text.StringBuilder();
-                
+
                     // Operation Path: "MarketProperty"
                     urlBuilder_.Append("MarketProperty");
 
@@ -507,7 +507,7 @@ namespace HemDotNetBlazorClient.Services.Base
                     request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("text/plain"));
 
                     var urlBuilder_ = new System.Text.StringBuilder();
-                
+
                     // Operation Path: "MarketProperty"
                     urlBuilder_.Append("MarketProperty");
 
@@ -585,7 +585,7 @@ namespace HemDotNetBlazorClient.Services.Base
                     request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("text/plain"));
 
                     var urlBuilder_ = new System.Text.StringBuilder();
-                
+
                     // Operation Path: "MarketProperty/MarketProperties"
                     urlBuilder_.Append("MarketProperty/MarketProperties");
 
@@ -663,7 +663,7 @@ namespace HemDotNetBlazorClient.Services.Base
                     request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("text/plain"));
 
                     var urlBuilder_ = new System.Text.StringBuilder();
-                
+
                     // Operation Path: "MarketProperty/byMunicipality"
                     urlBuilder_.Append("MarketProperty/byMunicipality");
                     urlBuilder_.Append('?');
@@ -750,7 +750,7 @@ namespace HemDotNetBlazorClient.Services.Base
                     request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("text/plain"));
 
                     var urlBuilder_ = new System.Text.StringBuilder();
-                
+
                     // Operation Path: "MarketProperty/ByAgent/{agentId}"
                     urlBuilder_.Append("MarketProperty/ByAgent/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(agentId, System.Globalization.CultureInfo.InvariantCulture)));
@@ -834,7 +834,7 @@ namespace HemDotNetBlazorClient.Services.Base
                     request_.Method = new System.Net.Http.HttpMethod("DELETE");
 
                     var urlBuilder_ = new System.Text.StringBuilder();
-                
+
                     // Operation Path: "MarketProperty/{propertyId}/{agentId}"
                     urlBuilder_.Append("MarketProperty/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(propertyId, System.Globalization.CultureInfo.InvariantCulture)));
@@ -913,7 +913,7 @@ namespace HemDotNetBlazorClient.Services.Base
                     request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("text/plain"));
 
                     var urlBuilder_ = new System.Text.StringBuilder();
-                
+
                     // Operation Path: "MarketProperty/{MarketPropertyId}"
                     urlBuilder_.Append("MarketProperty/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(marketPropertyId, System.Globalization.CultureInfo.InvariantCulture)));
@@ -996,7 +996,7 @@ namespace HemDotNetBlazorClient.Services.Base
                     request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("text/plain"));
 
                     var urlBuilder_ = new System.Text.StringBuilder();
-                
+
                     // Operation Path: "MarketProperty/filter"
                     urlBuilder_.Append("MarketProperty/filter");
 
@@ -1074,7 +1074,7 @@ namespace HemDotNetBlazorClient.Services.Base
                     request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("text/plain"));
 
                     var urlBuilder_ = new System.Text.StringBuilder();
-                
+
                     // Operation Path: "Municipality"
                     urlBuilder_.Append("Municipality");
 
@@ -1152,7 +1152,7 @@ namespace HemDotNetBlazorClient.Services.Base
                     request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("text/plain"));
 
                     var urlBuilder_ = new System.Text.StringBuilder();
-                
+
                     // Operation Path: "Municipality/search"
                     urlBuilder_.Append("Municipality/search");
                     urlBuilder_.Append('?');
@@ -1239,7 +1239,7 @@ namespace HemDotNetBlazorClient.Services.Base
                     request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("text/plain"));
 
                     var urlBuilder_ = new System.Text.StringBuilder();
-                
+
                     // Operation Path: "PropertyImage/{marketPropertyId}"
                     urlBuilder_.Append("PropertyImage/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(marketPropertyId, System.Globalization.CultureInfo.InvariantCulture)));
@@ -1340,7 +1340,7 @@ namespace HemDotNetBlazorClient.Services.Base
                     request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("text/plain"));
 
                     var urlBuilder_ = new System.Text.StringBuilder();
-                
+
                     // Operation Path: "PropertyImage"
                     urlBuilder_.Append("PropertyImage");
 
@@ -1420,7 +1420,7 @@ namespace HemDotNetBlazorClient.Services.Base
                     request_.Method = new System.Net.Http.HttpMethod("DELETE");
 
                     var urlBuilder_ = new System.Text.StringBuilder();
-                
+
                     // Operation Path: "PropertyImage/{imageId}"
                     urlBuilder_.Append("PropertyImage/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(imageId, System.Globalization.CultureInfo.InvariantCulture)));
@@ -1497,7 +1497,7 @@ namespace HemDotNetBlazorClient.Services.Base
                     request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("text/plain"));
 
                     var urlBuilder_ = new System.Text.StringBuilder();
-                
+
                     // Operation Path: "RealEstateAgent/{agentId}"
                     urlBuilder_.Append("RealEstateAgent/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(agentId, System.Globalization.CultureInfo.InvariantCulture)));
@@ -1583,7 +1583,7 @@ namespace HemDotNetBlazorClient.Services.Base
                     request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("text/plain"));
 
                     var urlBuilder_ = new System.Text.StringBuilder();
-                
+
                     // Operation Path: "RealEstateAgent/{agentId}"
                     urlBuilder_.Append("RealEstateAgent/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(agentId, System.Globalization.CultureInfo.InvariantCulture)));
@@ -1665,7 +1665,7 @@ namespace HemDotNetBlazorClient.Services.Base
                     request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("text/plain"));
 
                     var urlBuilder_ = new System.Text.StringBuilder();
-                
+
                     // Operation Path: "GetProfile/{agentId}"
                     urlBuilder_.Append("GetProfile/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(agentId, System.Globalization.CultureInfo.InvariantCulture)));
@@ -1724,15 +1724,15 @@ namespace HemDotNetBlazorClient.Services.Base
 
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual System.Threading.Tasks.Task<System.Collections.Generic.ICollection<RealEstateAgentDto>> RealEstateAgentAllAsync(string firstName, string lastName, string agencyName, string email, string phonenumber)
+        public virtual System.Threading.Tasks.Task<System.Collections.Generic.ICollection<RealEstateAgentDto>> RealEstateAgentAllAsync(string municipality, string firstName, string lastName, string agencyName, string email, string phonenumber)
         {
-            return RealEstateAgentAllAsync(firstName, lastName, agencyName, email, phonenumber, System.Threading.CancellationToken.None);
+            return RealEstateAgentAllAsync(municipality, firstName, lastName, agencyName, email, phonenumber, System.Threading.CancellationToken.None);
         }
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<System.Collections.Generic.ICollection<RealEstateAgentDto>> RealEstateAgentAllAsync(string firstName, string lastName, string agencyName, string email, string phonenumber, System.Threading.CancellationToken cancellationToken)
+        public virtual async System.Threading.Tasks.Task<System.Collections.Generic.ICollection<RealEstateAgentDto>> RealEstateAgentAllAsync(string municipality, string firstName, string lastName, string agencyName, string email, string phonenumber, System.Threading.CancellationToken cancellationToken)
         {
             var client_ = _httpClient;
             var disposeClient_ = false;
@@ -1744,10 +1744,14 @@ namespace HemDotNetBlazorClient.Services.Base
                     request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("text/plain"));
 
                     var urlBuilder_ = new System.Text.StringBuilder();
-                
+
                     // Operation Path: "RealEstateAgent"
                     urlBuilder_.Append("RealEstateAgent");
                     urlBuilder_.Append('?');
+                    if (municipality != null)
+                    {
+                        urlBuilder_.Append(System.Uri.EscapeDataString("municipality")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(municipality, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
+                    }
                     if (firstName != null)
                     {
                         urlBuilder_.Append(System.Uri.EscapeDataString("firstName")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(firstName, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
@@ -1844,7 +1848,7 @@ namespace HemDotNetBlazorClient.Services.Base
                     request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("text/plain"));
 
                     var urlBuilder_ = new System.Text.StringBuilder();
-                
+
                     // Operation Path: "WeatherForecast"
                     urlBuilder_.Append("WeatherForecast");
 
@@ -1972,7 +1976,7 @@ namespace HemDotNetBlazorClient.Services.Base
                     var field = System.Reflection.IntrospectionExtensions.GetTypeInfo(value.GetType()).GetDeclaredField(name);
                     if (field != null)
                     {
-                        var attribute = System.Reflection.CustomAttributeExtensions.GetCustomAttribute(field, typeof(System.Runtime.Serialization.EnumMemberAttribute)) 
+                        var attribute = System.Reflection.CustomAttributeExtensions.GetCustomAttribute(field, typeof(System.Runtime.Serialization.EnumMemberAttribute))
                             as System.Runtime.Serialization.EnumMemberAttribute;
                         if (attribute != null)
                         {
@@ -1984,13 +1988,13 @@ namespace HemDotNetBlazorClient.Services.Base
                     return converted == null ? string.Empty : converted;
                 }
             }
-            else if (value is bool) 
+            else if (value is bool)
             {
                 return System.Convert.ToString((bool)value, cultureInfo).ToLowerInvariant();
             }
             else if (value is byte[])
             {
-                return System.Convert.ToBase64String((byte[]) value);
+                return System.Convert.ToBase64String((byte[])value);
             }
             else if (value is string[])
             {
@@ -2464,7 +2468,7 @@ namespace HemDotNetBlazorClient.Services.Base
 
         [Newtonsoft.Json.JsonProperty("realEstateAgencyName", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Required]
-        [System.ComponentModel.DataAnnotations.StringLength(30, MinimumLength = 1)]
+        [System.ComponentModel.DataAnnotations.StringLength(100, MinimumLength = 1)]
         public string RealEstateAgencyName { get; set; }
 
         [Newtonsoft.Json.JsonProperty("realEstateAgencyPresentation", Required = Newtonsoft.Json.Required.Always)]
@@ -2474,6 +2478,10 @@ namespace HemDotNetBlazorClient.Services.Base
         [Newtonsoft.Json.JsonProperty("realEstateAgencyLogoUrl", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Required]
         public string RealEstateAgencyLogoUrl { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("realEstateAgencyMunicipality", Required = Newtonsoft.Json.Required.Always)]
+        [System.ComponentModel.DataAnnotations.Required]
+        public string RealEstateAgencyMunicipality { get; set; }
 
         [Newtonsoft.Json.JsonProperty("realEstateAgencyAgents", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.Collections.Generic.ICollection<RealEstateAgent> RealEstateAgencyAgents { get; set; }
@@ -2588,6 +2596,9 @@ namespace HemDotNetBlazorClient.Services.Base
         [Newtonsoft.Json.JsonProperty("realEstateAgencyLogoUrl", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string RealEstateAgencyLogoUrl { get; set; }
 
+        [Newtonsoft.Json.JsonProperty("realEstateAgencyMunicipality", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string RealEstateAgencyMunicipality { get; set; }
+
         [Newtonsoft.Json.JsonProperty("realEstateAgentAgencyId", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public int RealEstateAgentAgencyId { get; set; }
 
@@ -2675,12 +2686,12 @@ namespace HemDotNetBlazorClient.Services.Base
     public partial class FileParameter
     {
         public FileParameter(System.IO.Stream data)
-            : this (data, null, null)
+            : this(data, null, null)
         {
         }
 
         public FileParameter(System.IO.Stream data, string fileName)
-            : this (data, fileName, null)
+            : this(data, fileName, null)
         {
         }
 
@@ -2737,10 +2748,10 @@ namespace HemDotNetBlazorClient.Services.Base
 
 }
 
-#pragma warning restore  108
-#pragma warning restore  114
-#pragma warning restore  472
-#pragma warning restore  612
+#pragma warning restore 108
+#pragma warning restore 114
+#pragma warning restore 472
+#pragma warning restore 612
 #pragma warning restore 1573
 #pragma warning restore 1591
 #pragma warning restore 8073
