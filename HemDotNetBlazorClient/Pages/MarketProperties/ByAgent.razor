@@ -53,7 +53,6 @@ else
     </div>
 }
 
-<!-- Delete Confirmation Modal Component -->
 <ConfirmationModalComponent 
     IsVisible="showDeleteModal"
     Title="Bekräfta borttagning"
@@ -84,18 +83,21 @@ else
         }
     }
 
+    // Allan
     private void ShowDeleteConfirmation(int propertyId)
     {
         propertyIdToDelete = propertyId;
         showDeleteModal = true;
     }
 
+    // Allan
     private void CancelDelete()
     {
         showDeleteModal = false;
         propertyIdToDelete = null;
     }
 
+    // Allan
     private async Task ConfirmDelete()
     {
         try

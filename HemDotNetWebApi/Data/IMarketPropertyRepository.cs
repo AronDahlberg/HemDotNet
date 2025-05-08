@@ -26,7 +26,10 @@ namespace HemDotNetWebApi.Data
         // Katarina
         Task<MarketProperty> CreateMarketPropertyAsync(MarketProperty marketProperty);
 
+        // Allan
         Task<List<MarketProperty>> SearchMarketPropertiesAsync(MarketPropertySearchDto searchDto);
 
+        // Allan
+        Task<bool> IsPropertyOwnedByAgentAsync(int marketPropertyId, string agentUserId);
     }
 }
