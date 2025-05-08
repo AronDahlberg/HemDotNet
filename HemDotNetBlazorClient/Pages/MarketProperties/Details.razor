@@ -1,9 +1,40 @@
 ﻿@page "/property/details/{MarketPropertyId:int}"
 @inject IMarketPropertyService propertyService
+@inject IPropertyImageService propertyImageService
 @inject NavigationManager navigationManager
+@inject HttpClient httpClient
 @using Microsoft.AspNetCore.WebUtilities
 
-<h3>Details</h3>
+@* Author: Johan *@
+
+<style>
+    .carousel-wrapper {
+        display: flex;
+        justify-content: center; /* Centers the carousel horizontally */
+        margin-bottom: 30px;
+    }
+
+    .image-carousel {
+        max-width: 600px; /* Limits total width */
+        width: 100%;
+    }
+
+    .image-carousel {
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        margin-bottom: 15px;
+        position: relative;
+        height: 200px;
+    }
+
+    .property-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.3s ease;
+    }
+</style>
 
 @if (!string.IsNullOrEmpty(successMessage))
 {
@@ -19,11 +50,15 @@ else
 {
     <div class="property-details-container">
         <!-- Hero Image Carousel -->
-        <div class="image-carousel">
-            @foreach (var img in marketProperty.Images)
-            {
-                <img src="@img.ImageUrl" alt="Property Image" class="carousel-image" />
-            }
+        <div class="carousel-wrapper">
+            @* <div class="col-md-4 col-lg-3"> *@
+                <div class="image-carousel">
+                    @foreach (var image in images)
+                    {
+                        <img src="@($"{httpClient.BaseAddress}{image.ImageUrl}")" class="property-image" alt="Property image" />
+                    }
+                </div>
+            @* </div> *@
         </div>
 
         <!-- Property Summary -->
@@ -63,14 +98,28 @@ else
     [Parameter] public int MarketPropertyId { get; set; }
     private Response<MarketPropertyDetailsDto>? responseProperty;
     private MarketPropertyDetailsDto marketProperty;
+    private Response<List<PropertyImageDto>>? responseImages;
+    private List<PropertyImageDto> images;
     private string successMessage;
+    private string errorMessage;
 
-    //Co-Author: Johan
     protected override async Task OnInitializedAsync()
     {
         responseProperty = await propertyService.GetMarketPropertyById(MarketPropertyId);
         marketProperty = responseProperty.Data;
 
+        responseImages = await propertyImageService.GetPropertyImages(MarketPropertyId);
+        images = responseImages.Data;
+
+        // LoadProperty();
+        // LoadImages();
+
+        HandleSuccessMessage();
+    }
+
+    private void HandleSuccessMessage()
+    {
+        //If user is redirected after a Create action, display the successMessage passed in the url.
         var uri = navigationManager.ToAbsoluteUri(navigationManager.Uri);
         if (QueryHelpers.ParseQuery(uri.Query).TryGetValue("successMessage", out var message))
         {
@@ -80,5 +129,30 @@ else
             navigationManager.NavigateTo(cleanUri, forceLoad: false);
         }
     }
+
+    // private async void LoadProperty()
+    // {
+    //     responseProperty = await propertyService.GetMarketPropertyById(MarketPropertyId);
+    //     marketProperty = responseProperty.Data;
+    // }
+
+    // private async void LoadImages()
+    // {
+    //     var responseImages = await propertyImageService.GetPropertyImages(MarketPropertyId);
+
+    //     if (responseImages.Success)
+    //     {
+    //         images = responseImages.Data;
+    //     }
+    //     else
+    //     {
+    //         errorMessage = "Bara inloggade användare som har tillgång till objektet får lägga till eller ta bort bilder.";
+    //     }
+    // }
+
+    // private void GoBack()
+    // {
+    //     navigationManager.NavigateTo("/property/list");
+    // }
 
 }

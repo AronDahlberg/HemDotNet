@@ -26,7 +26,8 @@ namespace HemDotNetWebApi.Controllers
         }
 
         // Allan
-        [Authorize]
+        //Commented out Authorize, since we need to GET images in the public Details page. /Johan
+        //[Authorize] 
         [HttpGet("{marketPropertyId}")]
         public async Task<ActionResult<IEnumerable<PropertyImageDto>>> GetPropertyImages(int marketPropertyId)
         {

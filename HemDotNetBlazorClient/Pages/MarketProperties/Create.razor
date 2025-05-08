@@ -46,11 +46,13 @@
 <AuthorizeView Context="authContext">
     <Authorized>
         <div class="hero-section container-fluid col-xxl-8 bg-light text-dark py-5">
-            <div class="container bg-white rounded py-5 px-5">
-                <div class="row flex-lg-row-reverse align-items-center g-5 py-3">
-                    <div class="border rounded py-3 px-3 shadow">
-                        <h4 class="mb-4">Lägg till ny bostad</h4>
-
+            <div class="row justify-content-center">
+                <div class="col-md-6 col-lg-5">
+                    <div class="card shadow">
+                        <div class="card-header bg-primary text-white">
+                            <h3 class="mb-0">Lägg till ny bostad</h3>
+                        </div>
+                        <div class="card-body">
                         <EditForm Model="@NewMarketProperty" OnValidSubmit="@HandleValidSubmit">
                             <DataAnnotationsValidator />
                             <ValidationSummary />
@@ -126,6 +128,7 @@
 
                             <button type="submit" class="btn btn-primary w-100 mt-3">Spara bostad</button>
                         </EditForm>
+                        </div>
                     </div>
                 </div>
             </div>
