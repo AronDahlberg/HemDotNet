@@ -19,7 +19,7 @@ Author: Allan
                     <img src="logo.svg" alt="Logo" style="height: 36px; padding-bottom: 2px;" />
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain"
-                        aria-controls="navbarMain" aria-expanded="false" aria-label="Toggle navigation">
+                aria-controls="navbarMain" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse justify-content-between" id="navbarMain">
@@ -39,17 +39,33 @@ Author: Allan
                     <ul class="navbar-nav">
                         @if (isAuthenticated)
                         {
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <img src="@($"{httpClient.BaseAddress}{userProfileImage}")" class="rounded-circle me-2" width="32" height="32" alt="Profile" />
-                                </a>
-                                <ul class="dropdown-menu dropdown-menu-end">
-                                    <li><a class="dropdown-item" href="/agent/manage-properties">Hantera objekt</a></li>
-                                    <li><a class="dropdown-item" href="@($"users/profile/{userId}")">Visa/Redigera profil</a></li>
-                                    <li><hr class="dropdown-divider"></li>
-                                    <li><a class="dropdown-item" href="users/logout">Logga ut</a></li>
-                                </ul>
-                            </li>
+                            @if(!isAdmin)
+                            {
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <img src="@($"{httpClient.BaseAddress}{userProfileImage}")" class="rounded-circle me-2" width="32" height="32" alt="Profile" />
+                                    </a>
+                                    <ul class="dropdown-menu dropdown-menu-end">
+                                        <li><a class="dropdown-item" href="/agent/manage-properties">Hantera objekt</a></li>
+                                        <li><a class="dropdown-item" href="@($"users/profile/{userId}")">Visa/Redigera profil</a></li>
+                                        <li><hr class="dropdown-divider"></li>
+                                        <li><a class="dropdown-item" href="users/logout">Logga ut</a></li>
+                                    </ul>
+                                </li>
+                            }
+                            @if(isAdmin)
+                            {
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        ADMIN
+                                    </a>
+                                    <ul class="dropdown-menu dropdown-menu-end">
+                                        <li><a class="dropdown-item" href="/admin/manage-agents">Hantera mäklare</a></li>
+                                        <li><hr class="dropdown-divider"></li>
+                                        <li><a class="dropdown-item" href="users/logout">Logga ut</a></li>
+                                    </ul>
+                                </li>
+                            }
                         }
                         else
                         {
@@ -73,7 +89,7 @@ Author: Allan
                     <img src="logo.svg" alt="Logo" style="height: 36px; padding-bottom: 2px;" />
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain"
-                        aria-controls="navbarMain" aria-expanded="false" aria-label="Toggle navigation">
+                aria-controls="navbarMain" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse justify-content-between" id="navbarMain">
@@ -97,6 +113,8 @@ Author: Allan
     private string defaultProfileImage = "Images/DefaultProfilePicture.png";
     private string userProfileImage;
     private AuthenticationStateChangedHandler _authHandler;
+
+    private bool isAdmin = false;
 
     protected override async Task OnInitializedAsync()
     {
@@ -135,6 +153,8 @@ Author: Allan
         {
             var response = await agentService.GetProfileImageUrl(userId);
             userProfileImage = response.Data ?? defaultProfileImage;
+
+            isAdmin = user.IsInRole("Administrator");
         }
         else
         {
