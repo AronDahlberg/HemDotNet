@@ -3,6 +3,7 @@ using HemDotNetWebApi.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection.Emit;
 
 namespace HemDotNetWebApi.Data
 {
@@ -22,6 +23,12 @@ namespace HemDotNetWebApi.Data
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+
+            builder.Entity<RealEstateAgent>()
+                .HasOne(agent => agent.RealEstateAgentAgency)
+                .WithMany(agency => agency.RealEstateAgencyAgents)
+                .HasForeignKey(agent => agent.RealEstateAgentAgencyId)
+                .OnDelete(DeleteBehavior.Restrict);
 
         }
 

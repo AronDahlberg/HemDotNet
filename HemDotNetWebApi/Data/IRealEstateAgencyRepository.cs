@@ -1,6 +1,10 @@
-﻿namespace HemDotNetWebApi.Data
+﻿using HemDotNetWebApi.Models;
+
+namespace HemDotNetWebApi.Data
 {
-    public class IRealEstateAgencyRepository
+    public interface IRealEstateAgencyRepository
     {
+        // Allan
+        Task<IEnumerable<RealEstateAgency>> GetAllAsync();
     }
 }

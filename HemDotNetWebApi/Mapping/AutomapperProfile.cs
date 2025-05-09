@@ -119,6 +119,10 @@ namespace HemDotNetWebApi.Mapping
                 opt => opt.MapFrom(src => src.RealEstateAgentAgency.RealEstateAgencyMunicipality))
             .ForMember(dest => dest.PropertyIds,
                 opt => opt.MapFrom(src => src.RealEstateAgentProperties.Select(p => p.MarketPropertyId)));
+
+
+            CreateMap<RealEstateAgency, AgencyNameDto>()
+                .ForMember(dest => dest.AgencyName, opt => opt.MapFrom(src => src.RealEstateAgencyName));
         }
     }
 }

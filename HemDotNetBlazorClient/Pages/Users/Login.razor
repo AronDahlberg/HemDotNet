@@ -67,11 +67,21 @@
         }
         catch (ApiException aex)
         {
+
             if (aex.StatusCode >= 200 && aex.StatusCode <= 299)
             {
                 navManager.NavigateTo("/");
             }
+
             errorMessage = "Felaktiga inloggningsuppgifter. Försök igen!";
+
+            if (aex.StatusCode == 403)
+            {
+                errorMessage = "Administratören måste först bekräfta ditt konto.";
+                
+
+            }
+            
         }
     }
 }

@@ -23,7 +23,6 @@ namespace HemDotNetWebApi.Models
         [Required]
         public string RealEstateAgencyMunicipality { get; set; }
 
-        [NotMapped]
         public virtual List<RealEstateAgent> RealEstateAgencyAgents { get; set; }
     }
 }
