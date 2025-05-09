@@ -104,7 +104,8 @@ namespace HemDotNetWebApi.Controllers
             if (!string.IsNullOrWhiteSpace(phonenumber))
                 filteredAgents = filteredAgents.Where(a => a.RealEstateAgentPhoneNumber.Contains(phonenumber));
 
-            return Ok(filteredAgents.ToList());
+
+            return Ok(_mapper.Map<List<RealEstateAgentDto>>(filteredAgents.ToList()));
 
         }
     }
