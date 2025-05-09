@@ -3,6 +3,7 @@ using HemDotNetBlazorClient.Services.Base;
 
 namespace HemDotNetBlazorClient.Services
 {
+    // Allan
     public class RealEstateAgencyService : BaseHttpService, IRealEstateAgencyService
     {
         private readonly IClient _client;

@@ -110,7 +110,7 @@ namespace HemDotNetWebApi.Controllers
 
         }
 
-
+        // Allan
         [HttpPut("UpdateAgency/{agentId}/{newAgencyId}")]
         [Authorize(Roles = ApiRoles.Administrator)]
         public async Task<ActionResult<RealEstateAgentDto>> UpdateAgentAgency(string agentId, int newAgencyId)
