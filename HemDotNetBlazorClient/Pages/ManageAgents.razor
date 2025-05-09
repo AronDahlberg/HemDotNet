@@ -101,6 +101,9 @@
                             OnConfirm="ConfirmDeleteAgent" />
 
 @code {
+
+    // Author: Allan
+
     private IEnumerable<RealEstateAgentDto> realEstateAgents;
     private IEnumerable<AgencyNameDto> agencies;
     private Response<IEnumerable<RealEstateAgentDto>> response = new Response<IEnumerable<RealEstateAgentDto>> { Success = true };
@@ -111,12 +114,14 @@
     private bool showDeleteConfirmation = false;
     private string agentIdToDelete;
 
+    // Allan
     protected override async Task OnInitializedAsync()
     {
         await LoadAgents();
         await LoadAgencies();
     }
 
+    // Allan
     private async Task LoadAgents()
     {
         response = await realEstateAgentService.GetAgentsAsync("", "", "", "", "", "");
@@ -129,6 +134,7 @@
         }
     }
 
+    // Allan
     private async Task LoadAgencies()
     {
         var agencyResponse = await realEstateAgencyService.GetAllAgencies();
@@ -138,6 +144,7 @@
         }
     }
 
+    // Allan
     private async Task UpdateAgentAgency(string agentId, int newAgencyId)
     {
         try
@@ -163,6 +170,7 @@
         }
     }
 
+    // Allan
     private void ShowNotification(string message, bool success)
     {
         notificationMessage = message;
@@ -177,6 +185,7 @@
         });
     }
 
+    // Allan
     private void CloseNotification()
     {
         showNotification = false;
@@ -195,6 +204,7 @@
         agentIdToDelete = null;
     }
 
+    // Allan
     private async Task ConfirmDeleteAgent()
     {
         showDeleteConfirmation = false;
