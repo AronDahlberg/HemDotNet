@@ -27,7 +27,7 @@ namespace HemDotNetWebApi.Controllers
 
         // Allan
         [HttpGet("{marketPropertyId}")]
-        [Authorize]
+        //[Authorize]
         public async Task<ActionResult<IEnumerable<PropertyImageDto>>> GetPropertyImages(int marketPropertyId)
         {
             if (!await _repository.PropertyExistsAsync(marketPropertyId))
@@ -37,10 +37,12 @@ namespace HemDotNetWebApi.Controllers
 
             var userId = User.FindFirstValue(CustomClaimTypes.Uid);
 
-            if (!await _repository.IsPropertyOwnedByAgentAsync(marketPropertyId, userId))
-            {
-                return Forbid("Du har inte tillgång till det här objektet");
-            }
+            //Commented out by Johan. This Endpoint is used in publicly accessible pages.
+
+            //if (!await _repository.IsPropertyOwnedByAgentAsync(marketPropertyId, userId))
+            //{
+            //    return Forbid("Du har inte tillgång till det här objektet");
+            //}
 
             var images = await _repository.GetImagesByPropertyIdAsync(marketPropertyId);
             return Ok(_mapper.Map<IEnumerable<PropertyImageDto>>(images));

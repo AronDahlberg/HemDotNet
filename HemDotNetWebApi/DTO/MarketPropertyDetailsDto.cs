@@ -7,6 +7,7 @@ namespace HemDotNetWebApi.DTO
     {
         public int MarketPropertyId { get; set; }
         public string MunicipalityName { get; set; }
+        public string RealEstateAgentId { get; set; }
         public string RealEstateAgentFullName { get; set; }
         public PropertyCategory Category { get; set; }
         public decimal Price { get; set; }
