@@ -13,5 +13,8 @@ namespace HemDotNetBlazorClient.Services
 
         Task<Response<string>> GetProfileImageUrl(string agentId);
 
+        // Allan
+        Task<Response<RealEstateAgentDto>> UpdateAgentAgencyAsync(string agentId, int newAgencyId);
+
     }
 }

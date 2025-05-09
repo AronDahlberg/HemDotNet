@@ -80,5 +80,28 @@ namespace HemDotNetBlazorClient.Services
 
             return response;
         }
+
+        // Allan
+        public async Task<Response<RealEstateAgentDto>> UpdateAgentAgencyAsync(string agentId, int newAgencyId)
+        {
+            Response<RealEstateAgentDto> response;
+
+            try
+            {
+                var data = await _client.UpdateAgencyAsync(agentId, newAgencyId);
+                response = new Response<RealEstateAgentDto>
+                {
+                    Data = data,
+                    Success = true,
+                    Message = "Mäklarbyrå uppdaterad"
+                };
+            }
+            catch (ApiException ex)
+            {
+                response = ConvertApiExceptions<RealEstateAgentDto>(ex);
+            }
+
+            return response;
+        }
     }
 }
