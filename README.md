@@ -11,10 +11,7 @@
 | Visa detaljer om specifik bostad | /property/details/{bostadsId} |
 | Sök mäklare | /find-agents |
 | Visa personlig profil | /users/profile/{userId} |
-| Mäklare: hantera bostad | /agent/manage-properties |
-| Mäklare: Skapa nya bostäder | /agent/manage-properties |
+| Mäklare: Skapa/Ta bort/Redigera (WIP) | /agent/manage-properties |
 | Lägga till/ta bort bilder på en bostad | /MarketProperty/{bostadsId}/Images |
-| Ta bort en bostad | /agent/manage-properties |
 | Logga ut v2 | /logout |
 | Redigera profil (WIP) | /users/profile/edit/{userId} |
-| Redigera bostad (TODO) | TODO |
