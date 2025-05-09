@@ -1,0 +1,83 @@
+﻿@*Author: Allan*@
+@using HemDotNetBlazorClient.Components
+@using HemDotNetBlazorClient.Services
+@page "/admin/manage-agents"
+@inject IRealEstateAgentService realEstateAgentService
+@inject HttpClient httpClient
+
+
+
+<div class="mx-auto" style="width:1000px; margin-bottom:5rem;">
+
+    <h3 class="pt-4 text-center">Hitta mäklare i ditt område</h3>
+
+
+
+    @if (!response.Success)
+    {
+        <div class="alert alert-danger">
+            <h4>@response.Message</h4>
+        </div>
+    }
+    else if (realEstateAgents == null)
+    {
+        <div class="alert alert-info">
+            <h4>Loading data...</h4>
+        </div>
+    }
+    else
+    {
+        <div class="col-auto agentCards vstack"
+        style="gap:1rem;">
+            @foreach (var property in realEstateAgents)
+            {
+                <div class="agentCard card mb-3">
+                    <div class="card-body d-flex justify-content-between align-items-center gap-4">
+
+                        <!-- User Info Section -->
+                        <div class="userInfo d-flex gap-4 align-items-center col-6">
+                            <img class="img-thumbnail rounded-circle" style="width: 150px;"
+                            src="@($"{httpClient.BaseAddress}{property.RealEstateAgentImageUrl}")"
+                            alt="@($"{property.RealEstateAgentFirstName} profilepic")" />
+
+                            <div class="vstack justify-content-center">
+                                <h5 class="card-title">@property.RealEstateAgentFirstName @property.RealEstateAgentLastName</h5>
+                                <div>@property.RealEstateAgencyMunicipality</div>
+                                <small>@property.RealEstateAgentEmail</small>
+                                <small>@property.RealEstateAgentPhoneNumber</small>
+
+                            </div>
+                        </div>
+
+                        <!-- Agency Info Section -->
+                        <div class="agencyInfo text-center d-flex flex-column align-items-center col-4">
+                            <img class="img" style="width: 100px;"
+                            src="@($"{httpClient.BaseAddress}{property.RealEstateAgencyLogoUrl}")"
+                            alt="@($"{property.RealEstateAgentAgencyName} logo")" />
+                            <div class="font-weight-bold">@property.RealEstateAgentAgencyName</div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
+@code {
+
+
+
+    private IEnumerable<RealEstateAgentDto> realEstateAgents;
+    private Response<IEnumerable<RealEstateAgentDto>> response = new Response<IEnumerable<RealEstateAgentDto>> { Success = true };
+
+    protected override async Task OnInitializedAsync()
+    {
+
+        response = await realEstateAgentService.GetAgentsAsync("", "", "", "", "", "");
+        if (response.Success)
+        {
+            realEstateAgents = response.Data;
+            realEstateAgents.OrderBy(a => a.Id);
+        }
+    }
+
+}
