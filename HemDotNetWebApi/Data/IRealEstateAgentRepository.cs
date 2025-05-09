@@ -14,5 +14,8 @@ namespace HemDotNetWebApi.Data
         // CHRIS
         Task<IEnumerable<RealEstateAgent>> GetAllAsync();
 
+        // Allan
+        Task<RealEstateAgent> UpdateAgentAgencyAsync(string agentId, int newAgencyId);
+
     }
 }

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using HemDotNetWebApi.Constants;
 using HemDotNetWebApi.Data;
 using HemDotNetWebApi.DTO;
 using HemDotNetWebApi.DTOs;
@@ -107,6 +108,27 @@ namespace HemDotNetWebApi.Controllers
 
             return Ok(_mapper.Map<List<RealEstateAgentDto>>(filteredAgents.ToList()));
 
+        }
+
+
+        [HttpPut("UpdateAgency/{agentId}/{newAgencyId}")]
+        [Authorize(Roles = ApiRoles.Administrator)]
+        public async Task<ActionResult<RealEstateAgentDto>> UpdateAgentAgency(string agentId, int newAgencyId)
+        {
+            try
+            {
+                var updatedAgent = await _realEstateAgentRepository.UpdateAgentAgencyAsync(agentId, newAgencyId);
+                var dto = _mapper.Map<RealEstateAgentDto>(updatedAgent);
+                return Ok(dto);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"An error occurred while updating the agent's agency: {ex.Message}");
+            }
         }
     }
 }
