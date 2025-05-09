@@ -42,7 +42,9 @@
                 <h5 class="card-title mb-1 text-primary">@Property.PropertyAddress, @Property.MunicipalityName</h5>
                 <p class="card-text mb-1"><strong>Pris:</strong> @Property.Price.ToString() kr</p>
                 <p class="card-text"><strong>Kategori: </strong>@GetPropertyCategoryDisplayName(Property.Category)</p>
-                <a href="" class="btn btn-primary mt-2">Mer information</a>
+                <NavLink class="btn btn-primary mt-2" href="@($"/property/details/{@Property.MarketPropertyId}")">
+                    Mer information
+                </NavLink>
             </div>
         </div>
     </div>

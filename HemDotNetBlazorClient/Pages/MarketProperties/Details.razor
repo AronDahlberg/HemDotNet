@@ -1,9 +1,63 @@
-﻿@page "/MarketProperty/Details/{Id:int}"
+﻿@page "/property/details/{MarketPropertyId:int}"
 @inject IMarketPropertyService propertyService
+@inject IPropertyImageService propertyImageService
+@inject IRealEstateAgentService realEstateAgentService
 @inject NavigationManager navigationManager
+@inject HttpClient httpClient
 @using Microsoft.AspNetCore.WebUtilities
 
-<h3>Details</h3>
+@* Author: Johan *@
+
+<style>
+    .carousel-wrapper {
+        display: flex;
+        justify-content: center; /* Centers the carousel horizontally */
+        margin-bottom: 30px;
+        /* margin-right: 0px !important;
+                                padding-right: 0px !important; */
+    }
+
+    .carousel {
+        max-width: none;
+        width: 100%;
+        aspect-ratio: 4 / 3; /* Modern browsers only */
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        background-color: #f8f9fa; /* Helps letterboxing look clean */
+        /* margin-right: -10px; */
+    }
+
+    .carousel-item img {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: cover;
+    }
+
+    .contact-info h4 {
+        color: bg-primary;
+    }
+
+    .contact-info {
+        background-color: #f8f9fa;
+        padding: 15px;
+        border-radius: 8px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        /* margin-left: -10px; */
+    }
+
+        .contact-info p {
+            margin: 0.25rem;
+            margin-bottom: 0.25rem;
+        }
+
+    .summary-wrapper {
+        display: flex;
+        justify-content: center; /* Centers the carousel horizontally */
+        margin-bottom: 30px;
+    }
+
+</style>
 
 @if (!string.IsNullOrEmpty(successMessage))
 {
@@ -11,17 +65,129 @@
         @successMessage
     </div>
 }
+@if (marketProperty == null)
+{
+    <p>Loading property details...</p>
+}
+else
+{
+    <div class="property-details-container">
+        <div class="container mt-4">
+            <div class="row gx-0">
+                <!-- Hero Image Carousel -->
+                <div class="col-md-8 mb-4 px-0">
+                    <div class="carousel-wrapper">
+                        <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
+                            <div class="carousel-inner">
+                                @for (int i = 0; i < images.Count; i++)
+                                {
+                                    <div class="carousel-item @(i == 0 ? "active" : "")">
+                                        <img src="@($"{httpClient.BaseAddress}{images[i].ImageUrl}")" class="d-block w-100" alt="Property image">
+                                    </div>
+                                }
+                            </div>
+                            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Previous</span>
+                            </button>
+                            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Next</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <!-- Right: Contact Info -->
+                <div class="col-md-4 px-0">
+                    <div class="contact-info">
+                        <div class="text-primary">
+                            <h4><strong>Kontakta mäklaren</strong></h4>
+                            <NavLink href="@($"/users/profile/{marketProperty.RealEstateAgentId}")">
+                            <p><strong><u>@marketProperty.RealEstateAgentFullName</u></strong></p>
+                            </NavLink>
+                        </div>
+                        <!-- Optional: Add phone, email, or contact form -->
+                        <div>
+                            <p>@realEstateAgent.RealEstateAgentAgencyName</p>
+                            <p>@realEstateAgent.RealEstateAgencyMunicipality</p>
+                        </div>
+                        <div>
+                            <img src="@($"{httpClient.BaseAddress}{realEstateAgent.RealEstateAgentImageUrl}")" class="img-fluid rounded-circle mt-1" alt="Agent image" style="width: 5em; height: 5em; object-fit: cover;" />
+                        </div>
+                    </div>
+                    <NavLink class="btn btn-primary w-100 mt-3" href="@($"/MarketProperty/{MarketPropertyId}/Images")">
+                        Lägg till/Ta bort bilder
+                    </NavLink>
+                </div>
+            </div>
+            <div class="row">
+                <div class="summary-wrapper">
+                    <div class="col-md-8 mb-4 px-0">
+                        <!-- Property Summary -->
+                        <div class="property-summary">
+                            <h1>@marketProperty.Price.ToString("C")</h1>
+                            <p>@marketProperty.AmountOfRooms rooms | @marketProperty.LivingArea m² | @marketProperty.PropertyAddress, @marketProperty.MunicipalityName</p>
+                        </div>
+                    </div>
+
+                    <div class="col-md-8 mb-4 px-0">
+                        <!-- Detailed Description -->
+                        <div class="property-description">
+                            <h2>Description</h2>
+                            <p>@marketProperty.Description</p>
+                        </div>
+
+                        <!-- Additional Information -->
+                        <div class="additional-info">
+                            <h2>Additional Information</h2>
+                            <ul>
+                                <li>Construction Year: @marketProperty.ContructionYear</li>
+                                <li>Ancillary Area: @marketProperty.AncillaryArea m²</li>
+                                <li>Lot Area: @marketProperty.LotArea m²</li>
+                                <li>Monthly Fee: @(marketProperty.MonthlyFee.HasValue ? marketProperty.MonthlyFee.Value.ToString("C") : "N/A")</li>
+                                <li>Yearly Maintenance Cost: @(marketProperty.YearlyMaintenanceCost.HasValue ? marketProperty.YearlyMaintenanceCost.Value.ToString("C") : "N/A")</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
 
 @code {
-    [Parameter] public int id { get; set; }
-    private Response<MarketPropertyDetailsDto>? marketProperty;
+    [Parameter] public int MarketPropertyId { get; set; }
+    private Response<MarketPropertyDetailsDto>? responseProperty;
+    private MarketPropertyDetailsDto marketProperty;
+    private Response<List<PropertyImageDto>>? responseImages;
+    private List<PropertyImageDto> images;
+    private RealEstateAgentDto realEstateAgent;
+    private Response<RealEstateAgentDto>? responseAgent;
     private string successMessage;
+    private string errorMessage;
 
-    //Co-Author: Johan
+    // var agentId = marketProperty.RealEstateAgent.Id;
+
     protected override async Task OnInitializedAsync()
     {
-        marketProperty = await propertyService.GetMarketPropertyById(id);
+        responseProperty = await propertyService.GetMarketPropertyById(MarketPropertyId);
+        marketProperty = responseProperty.Data;
 
+        responseImages = await propertyImageService.GetPropertyImages(MarketPropertyId);
+        images = responseImages.Data;
+
+        responseAgent = await realEstateAgentService.GetAgentByIdAsync(marketProperty.RealEstateAgentId);
+        realEstateAgent = responseAgent.Data;
+
+        // LoadProperty();
+        // LoadImages();
+
+        HandleSuccessMessage();
+    }
+
+    private void HandleSuccessMessage()
+    {
+        //If user is redirected after a Create action, display the successMessage passed in the url.
         var uri = navigationManager.ToAbsoluteUri(navigationManager.Uri);
         if (QueryHelpers.ParseQuery(uri.Query).TryGetValue("successMessage", out var message))
         {
@@ -31,5 +197,30 @@
             navigationManager.NavigateTo(cleanUri, forceLoad: false);
         }
     }
+
+    // private async void LoadProperty()
+    // {
+    //     responseProperty = await propertyService.GetMarketPropertyById(MarketPropertyId);
+    //     marketProperty = responseProperty.Data;
+    // }
+
+    // private async void LoadImages()
+    // {
+    //     var responseImages = await propertyImageService.GetPropertyImages(MarketPropertyId);
+
+    //     if (responseImages.Success)
+    //     {
+    //         images = responseImages.Data;
+    //     }
+    //     else
+    //     {
+    //         errorMessage = "Bara inloggade användare som har tillgång till objektet får lägga till eller ta bort bilder.";
+    //     }
+    // }
+
+    // private void GoBack()
+    // {
+    //     navigationManager.NavigateTo("/property/list");
+    // }
 
 }
