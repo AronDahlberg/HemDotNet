@@ -66,5 +66,33 @@ namespace HemDotNetWebApi.Data
             return existingAgent;
         }
 
+        // Allan
+        public async Task<RealEstateAgent> UpdateAgentAgencyAsync(string agentId, int newAgencyId)
+        {
+            var agent = await _context.RealEstateAgents
+                .Include(a => a.RealEstateAgentAgency)
+                .FirstOrDefaultAsync(a => a.Id == agentId);
+
+            if (agent == null)
+            {
+                throw new KeyNotFoundException($"Mäklare med ID {agentId} hittades inte.");
+            }
+
+            var newAgency = await _context.RealEstateAgencies
+                .FirstOrDefaultAsync(a => a.RealEstateAgencyId == newAgencyId);
+
+            if (newAgency == null)
+            {
+                throw new KeyNotFoundException($"Mäklarbyrå med ID {newAgencyId} hittades inte.");
+            }
+
+            agent.RealEstateAgentAgency.RealEstateAgencyId = newAgencyId;
+            agent.RealEstateAgentAgency = newAgency;
+
+            await _context.SaveChangesAsync();
+
+            return agent;
+        }
+
     }
 }
