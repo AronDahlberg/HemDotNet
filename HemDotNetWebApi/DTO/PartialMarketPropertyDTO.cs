@@ -7,6 +7,7 @@ namespace HemDotNetWebApi.DTO
     //Author: Johan Ek
     public class PartialMarketPropertyDTO
     {
+        public int MarketPropertyId { get; set; }
         public string MunicipalityName { get; set; }
         public decimal Price { get; set; }
         public string PropertyAddress { get; set; }

@@ -97,6 +97,13 @@ namespace HemDotNetWebApi.Data
             return true;
         }
 
+        // Allan
+        public async Task<bool> IsPropertyOwnedByAgentAsync(int marketPropertyId, string agentUserId)
+        {
+            return await _context.MarketProperties
+                .AnyAsync(p => p.MarketPropertyId == marketPropertyId && p.RealEstateAgent.Id == agentUserId);
+        }
+
         // Katarina
         public async Task<MarketProperty?> GetMarketPropertyById(int id)
         {

@@ -57,7 +57,6 @@ namespace HemDotNetWebApi.Controllers
                 return BadRequest("No image file provided");
             }
 
-            // Validate file type - which files types are allowed?
             string[] allowedExtensions = { ".jpg", ".jpeg", ".png"};
             string fileExtension = Path.GetExtension(imageFile.FileName).ToLowerInvariant();
             if (!allowedExtensions.Contains(fileExtension))
