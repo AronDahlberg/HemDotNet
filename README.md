@@ -1,1 +1,15 @@
-HemDotNet
+# Current Features
+- Registrera sig (/signup)
+- Logga in (/login)
+- Logga ut v1 (WIP v2) (/logout)
+- Söka bostäder (/ och /searchresults)
+- Visa detaljer om specifik bostad (WIP)
+- Söka mäklare (/find-agents)
+- Visa personlig profil (users/profile/{userId})
+- Redigera profil (WIP)
+- Hantera bostäder per mäklare (/agent/manage-properties)
+- Skapa objekt/(lägga till) nya bostäder (/agent/manage-properties)
+- Redigera bostad (TODO)
+- Lägga till/ta bort bilder på en bostad (/MarketProperty/{bostadsId}/Images)
+- Ta bort en bostad (/MarketProperty/{bostadsId}/Images)
+- 
