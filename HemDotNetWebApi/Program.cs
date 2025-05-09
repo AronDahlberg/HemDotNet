@@ -47,6 +47,7 @@ namespace HemDotNetWebApi
 
             // Allan
             builder.Services.AddTransient<IMunicipalityRepository, MunicipalityRepository>();
+            builder.Services.AddTransient<IRealEstateAgencyRepository, RealEstateAgencyRepository>();
 
             // Author: CHRIS
             builder.Services.AddTransient<IRealEstateAgentRepository, RealEstateAgentRepository>();
