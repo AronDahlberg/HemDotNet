@@ -1,4 +1,5 @@
 using AutoMapper;
+using HemDotNetWebApi.Constants;
 using HemDotNetWebApi.Data;
 using HemDotNetWebApi.DTO;
 using HemDotNetWebApi.DTOs;
@@ -8,6 +9,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using System.Security.Claims;
 
 namespace HemDotNetWebApi.Controllers
 {
@@ -90,11 +92,19 @@ namespace HemDotNetWebApi.Controllers
         }
 
         // Adam
+        // Co-Author: Allan; add check to determine if the person logged in has right to delete
+        // this specific property
         [HttpDelete("{propertyId}/{agentId}")]
         [Authorize]
-
         public async Task<IActionResult> AgentDelete(int propertyId, string agentId)
         {
+            var userId = User.FindFirstValue(CustomClaimTypes.Uid);
+
+            if (!await _marketPropertyRepository.IsPropertyOwnedByAgentAsync(propertyId, userId))
+            {
+                return Forbid("You do not own this property.");
+            }
+
             var result = await _marketPropertyRepository.AgentDelete(propertyId, agentId);
             if (result)
             {
@@ -105,6 +115,8 @@ namespace HemDotNetWebApi.Controllers
                 return NotFound("Property not found or you do not have permission to delete it.");
             }
         }
+
+
 
         // Katarina
         //Co-Author: Johan. Updated return type explicitly to MarketPropertyDetailsDto so NSwag could map properly.

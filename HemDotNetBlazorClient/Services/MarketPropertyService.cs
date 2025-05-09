@@ -136,5 +136,30 @@ namespace HemDotNetBlazorClient.Services
 
             return response;
         }
+
+        //Author: Allan
+        public async Task<Response<bool>> DeleteMarketPropertyById(int marketPropertyId, string agentId)
+        {
+            Response<bool> response;
+
+            try
+            {
+                await GetBearerToken();
+
+                await _client.MarketPropertyDELETEAsync(marketPropertyId, agentId);
+                response = new Response<bool>
+                {
+                    Data = true,
+                    Success = true
+                };
+
+            }
+            catch (ApiException ex)
+            {
+                response = ConvertApiExceptions<bool>(ex);
+            }
+
+            return response;
+        }
     }
 }

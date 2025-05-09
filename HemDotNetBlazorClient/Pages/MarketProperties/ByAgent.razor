@@ -1,12 +1,15 @@
 ﻿@*Made by Chris*@
+@*Co-author: Allan (edit, delete, add, sold buttons, their functionality and styling, delete confirmation message)*@
 @using HemDotNetBlazorClient.Components
+@using HemDotNetBlazorClient.Providers
 @using HemDotNetBlazorClient.Services
-@page "/MarketPropertiesByAgent/{agentId}"
+@page "/agent/manage-properties/"
 @inject IMarketPropertyService marketPropertyService
+@inject ApiAuthenticationStateProvider authStateProvider
 @inject HttpClient httpClient
+@inject IJSRuntime JSRuntime
 
-<h3 class="py-4 text-center">Market Properties by @AgentId</h3>
-
+<h3 class="py-4 text-center">Lägg till, redigera eller ta bort objekt</h3>
 @if (!response.Success)
 {
     <div class="alert alert-danger">
@@ -21,28 +24,109 @@ else if (marketProperties == null)
 }
 else
 {
-    <div class="d-flex flex-column align-items-center py-5">
-        @foreach (var property in marketProperties)
-        {
-            <PropertyCard Property="property" />
-        }
+    <div class="container py-5">
+        <div class="row">
+            @foreach (var property in marketProperties)
+            {
+                <div class="col-12 d-flex flex-column align-items-center mb-5">
+                    <PropertyCard Property="property" />
+                    <div class="mt-2 d-flex gap-2">
+                        <button class="btn btn-primary text-white">Redigera</button>
+                        <a class="btn btn-primary text-white" href="/MarketProperty/@property.MarketPropertyId/Images">
+                            Lägg till eller ta bort bilder
+                        </a>
+                        <button class="btn btn-danger text-white" @onclick="() => ShowDeleteConfirmation(property.MarketPropertyId)">Radera</button>
+                        <button class="btn btn-outline-success">Markera som såld</button>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <div class="row">
+            <div class="col-12 d-flex justify-content-center mt-3">
+                <a class="btn btn-primary" href="/MarketProperty/Create">
+                    <img src="plusicon.svg" alt="Add" class="mx-1" style="width: 1.2em; height: 1.2em; vertical-align: middle;" />
+                    Lägg till ett nytt objekt
+                </a>
+            </div>
+        </div>
     </div>
 }
 
-@code {
+<ConfirmationModalComponent 
+    IsVisible="showDeleteModal"
+    Title="Bekräfta borttagning"
+    Message="Är du säker på att du vill radera detta objekt? Denna åtgärd kan inte ångras."
+    CancelText="Avbryt"
+    ConfirmText="Ja, radera"
+    OnCancel="CancelDelete"
+    OnConfirm="ConfirmDelete" />
 
+@code {
     [Parameter]
     public string? AgentId { get; set; }
-
     private List<PartialMarketPropertyDTO> marketProperties;
     private Response<List<PartialMarketPropertyDTO>> response = new Response<List<PartialMarketPropertyDTO>> { Success = true };
+    private bool showDeleteModal = false;
+    private string? errorMessage = null;
+    private int? propertyIdToDelete;
 
     protected override async Task OnInitializedAsync()
     {
-        response = await marketPropertyService.GetMarketPropertiesByAgent(AgentId);
+        var authState = await authStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+        var userId = user.FindFirst("uid")?.Value;
+        response = await marketPropertyService.GetMarketPropertiesByAgent(userId);
         if (response.Success)
         {
             marketProperties = response.Data;
+        }
+    }
+
+    // Allan
+    private void ShowDeleteConfirmation(int propertyId)
+    {
+        propertyIdToDelete = propertyId;
+        showDeleteModal = true;
+    }
+
+    // Allan
+    private void CancelDelete()
+    {
+        showDeleteModal = false;
+        propertyIdToDelete = null;
+    }
+
+    // Allan
+    private async Task ConfirmDelete()
+    {
+        try
+        {
+            var authState = await authStateProvider.GetAuthenticationStateAsync();
+            var user = authState.User;
+            var userId = user.FindFirst("uid")?.Value;
+
+            var result = await marketPropertyService.DeleteMarketPropertyById((int) propertyIdToDelete, userId);
+
+            showDeleteModal = false;
+
+            if (result.Success)
+            {
+                marketProperties = marketProperties.Where(p => p.MarketPropertyId != propertyIdToDelete).ToList();
+                StateHasChanged();
+            }
+            else
+            {
+                errorMessage = result.Message ?? "Något gick fel vid borttagning av objektet.";
+            }
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Ett fel uppstod: {ex.Message}";
+        }
+        finally
+        {
+            propertyIdToDelete = null;
         }
     }
 }
