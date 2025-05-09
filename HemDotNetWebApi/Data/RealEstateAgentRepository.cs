@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using HemDotNetWebApi.Constants;
 using HemDotNetWebApi.DTO;
 using HemDotNetWebApi.Models;
 using Microsoft.EntityFrameworkCore;
@@ -17,16 +18,25 @@ namespace HemDotNetWebApi.Data
         }
 
         // CHRIS
-        public async Task<IEnumerable<RealEstateAgentDto>> GetAllAsync()
+        // Co-Author: Allan - take away accounts with role admin from what we return
+        public async Task<IEnumerable<RealEstateAgent>> GetAllAsync()
         {
+
             var agents = await _context.RealEstateAgents
                 .Include(a => a.RealEstateAgentAgency)
                 .Include(a => a.RealEstateAgentProperties)
+                .Where(agent =>
+                    !_context.UserRoles
+                        .Where(ur => ur.UserId == agent.Id)
+                        .Join(_context.Roles,
+                              ur => ur.RoleId,
+                              r => r.Id,
+                              (ur, r) => r.Name)
+                        .Contains(ApiRoles.Administrator))
                 .ToListAsync();
 
-            var agentDtos = _mapper.Map<IEnumerable<RealEstateAgentDto>>(agents);
 
-            return agentDtos;
+            return agents;
         }
 
         // CHRIS

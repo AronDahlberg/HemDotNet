@@ -82,14 +82,12 @@ namespace HemDotNetWebApi.Controllers
             [FromQuery] string? agencyName,
             [FromQuery] string? email,
             [FromQuery] string? phonenumber
-
-
             )
         {
             var filteredAgents = await _realEstateAgentRepository.GetAllAsync();
 
             if (!string.IsNullOrWhiteSpace(municipality))
-                filteredAgents = filteredAgents.Where(a => a.RealEstateAgencyMunicipality.ToLower().Contains(municipality.ToLowerInvariant()));
+                filteredAgents = filteredAgents.Where(a => a.RealEstateAgentAgency.RealEstateAgencyName.ToLower().Contains(municipality.ToLowerInvariant()));
 
             if (!string.IsNullOrWhiteSpace(firstName))
                 filteredAgents = filteredAgents.Where(a => a.RealEstateAgentFirstName.ToLower().Contains(firstName.ToLowerInvariant()));
@@ -98,14 +96,13 @@ namespace HemDotNetWebApi.Controllers
                 filteredAgents = filteredAgents.Where(a => a.RealEstateAgentLastName.ToLower().Contains(lastName.ToLowerInvariant()));
 
             if (!string.IsNullOrWhiteSpace(agencyName))
-                filteredAgents = filteredAgents.Where(a => a.RealEstateAgentAgencyName.ToLower().Contains(agencyName.ToLowerInvariant()));
+                filteredAgents = filteredAgents.Where(a => a.RealEstateAgentAgency.RealEstateAgencyName.ToLower().Contains(agencyName.ToLowerInvariant()));
 
             if (!string.IsNullOrWhiteSpace(email))
                 filteredAgents = filteredAgents.Where(a => a.RealEstateAgentEmail.ToLower().Contains(email.ToLowerInvariant()));
 
             if (!string.IsNullOrWhiteSpace(phonenumber))
                 filteredAgents = filteredAgents.Where(a => a.RealEstateAgentPhoneNumber.Contains(phonenumber));
-
 
             return Ok(filteredAgents.ToList());
 

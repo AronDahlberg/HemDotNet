@@ -10,7 +10,7 @@
 
 <div class="mx-auto" style="width:1000px; margin-bottom:5rem;">
 
-    <h3 class="pt-4 text-center">Hitta mäklare i ditt område</h3>
+    <h3 class="pt-5 text-center">Hantera mäklare</h3>
 
 
 
@@ -74,8 +74,10 @@
         response = await realEstateAgentService.GetAgentsAsync("", "", "", "", "", "");
         if (response.Success)
         {
-            realEstateAgents = response.Data;
-            realEstateAgents.OrderBy(a => a.Id);
+            realEstateAgents = response.Data
+            .OrderByDescending(a => a.RealEstateAgentAgencyName == "Wait list")
+            .ThenBy(a => a.Id)
+            .ToList();
         }
     }
 

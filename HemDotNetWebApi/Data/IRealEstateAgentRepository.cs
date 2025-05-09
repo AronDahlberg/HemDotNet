@@ -12,7 +12,7 @@ namespace HemDotNetWebApi.Data
         Task<RealEstateAgent> GetAsync(string agentId);
 
         // CHRIS
-        Task<IEnumerable<RealEstateAgentDto>> GetAllAsync();
+        Task<IEnumerable<RealEstateAgent>> GetAllAsync();
 
     }
 }
