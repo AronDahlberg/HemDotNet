@@ -16,5 +16,7 @@ namespace HemDotNetBlazorClient.Services
         // Allan
         Task<Response<RealEstateAgentDto>> UpdateAgentAgencyAsync(string agentId, int newAgencyId);
 
+        // Allan
+        Task<Response<bool>> DeleteAgentAsync(string agentId);
     }
 }

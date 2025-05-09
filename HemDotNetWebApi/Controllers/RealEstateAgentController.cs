@@ -130,5 +130,25 @@ namespace HemDotNetWebApi.Controllers
                 return StatusCode(500, $"An error occurred while updating the agent's agency: {ex.Message}");
             }
         }
+
+        // Allan
+        [HttpDelete("{agentId}")]
+        [Authorize(Roles = ApiRoles.Administrator)]
+        public async Task<IActionResult> DeleteAgent(string agentId)
+        {
+            try
+            {
+                await _realEstateAgentRepository.DeleteAsync(agentId);
+                return Ok();
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Ett fel inträffade: {ex.Message}");
+            }
+        }
     }
 }

@@ -1,4 +1,5 @@
-﻿@*Author: Allan*@
+﻿@* Author: Allan *@
+
 @using HemDotNetBlazorClient.Components
 @using HemDotNetBlazorClient.Services
 @using Microsoft.AspNetCore.Authorization
@@ -7,8 +8,10 @@
 @inject IRealEstateAgencyService realEstateAgencyService
 @inject HttpClient httpClient
 @attribute [Authorize(Roles = "Administrator")]
+
 <div class="mx-auto" style="width:1000px; margin-bottom:5rem;">
     <h3 class="pt-5 text-center">Hantera mäklare</h3>
+
     @if (!response.Success)
     {
         <div class="alert alert-danger">
@@ -23,47 +26,53 @@
     }
     else
     {
-        <div class="col-auto agentCards vstack"
-             style="gap:1rem;">
+        <div class="col-auto agentCards vstack" style="gap:1rem;">
             @foreach (var agent in realEstateAgents)
             {
-                <div class="agentCard card mb-3">
-                    <div class="card-body d-flex justify-content-between align-items-center gap-4">
-                        <div class="userInfo d-flex gap-4 align-items-center col-6">
-                            <img class="img-thumbnail rounded-circle" style="width: 150px;"
-                                 src="@($"{httpClient.BaseAddress}{agent.RealEstateAgentImageUrl}")"
-                                 alt="@($"{agent.RealEstateAgentFirstName} profilepic")" />
-                            <div class="vstack justify-content-center">
-                                <h5 class="card-title">@agent.RealEstateAgentFirstName @agent.RealEstateAgentLastName</h5>
-                                <div>@agent.RealEstateAgencyMunicipality</div>
-                                <small>@agent.RealEstateAgentEmail</small>
-                                <small>@agent.RealEstateAgentPhoneNumber</small>
+                <div class="d-flex align-items-start justify-content-between" style="gap: 1rem;">
+                    <div class="agentCard card mb-3 flex-grow-1">
+                        <div class="card-body d-flex justify-content-between align-items-center gap-4">
+                            <div class="userInfo d-flex gap-4 align-items-center col-6">
+                                <img class="img-thumbnail rounded-circle" style="width: 150px;"
+                                     src="@($"{httpClient.BaseAddress}{agent.RealEstateAgentImageUrl}")"
+                                     alt="@($"{agent.RealEstateAgentFirstName} profilepic")" />
+                                <div class="vstack justify-content-center">
+                                    <h5 class="card-title">@agent.RealEstateAgentFirstName @agent.RealEstateAgentLastName</h5>
+                                    <div>@agent.RealEstateAgencyMunicipality</div>
+                                    <small>@agent.RealEstateAgentEmail</small>
+                                    <small>@agent.RealEstateAgentPhoneNumber</small>
+                                </div>
+                            </div>
+                            <div class="agencyInfo text-center d-flex flex-column align-items-center col-4">
+                                <img class="img" style="width: 100px;"
+                                     src="@($"{httpClient.BaseAddress}{agent.RealEstateAgencyLogoUrl}")"
+                                     alt="@($"{agent.RealEstateAgentAgencyName} logo")" />
+
+                                @if (agencies != null)
+                                {
+                                    <div class="mt-3 w-100">
+                                        <select class="form-select"
+                                                @onchange="@(e => UpdateAgentAgency(agent.Id, Convert.ToInt32(e.Value)))">
+                                            @foreach (var agency in agencies)
+                                            {
+                                                <option value="@agency.RealEstateAgencyId" selected="@(agency.RealEstateAgencyId == agent.RealEstateAgentAgencyId)">
+                                                    @agency.AgencyName
+                                                </option>
+                                            }
+                                        </select>
+                                    </div>
+                                }
                             </div>
                         </div>
-                        <div class="agencyInfo text-center d-flex flex-column align-items-center col-4">
-                            <img class="img" style="width: 100px;"
-                                 src="@($"{httpClient.BaseAddress}{agent.RealEstateAgencyLogoUrl}")"
-                                 alt="@($"{agent.RealEstateAgentAgencyName} logo")" />
-                            <div class="font-weight-bold">@agent.RealEstateAgentAgencyName</div>
-
-                            @if (agencies != null)
-                            {
-                                <div class="mt-3 w-100">
-                                    <select class="form-select" value="@agent.RealEstateAgentAgencyId"
-                                            @onchange="@(e => UpdateAgentAgency(agent.Id, Convert.ToInt32(e.Value)))">
-                                        @foreach (var agency in agencies)
-                                        {
-                                            <option value="@agency.RealEstateAgencyId" selected="@(agency.RealEstateAgencyId == agent.RealEstateAgentAgencyId)">
-                                                @agency.AgencyName
-                                            </option>
-                                        }
-                                    </select>
-                                </div>
-                            }
-                        </div>
+                    </div>
+                    <div class="mt-2">
+                        <button class="btn btn-danger p-2" @onclick="() => PromptDeleteAgent(agent.Id)">
+                            <img src="trash.svg" alt="Radera mäklare" style="width: 24px; height: 24px;" />
+                        </button>
                     </div>
                 </div>
             }
+
         </div>
     }
 </div>
@@ -83,6 +92,14 @@
     </div>
 }
 
+<ConfirmationModalComponent IsVisible="@showDeleteConfirmation"
+                            Title="Bekräfta borttagning"
+                            Message="Är du säker på att du vill radera den här mäklaren? Detta kommer också radera alla mäklarens objekt"
+                            CancelText="Avbryt"
+                            ConfirmText="Ja, radera"
+                            OnCancel="CancelDelete"
+                            OnConfirm="ConfirmDeleteAgent" />
+
 @code {
     private IEnumerable<RealEstateAgentDto> realEstateAgents;
     private IEnumerable<AgencyNameDto> agencies;
@@ -90,6 +107,9 @@
     private bool showNotification = false;
     private bool updateSuccess = false;
     private string notificationMessage = "";
+
+    private bool showDeleteConfirmation = false;
+    private string agentIdToDelete;
 
     protected override async Task OnInitializedAsync()
     {
@@ -103,9 +123,9 @@
         if (response.Success)
         {
             realEstateAgents = response.Data
-            .OrderByDescending(a => a.RealEstateAgentAgencyName == "Wait list")
-            .ThenBy(a => a.Id)
-            .ToList();
+                .OrderByDescending(a => a.RealEstateAgentAgencyName == "Wait list")
+                .ThenBy(a => a.Id)
+                .ToList();
         }
     }
 
@@ -126,22 +146,20 @@
             if (agent != null)
             {
                 var updateResponse = await realEstateAgentService.UpdateAgentAgencyAsync(agentId, newAgencyId);
-
                 if (updateResponse.Success)
                 {
-                    // Refresh the agent list
                     await LoadAgents();
-                    ShowNotification("Agent's agency updated successfully!", true);
+                    ShowNotification("Mäklarens mäklarbyrå uppdaterad!", true);
                 }
                 else
                 {
-                    ShowNotification($"Failed to update agent's agency: {updateResponse.Message}", false);
+                    ShowNotification($"Uppdatering misslyckades: {updateResponse.Message}", false);
                 }
             }
         }
         catch (Exception ex)
         {
-            ShowNotification($"An error occurred: {ex.Message}", false);
+            ShowNotification($"Ett fel inträffade: {ex.Message}", false);
         }
     }
 
@@ -152,7 +170,6 @@
         showNotification = true;
         StateHasChanged();
 
-        // Automatically hide the notification after 5 seconds
         Task.Delay(5000).ContinueWith(_ =>
         {
             CloseNotification();
@@ -164,5 +181,42 @@
     {
         showNotification = false;
         StateHasChanged();
+    }
+
+    private void PromptDeleteAgent(string agentId)
+    {
+        agentIdToDelete = agentId;
+        showDeleteConfirmation = true;
+    }
+
+    private void CancelDelete()
+    {
+        showDeleteConfirmation = false;
+        agentIdToDelete = null;
+    }
+
+    private async Task ConfirmDeleteAgent()
+    {
+        showDeleteConfirmation = false;
+
+        try
+        {
+            var deleteResponse = await realEstateAgentService.DeleteAgentAsync(agentIdToDelete);
+            if (deleteResponse.Success)
+            {
+                ShowNotification("Mäklare raderad!", true);
+                await LoadAgents();
+            }
+            else
+            {
+                ShowNotification($"Radering misslyckades: {deleteResponse.Message}", false);
+            }
+        }
+        catch (Exception ex)
+        {
+            ShowNotification($"Ett fel inträffade: {ex.Message}", false);
+        }
+
+        agentIdToDelete = null;
     }
 }

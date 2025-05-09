@@ -67,7 +67,6 @@ namespace HemDotNetWebApi.Data
         }
 
         // Allan
-
         public async Task<RealEstateAgent> UpdateAgentAgencyAsync(string agentId, int newAgencyId)
         {
             var agent = await _context.RealEstateAgents
@@ -93,6 +92,24 @@ namespace HemDotNetWebApi.Data
             await _context.SaveChangesAsync();
 
             return agent;
+        }
+
+        // Allan
+        public async Task DeleteAsync(string agentId)
+        {
+            var agent = await _context.RealEstateAgents
+                .Include(a => a.RealEstateAgentProperties)
+                .FirstOrDefaultAsync(a => a.Id == agentId);
+
+            if (agent == null)
+            {
+                throw new KeyNotFoundException($"Agent with ID {agentId} not found.");
+            }
+
+            _context.MarketProperties.RemoveRange(agent.RealEstateAgentProperties);
+
+            _context.RealEstateAgents.Remove(agent);
+            await _context.SaveChangesAsync();
         }
 
     }

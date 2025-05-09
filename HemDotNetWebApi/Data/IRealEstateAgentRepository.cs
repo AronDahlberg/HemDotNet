@@ -17,5 +17,8 @@ namespace HemDotNetWebApi.Data
         // Allan
         Task<RealEstateAgent> UpdateAgentAgencyAsync(string agentId, int newAgencyId);
 
+        // Allan
+        Task DeleteAsync(string agentId);
+
     }
 }
