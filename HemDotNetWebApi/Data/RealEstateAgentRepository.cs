@@ -67,28 +67,33 @@ namespace HemDotNetWebApi.Data
         }
 
         // Allan
+
         public async Task<RealEstateAgent> UpdateAgentAgencyAsync(string agentId, int newAgencyId)
         {
+            // Find the agent
             var agent = await _context.RealEstateAgents
                 .Include(a => a.RealEstateAgentAgency)
                 .FirstOrDefaultAsync(a => a.Id == agentId);
 
             if (agent == null)
             {
-                throw new KeyNotFoundException($"Mäklare med ID {agentId} hittades inte.");
+                throw new KeyNotFoundException($"Agent with ID {agentId} not found.");
             }
 
+            // Verify the new agency exists
             var newAgency = await _context.RealEstateAgencies
                 .FirstOrDefaultAsync(a => a.RealEstateAgencyId == newAgencyId);
 
             if (newAgency == null)
             {
-                throw new KeyNotFoundException($"Mäklarbyrå med ID {newAgencyId} hittades inte.");
+                throw new KeyNotFoundException($"Agency with ID {newAgencyId} not found.");
             }
 
-            agent.RealEstateAgentAgency.RealEstateAgencyId = newAgencyId;
+            // Update the agent's agency
+            agent.RealEstateAgentAgencyId = newAgencyId;
             agent.RealEstateAgentAgency = newAgency;
 
+            // Save changes
             await _context.SaveChangesAsync();
 
             return agent;

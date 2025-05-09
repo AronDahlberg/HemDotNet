@@ -24,9 +24,11 @@ namespace HemDotNetWebApi.Models
         [Required]
         public string RealEstateAgentImageUrl { get; set; }
 
-        
-        [ForeignKey("RealEstateAgency")]
-        public RealEstateAgency? RealEstateAgentAgency { get; set; }
+
+        public int RealEstateAgentAgencyId { get; set; }
+
+        [ForeignKey(nameof(RealEstateAgentAgencyId))]
+        public RealEstateAgency RealEstateAgentAgency { get; set; }
 
         //[NotMapped] Hope nothing breaks by commenting out
         public virtual List<MarketProperty> RealEstateAgentProperties { get; set; }
