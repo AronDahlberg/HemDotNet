@@ -3,6 +3,7 @@
 @inject HttpClient httpClient
 @inject ApiAuthenticationStateProvider AuthStateProvider
 @inject IRealEstateAgentService agentService
+@inject ProfileService profileService
 
 <!--
 
@@ -138,6 +139,8 @@ Author: Allan
         // Here, we subscribe to auth state changes. Otherwise, at login, navbar doesnt know
         // that it has to update
         AuthStateProvider.AuthenticationStateChanged += _authHandler;
+
+        profileService.ProfilePictureChanged += StateHasChanged;
     }
 
     // Allan
@@ -170,6 +173,7 @@ Author: Allan
         if (_authHandler != null)
         {
             AuthStateProvider.AuthenticationStateChanged -= _authHandler;
+            profileService.ProfilePictureChanged -= StateHasChanged;
         }
     }
 }
