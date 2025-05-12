@@ -44,7 +44,7 @@ Author: Allan
                             {
                                 <li class="nav-item dropdown">
                                     <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                        <img src="@($"{httpClient.BaseAddress}{userProfileImage}")" class="rounded-circle me-2" width="32" height="32" alt="Profile" />
+                                        <img src="@($"{httpClient.BaseAddress}{profileService.CurrentUserProfilePicture}")" class="rounded-circle me-2" width="32" height="32" alt="Profile" />
                                     </a>
                                     <ul class="dropdown-menu dropdown-menu-end">
                                         <li><a class="dropdown-item" href="/agent/manage-properties">Hantera objekt</a></li>
@@ -156,6 +156,7 @@ Author: Allan
         {
             var response = await agentService.GetProfileImageUrl(userId);
             userProfileImage = response.Data ?? defaultProfileImage;
+            profileService.CurrentUserProfilePicture = userProfileImage;
 
             isAdmin = user.IsInRole("Administrator");
         }

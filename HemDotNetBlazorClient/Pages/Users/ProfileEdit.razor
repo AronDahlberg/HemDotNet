@@ -3,6 +3,7 @@
 @inject NavigationManager NavigationManager
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject IRealEstateAgentService realEstateAgentService
+@inject ProfileService profileService
 
 
 <h3 class="my-4">Redigera Profil</h3>
@@ -138,6 +139,9 @@ else
             {
                 uploadedImageUrl = uploadResponse.Data.ProfileImageUrl;
                 agentUpdateModel.RealEstateAgentImageUrl = uploadedImageUrl;
+
+                // update state service, this will notify the navbar
+                profileService.UpdateProfilePicture(uploadedImageUrl);
             }
             else
             {

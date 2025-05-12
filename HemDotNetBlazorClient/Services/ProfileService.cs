@@ -1,9 +1,12 @@
-﻿namespace HemDotNetBlazorClient.Services
+﻿using HemDotNetBlazorClient.Providers;
+
+namespace HemDotNetBlazorClient.Services
 {
     // Allan
     public class ProfileService
     {
         private string _currentUserProfilePicture;
+        
 
         public event Action ProfilePictureChanged;
 
@@ -18,6 +21,7 @@
         }
 
         private void NotifyStateChanged() => ProfilePictureChanged?.Invoke();
+
 
         public void UpdateProfilePicture(string newImageUrl)
         {
