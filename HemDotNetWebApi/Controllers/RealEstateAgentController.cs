@@ -153,7 +153,7 @@ namespace HemDotNetWebApi.Controllers
         }
 
         // Allan
-        [HttpPost("upload-profile-picture")]
+        [HttpPost("ProfilePicture")]
         [Consumes("multipart/form-data")]
         [Authorize]
         public async Task<ActionResult<string>> UploadProfilePicture([FromForm] UploadAgentProfilePictureDto dto, IFormFile imageFile)
@@ -175,7 +175,7 @@ namespace HemDotNetWebApi.Controllers
                 return BadRequest("File size is larger than limit of 5MB");
             }
 
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var userId = User.FindFirstValue(CustomClaimTypes.Uid);
 
             if (dto.AgentId != userId)
             {
@@ -185,7 +185,7 @@ namespace HemDotNetWebApi.Controllers
             try
             {
                 var imageUrl = await _realEstateAgentRepository.UploadAgentProfilePictureAsync(dto.AgentId, imageFile);
-                return Ok(imageUrl); // Or return a DTO if needed
+                return Ok(imageUrl);
             }
             catch (Exception)
             {
