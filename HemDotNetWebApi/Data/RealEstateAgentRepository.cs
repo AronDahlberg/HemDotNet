@@ -67,6 +67,11 @@ namespace HemDotNetWebApi.Data
                 throw new KeyNotFoundException($"Agent with ID {agent.Id} not found.");
             }
 
+            agent.Email = existingAgent.RealEstateAgentEmail;
+            agent.UserName = agent.RealEstateAgentEmail;
+            agent.NormalizedUserName = agent.RealEstateAgentEmail.ToUpperInvariant();
+            agent.NormalizedEmail = agent.NormalizedUserName;
+
             _context.Entry(existingAgent).CurrentValues.SetValues(agent);
 
             await _context.SaveChangesAsync();
