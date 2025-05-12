@@ -88,19 +88,19 @@ namespace HemDotNetWebApi.Controllers
             var filteredAgents = await _realEstateAgentRepository.GetAllAsync();
 
             if (!string.IsNullOrWhiteSpace(municipality))
-                filteredAgents = filteredAgents.Where(a => a.RealEstateAgentAgency.RealEstateAgencyMunicipality.ToLower().Contains(municipality.ToLowerInvariant()));
+                filteredAgents = filteredAgents.Where(a => a.RealEstateAgentAgency.RealEstateAgencyMunicipality.ToLower().Contains(municipality, StringComparison.OrdinalIgnoreCase));
 
             if (!string.IsNullOrWhiteSpace(firstName))
-                filteredAgents = filteredAgents.Where(a => a.RealEstateAgentFirstName.ToLower().Contains(firstName.ToLowerInvariant()));
+                filteredAgents = filteredAgents.Where(a => a.RealEstateAgentFirstName.ToLower().Contains(firstName, StringComparison.OrdinalIgnoreCase));
 
             if (!string.IsNullOrWhiteSpace(lastName))
-                filteredAgents = filteredAgents.Where(a => a.RealEstateAgentLastName.ToLower().Contains(lastName.ToLowerInvariant()));
+                filteredAgents = filteredAgents.Where(a => a.RealEstateAgentLastName.ToLower().Contains(lastName, StringComparison.OrdinalIgnoreCase));
 
             if (!string.IsNullOrWhiteSpace(agencyName))
-                filteredAgents = filteredAgents.Where(a => a.RealEstateAgentAgency.RealEstateAgencyName.ToLower().Contains(agencyName.ToLowerInvariant()));
+                filteredAgents = filteredAgents.Where(a => a.RealEstateAgentAgency.RealEstateAgencyName.ToLower().Contains(agencyName, StringComparison.OrdinalIgnoreCase));
 
             if (!string.IsNullOrWhiteSpace(email))
-                filteredAgents = filteredAgents.Where(a => a.RealEstateAgentEmail.ToLower().Contains(email.ToLowerInvariant()));
+                filteredAgents = filteredAgents.Where(a => a.RealEstateAgentEmail.ToLower().Contains(email, StringComparison.OrdinalIgnoreCase));
 
             if (!string.IsNullOrWhiteSpace(phonenumber))
                 filteredAgents = filteredAgents.Where(a => a.RealEstateAgentPhoneNumber.Contains(phonenumber));
