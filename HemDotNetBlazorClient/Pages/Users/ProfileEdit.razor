@@ -186,6 +186,14 @@ else
 
         if (profileImageFile != null)
         {
+
+            string extension = Path.GetExtension(profileImageFile.Name).ToLowerInvariant();
+            if (extension != ".jpg" && extension != ".jpeg" && extension != ".png")
+            {
+                errorMessage = "Endast JPG-, JPEG- och PNG-filer är tillåtna";
+                return;
+            }
+
             var fileContent = new StreamContent(profileImageFile.OpenReadStream(5 * 1024 * 1024));
             fileContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(profileImageFile.ContentType);
 
