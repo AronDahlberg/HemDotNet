@@ -2076,7 +2076,7 @@ namespace HemDotNetBlazorClient.Services.Base
 
         [Newtonsoft.Json.JsonProperty("description", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Required]
-        [System.ComponentModel.DataAnnotations.StringLength(200, MinimumLength = 1)]
+        [System.ComponentModel.DataAnnotations.StringLength(500, MinimumLength = 1)]
         public string Description { get; set; }
 
         [Newtonsoft.Json.JsonProperty("amountOfRooms", Required = Newtonsoft.Json.Required.Always)]
