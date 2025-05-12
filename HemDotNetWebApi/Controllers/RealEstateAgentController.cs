@@ -6,6 +6,7 @@ using HemDotNetWebApi.DTOs;
 using HemDotNetWebApi.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace HemDotNetWebApi.Controllers
 {
@@ -150,5 +151,47 @@ namespace HemDotNetWebApi.Controllers
                 return StatusCode(500, $"Ett fel inträffade: {ex.Message}");
             }
         }
+
+        // Allan
+        [HttpPost("upload-profile-picture")]
+        [Consumes("multipart/form-data")]
+        [Authorize]
+        public async Task<ActionResult<string>> UploadProfilePicture([FromForm] UploadAgentProfilePictureDto dto, IFormFile imageFile)
+        {
+            if (imageFile == null || imageFile.Length == 0)
+            {
+                return BadRequest("No image file provided");
+            }
+
+            string[] allowedExtensions = { ".jpg", ".jpeg", ".png" };
+            string fileExtension = Path.GetExtension(imageFile.FileName).ToLowerInvariant();
+            if (!allowedExtensions.Contains(fileExtension))
+            {
+                return BadRequest("Invalid file type. Only jpg, jpeg and png are allowed");
+            }
+
+            if (imageFile.Length > 5 * 1024 * 1024)
+            {
+                return BadRequest("File size is larger than limit of 5MB");
+            }
+
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (dto.AgentId != userId)
+            {
+                return Forbid("You can only update your own profile picture.");
+            }
+
+            try
+            {
+                var imageUrl = await _realEstateAgentRepository.UploadAgentProfilePictureAsync(dto.AgentId, imageFile);
+                return Ok(imageUrl); // Or return a DTO if needed
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "An error occurred while uploading the profile picture.");
+            }
+        }
+
     }
 }
