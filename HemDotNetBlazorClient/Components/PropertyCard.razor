@@ -3,39 +3,39 @@
 
 <style>
     .image-container {
-    aspect-ratio: 5 / 3;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-    position: relative;
-    border-radius: 0.5rem 0 0 0.5rem;
+        aspect-ratio: 5 / 3;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        position: relative;
+        border-radius: 0.5rem 0 0 0.5rem;
     }
 
-    .image-container img {
-    object-fit: cover;
-    width: 100%;
-    height: 100%;
-    display: block;
-    }
+        .image-container img {
+            object-fit: cover;
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
 
     .property-meta {
-    font-size: 0.9rem;
-    color: #6c757d;
+        font-size: 0.9rem;
+        color: #6c757d;
     }
 
     .agency-logo {
-    max-height: 30px;
+        max-height: 30px;
     }
 
-    .premium-badge {
-    background-color: #e6f4ea;
-    color: #2e7d32;
-    padding: 0.25rem 0.5rem;
-    font-weight: 500;
-    font-size: 0.8rem;
-    border-radius: 0.25rem;
-    display: inline-block;
-    margin-bottom: 0.5rem;
+    .agency-info {
+        font-size: 0.9rem;
+        color: #343a40;
+    }
+
+    .divider {
+        border-top: 1px solid #dee2e6;
+        margin-top: 1rem;
+        margin-bottom: 0.5rem;
     }
 </style>
 
@@ -51,18 +51,19 @@
         </div>
         <div class="col-md-8 d-flex flex-column justify-content-between p-3">
             <div>
-                <h5 class="mb-1 text-primary">@Property.PropertyAddress, <span class="text-muted">@Property.MunicipalityName</span></h5>
+                <h5 class="mb-1 text-primary">@Property.PropertyAddress, @Property.MunicipalityName</h5>
                 <div class="property-meta mb-2">
                     <span>@Property.LivingArea.ToString("0.#") m²</span> ·
                     <span>@Property.AmountOfRooms.ToString() rum</span> ·
-                    @if(Property.MonthlyFee > 0){
+                    @if (Property.MonthlyFee > 0)
+                    {
                         <span>@(Property.MonthlyFee.ToString("N0", customCulture)) kr/mån</span>
                     }
                     ·
                     <span>
                         @((decimal)Property.LivingArea > 0 ?
-                                Math.Round((decimal)Property.Price / (decimal)Property.LivingArea)
-                                .ToString("N0", customCulture) + " kr/m²" : "")
+                            Math.Round((decimal)Property.Price / (decimal)Property.LivingArea)
+                            .ToString("N0", customCulture) + " kr/m²" : "")
                     </span>
                 </div>
 
@@ -75,18 +76,21 @@
                         @(Property.Description.Length > 180 ? Property.Description.Substring(0, 180) + "..." : Property.Description)
                     </p>
                 }
-
-                <div class="premium-badge">Premium</div>
             </div>
-            <div class="d-flex justify-content-between align-items-center mt-2">
-                <NavLink class="btn btn-outline-primary" href="@($"/property/details/{Property.MarketPropertyId}")">
+            <div>
+                <NavLink class="btn btn-outline-primary mb-2" href="@($"/property/details/{Property.MarketPropertyId}")">
                     Mer information
                 </NavLink>
-                @if (!string.IsNullOrEmpty(Property.RealEstateAgencyLogoUrl))
-                {
-                    Console.WriteLine("test");
-                    <img class="agency-logo" src="@($"{httpClient.BaseAddress}{Property.RealEstateAgencyLogoUrl}")" alt="Agency Logo" />
-                }
+
+                <div class="divider"></div>
+
+                <div class="d-flex justify-content-between align-items-center agency-info">
+                    <p class="mb-0">@Property.RealEstateAgencyName</p>
+                    @if (!string.IsNullOrEmpty(Property.RealEstateAgencyLogoUrl))
+                    {
+                        <img class="agency-logo" src="@($"{httpClient.BaseAddress}{Property.RealEstateAgencyLogoUrl}")" alt="Agency Logo" />
+                    }
+                </div>
             </div>
         </div>
     </div>
@@ -97,14 +101,12 @@
     public PartialMarketPropertyDTO Property { get; set; }
 
     private CultureInfo customCulture = (CultureInfo)CultureInfo.InvariantCulture.Clone();
-    
-    // Allan
+
     protected override async Task OnInitializedAsync()
     {
         customCulture.NumberFormat.NumberGroupSeparator = " ";
     }
 
-    // Allan
     private string GetPropertyCategoryDisplayName(PropertyCategory category)
     {
         return category switch
