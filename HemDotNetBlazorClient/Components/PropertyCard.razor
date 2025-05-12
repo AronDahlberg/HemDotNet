@@ -1,6 +1,9 @@
 ﻿@using System.Globalization
 @inject HttpClient httpClient
 
+@* Author: Allan *@
+@* Additional css fixes/changes by Chris *@
+
 <style>
     .image-container {
         aspect-ratio: 5 / 3;
@@ -102,11 +105,13 @@
 
     private CultureInfo customCulture = (CultureInfo)CultureInfo.InvariantCulture.Clone();
 
+    // Allan
     protected override async Task OnInitializedAsync()
     {
         customCulture.NumberFormat.NumberGroupSeparator = " ";
     }
 
+    // Allan
     private string GetPropertyCategoryDisplayName(PropertyCategory category)
     {
         return category switch
