@@ -5,6 +5,6 @@ namespace HemDotNetWebApi.DTO
     public class UploadAgentProfilePictureDto
     {
         [Required]
-        public string AgentId { get; set; } // Optional if you only allow current user
+        public string AgentId { get; set; }
     }
 }

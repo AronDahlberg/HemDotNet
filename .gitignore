@@ -369,3 +369,5 @@ appsettings.Development.json
 HemDotNetWebApi/Images/PropertyImages/
 /HemDotNetBlazorClient/Properties/launchSettings.json
 /HemDotNetWebApi/Properties/launchSettings.json
+
+HemDotNetWebApi/Images/ProfileImages/

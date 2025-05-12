@@ -10,11 +10,19 @@ namespace HemDotNetWebApi.Data
     {
         private readonly ApplicationDbContext _context;
         private readonly IMapper _mapper;
+        private readonly IWebHostEnvironment _environment;
+        private readonly string _profileImageDirectory;
 
-        public RealEstateAgentRepository(ApplicationDbContext context, IMapper mapper)
+        public RealEstateAgentRepository(ApplicationDbContext context, IMapper mapper, IWebHostEnvironment environment)
         {
             _context = context;
             _mapper = mapper;
+            _environment = environment;
+            _profileImageDirectory = Path.Combine(_environment.ContentRootPath, "Images", "ProfileImages");
+            if (!Directory.Exists(_profileImageDirectory))
+            {
+                Directory.CreateDirectory(_profileImageDirectory);
+            }
         }
 
         // CHRIS
@@ -110,6 +118,31 @@ namespace HemDotNetWebApi.Data
 
             _context.RealEstateAgents.Remove(agent);
             await _context.SaveChangesAsync();
+        }
+
+        // Allan
+        public async Task<string> UploadAgentProfilePictureAsync(string agentId, IFormFile file)
+        {
+            var agent = await _context.RealEstateAgents.FindAsync(agentId);
+            if (agent == null)
+                throw new Exception("Agent not found");
+
+            string fileExtension = Path.GetExtension(file.FileName);
+            string fileName = $"{Guid.NewGuid()}{fileExtension}";
+            string filePath = Path.Combine(_profileImageDirectory, fileName);
+            string relativePath = $"Images/ProfileImages/{fileName}";
+
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                await file.CopyToAsync(stream);
+            }
+
+            agent.RealEstateAgentImageUrl = relativePath;
+
+            _context.RealEstateAgents.Update(agent);
+            await _context.SaveChangesAsync();
+
+            return relativePath;
         }
 
     }
