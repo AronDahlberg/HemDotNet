@@ -2354,7 +2354,7 @@ namespace HemDotNetBlazorClient.Services.Base
 
         [Newtonsoft.Json.JsonProperty("description", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Required]
-        [System.ComponentModel.DataAnnotations.StringLength(200, MinimumLength = 1)]
+        [System.ComponentModel.DataAnnotations.StringLength(500, MinimumLength = 1)]
         public string Description { get; set; }
 
         [Newtonsoft.Json.JsonProperty("amountOfRooms", Required = Newtonsoft.Json.Required.Always)]
@@ -2484,8 +2484,8 @@ namespace HemDotNetBlazorClient.Services.Base
         [Newtonsoft.Json.JsonProperty("yearlyMaintenanceCost", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public double? YearlyMaintenanceCost { get; set; }
 
-        [Newtonsoft.Json.JsonProperty("contructionYear", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public int ContructionYear { get; set; }
+        [Newtonsoft.Json.JsonProperty("constructionYear", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public int ConstructionYear { get; set; }
 
         [Newtonsoft.Json.JsonProperty("images", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.Collections.Generic.ICollection<PropertyImageDto> Images { get; set; }
@@ -2532,8 +2532,8 @@ namespace HemDotNetBlazorClient.Services.Base
         [Newtonsoft.Json.JsonProperty("yearlyMaintenanceCost", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public double? YearlyMaintenanceCost { get; set; }
 
-        [Newtonsoft.Json.JsonProperty("contructionYear", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public int ContructionYear { get; set; }
+        [Newtonsoft.Json.JsonProperty("constructionYear", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public int ConstructionYear { get; set; }
 
         [Newtonsoft.Json.JsonProperty("realEstateAgentId", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public int RealEstateAgentId { get; set; }

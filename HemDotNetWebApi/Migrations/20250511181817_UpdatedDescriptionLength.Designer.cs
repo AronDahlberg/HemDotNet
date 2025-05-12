@@ -4,6 +4,7 @@ using HemDotNetWebApi.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HemDotNetWebApi.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250511181817_UpdatedDescriptionLength")]
+    partial class UpdatedDescriptionLength
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -205,7 +208,7 @@ namespace HemDotNetWebApi.Migrations
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
 
-                    b.Property<int>("RealEstateAgentAgencyId")
+                    b.Property<int?>("RealEstateAgency")
                         .HasColumnType("int");
 
                     b.Property<string>("RealEstateAgentEmail")
@@ -250,7 +253,7 @@ namespace HemDotNetWebApi.Migrations
                         .HasDatabaseName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
-                    b.HasIndex("RealEstateAgentAgencyId");
+                    b.HasIndex("RealEstateAgency");
 
                     b.ToTable("AspNetUsers", (string)null);
                 });
@@ -421,10 +424,8 @@ namespace HemDotNetWebApi.Migrations
             modelBuilder.Entity("HemDotNetWebApi.Models.RealEstateAgent", b =>
                 {
                     b.HasOne("HemDotNetWebApi.Models.RealEstateAgency", "RealEstateAgentAgency")
-                        .WithMany("RealEstateAgencyAgents")
-                        .HasForeignKey("RealEstateAgentAgencyId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .WithMany()
+                        .HasForeignKey("RealEstateAgency");
 
                     b.Navigation("RealEstateAgentAgency");
                 });
@@ -483,11 +484,6 @@ namespace HemDotNetWebApi.Migrations
             modelBuilder.Entity("HemDotNetWebApi.Models.MarketProperty", b =>
                 {
                     b.Navigation("Images");
-                });
-
-            modelBuilder.Entity("HemDotNetWebApi.Models.RealEstateAgency", b =>
-                {
-                    b.Navigation("RealEstateAgencyAgents");
                 });
 
             modelBuilder.Entity("HemDotNetWebApi.Models.RealEstateAgent", b =>
