@@ -57,6 +57,7 @@ namespace HemDotNetWebApi.Data
         }
 
         // CHRIS
+        // Co-Author: Allan (added so we also update the fields given by identity)
         public async Task<RealEstateAgent> UpdateAsync(RealEstateAgent agent)
         {
             var existingAgent = await _context.RealEstateAgents

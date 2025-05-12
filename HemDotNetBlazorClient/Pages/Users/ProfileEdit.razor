@@ -159,8 +159,10 @@ else
         {
             var agent = response.Data;
 
+            var userId = user.FindFirst("uid")?.Value;
+
             isCurrentUser = user.Identity?.IsAuthenticated == true &&
-                            user.Identity.Name == agent.RealEstateAgentEmail;
+                            userId == agent.Id;
 
             if (isCurrentUser)
             {
