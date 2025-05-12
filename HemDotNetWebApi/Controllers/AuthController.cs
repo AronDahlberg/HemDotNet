@@ -97,6 +97,13 @@ namespace HemDotNetWebApi.Controllers
                     return Unauthorized();
                 }
 
+                var waitList = await _context.RealEstateAgencies
+                    .FirstOrDefaultAsync(a => a.RealEstateAgencyName == "Wait list");
+
+                if (user.RealEstateAgentAgencyId == waitList.RealEstateAgencyId)
+                    return Problem($"Administratören måste först godkänna det här kontot.", statusCode: 403);
+
+
                 string tokenString = await GenerateToken(user);
 
                 var response = new AuthResponse
