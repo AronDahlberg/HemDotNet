@@ -83,6 +83,29 @@ namespace HemDotNetBlazorClient.Services
         }
 
         // Allan
+        public async Task<Response<bool>> EditAgentProfile(string agentid, RealEstateAgentUpdateDTO dto)
+        {
+            Response<bool> response;
+
+            try
+            {
+
+                var data = await _client.RealEstateAgentPUTAsync(agentid, dto);
+                response = new Response<bool>
+                {
+                    Data = true,
+                    Success = true
+                };
+            }
+            catch (ApiException ex)
+            {
+                response = ConvertApiExceptions<bool>(ex);
+            }
+
+            return response;
+        }
+
+        // Allan
         public async Task<Response<RealEstateAgentDto>> UpdateAgentAgencyAsync(string agentId, int newAgencyId)
         {
             Response<RealEstateAgentDto> response;

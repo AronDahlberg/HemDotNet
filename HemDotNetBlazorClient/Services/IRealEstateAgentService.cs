@@ -5,9 +5,6 @@ namespace HemDotNetBlazorClient.Services
     // Allan
     public interface IRealEstateAgentService
     {
-        // Allan
-        Task<Response<RealEstateAgentDto>> GetAgentByIdAsync(string agentId);
-
         // Chris
         Task<Response<IEnumerable<RealEstateAgentDto>>> GetAgentsAsync(string? municipality, string? firstName, string? lastName, string? agencyName, string? email, string? phoneNumber);
 
@@ -15,8 +12,8 @@ namespace HemDotNetBlazorClient.Services
 
         // Allan
         Task<Response<RealEstateAgentDto>> UpdateAgentAgencyAsync(string agentId, int newAgencyId);
-
-        // Allan
         Task<Response<bool>> DeleteAgentAsync(string agentId);
+        Task<Response<bool>> EditAgentProfile(string agentid, RealEstateAgentUpdateDTO dto);
+        Task<Response<RealEstateAgentDto>> GetAgentByIdAsync(string agentId);
     }
 }

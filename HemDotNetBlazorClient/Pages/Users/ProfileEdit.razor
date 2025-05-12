@@ -1,0 +1,131 @@
+﻿@page "/users/profile/edit/{Id}"
+@inject IRealEstateAgentService realEstateAgentService
+@inject NavigationManager NavigationManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+@using HemDotNetWebApi.DTOs
+@using Microsoft.AspNetCore.Components.Forms
+@using Microsoft.AspNetCore.Components.Authorization
+
+<h3 class="my-4">Redigera Profil</h3>
+
+@if (isLoading)
+{
+    <div class="text-center my-5">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Laddar...</span>
+        </div>
+        <p class="mt-3 text-muted">Laddar dina uppgifter...</p>
+    </div>
+}
+else if (!isCurrentUser)
+{
+    <div class="alert alert-danger">
+        <strong>Åtkomst nekad:</strong> Du kan endast redigera din egen profil.
+    </div>
+}
+else
+{
+    <EditForm Model="agentUpdateModel" OnValidSubmit="HandleValidSubmit">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <div class="mb-3">
+            <label class="form-label">Förnamn</label>
+            <InputText class="form-control" @bind-Value="agentUpdateModel.RealEstateAgentFirstName" />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Efternamn</label>
+            <InputText class="form-control" @bind-Value="agentUpdateModel.RealEstateAgentLastName" />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">E-post</label>
+            <InputText class="form-control" @bind-Value="agentUpdateModel.RealEstateAgentEmail" />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Telefonnummer</label>
+            <InputText class="form-control" @bind-Value="agentUpdateModel.RealEstateAgentPhoneNumber" />
+        </div>
+
+        <button type="submit" class="btn btn-primary">
+            <i class="bi bi-save me-2"></i>Spara ändringar
+        </button>
+        <button type="button" class="btn btn-secondary ms-2" @onclick="GoBack">
+            <i class="bi bi-arrow-left me-2"></i>Avbryt
+        </button>
+
+        @if (!string.IsNullOrEmpty(successMessage))
+        {
+            <div class="alert alert-success mt-3">@successMessage</div>
+        }
+
+        @if (!string.IsNullOrEmpty(errorMessage))
+        {
+            <div class="alert alert-danger mt-3">@errorMessage</div>
+        }
+    </EditForm>
+}
+
+@code {
+    [Parameter] public string Id { get; set; }
+
+    private RealEstateAgentUpdateDTO agentUpdateModel = new();
+    private bool isLoading = true;
+    private bool isCurrentUser = false;
+    private string successMessage;
+    private string errorMessage;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        var response = await realEstateAgentService.GetAgentByIdAsync(Id);
+
+        if (response?.Success == true)
+        {
+            var agent = response.Data;
+
+            isCurrentUser = user.Identity?.IsAuthenticated == true &&
+                            user.Identity.Name == agent.RealEstateAgentEmail;
+
+            if (isCurrentUser)
+            {
+                agentUpdateModel = new RealEstateAgentUpdateDTO
+                    {
+                        RealEstateAgentFirstName = agent.RealEstateAgentFirstName,
+                        RealEstateAgentLastName = agent.RealEstateAgentLastName,
+                        RealEstateAgentEmail = agent.RealEstateAgentEmail,
+                        RealEstateAgentPhoneNumber = agent.RealEstateAgentPhoneNumber,
+                        RealEstateAgentImageUrl = agent.RealEstateAgentImageUrl // Still used, even if not editable
+                    };
+            }
+        }
+
+        isLoading = false;
+    }
+
+    private async Task HandleValidSubmit()
+    {
+        successMessage = errorMessage = string.Empty;
+
+        var result = await realEstateAgentService.EditAgentProfile(Id, agentUpdateModel);
+
+        if (result.Success)
+        {
+            successMessage = "Profilen har uppdaterats.";
+        }
+        else
+        {
+            errorMessage = result.Message ?? "Ett fel uppstod vid uppdatering.";
+        }
+    }
+
+    private void GoBack()
+    {
+        NavigationManager.NavigateTo($"/users/profile/{Id}");
+    }
+}
