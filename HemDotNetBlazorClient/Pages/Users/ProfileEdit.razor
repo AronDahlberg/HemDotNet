@@ -5,6 +5,7 @@
 @inject IRealEstateAgentService realEstateAgentService
 @inject ProfileService profileService
 
+@*Author: Allan*@
 
 <h3 class="my-4">Redigera Profil</h3>
 
@@ -49,7 +50,6 @@ else
             <InputText class="form-control" @bind-Value="agentUpdateModel.RealEstateAgentPhoneNumber" />
         </div>
 
-        <!-- Profile Image Upload Section -->
         <div class="mb-3">
             <label class="form-label">Profilbild</label>
             <InputFile OnChange="HandleImageChange" class="form-control" />
@@ -81,6 +81,9 @@ else
 }
 
 @code {
+
+    // Author: Allan
+
     [Parameter] public string Id { get; set; }
 
     private RealEstateAgentUpdateDTO agentUpdateModel = new();
@@ -150,7 +153,6 @@ else
             }
         }
 
-        // Now proceed to update profile info
         var result = await realEstateAgentService.EditAgentProfile(Id, agentUpdateModel);
 
         if (result.Success)

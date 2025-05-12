@@ -113,16 +113,6 @@ namespace HemDotNetBlazorClient.Services
 
             try
             {
-                /*
-                await GetBearerToken();
-
-                // Read the stream content into a FileParameter
-                var fileName = "image" + Path.GetExtension(fileContent.Headers.ContentDisposition?.FileName ?? ".jpg");
-                var stream = await fileContent.ReadAsStreamAsync();
-                var mediaType = fileContent.Headers.ContentType?.MediaType;
-
-                var fileParameter = new FileParameter(stream, fileName, mediaType);
-                */
                 await GetBearerToken();
 
                 var formData = new MultipartFormDataContent();
@@ -147,10 +137,6 @@ namespace HemDotNetBlazorClient.Services
 
             return response;
         }
-
-
-
-
 
         // Allan
         public async Task<Response<RealEstateAgentDto>> UpdateAgentAgencyAsync(string agentId, int newAgencyId)
