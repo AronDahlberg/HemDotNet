@@ -88,7 +88,7 @@ namespace HemDotNetWebApi.Controllers
             var filteredAgents = await _realEstateAgentRepository.GetAllAsync();
 
             if (!string.IsNullOrWhiteSpace(municipality))
-                filteredAgents = filteredAgents.Where(a => a.RealEstateAgentAgency.RealEstateAgencyName.ToLower().Contains(municipality.ToLowerInvariant()));
+                filteredAgents = filteredAgents.Where(a => a.RealEstateAgentAgency.RealEstateAgencyMunicipality.ToLower().Contains(municipality.ToLowerInvariant()));
 
             if (!string.IsNullOrWhiteSpace(firstName))
                 filteredAgents = filteredAgents.Where(a => a.RealEstateAgentFirstName.ToLower().Contains(firstName.ToLowerInvariant()));
