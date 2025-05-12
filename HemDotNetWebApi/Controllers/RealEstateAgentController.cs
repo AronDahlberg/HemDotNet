@@ -156,7 +156,7 @@ namespace HemDotNetWebApi.Controllers
         [HttpPost("ProfilePicture")]
         [Consumes("multipart/form-data")]
         [Authorize]
-        public async Task<ActionResult<string>> UploadProfilePicture([FromForm] UploadAgentProfilePictureDto dto, IFormFile imageFile)
+        public async Task<ActionResult> UploadProfilePicture([FromForm] UploadAgentProfilePictureDto dto, IFormFile imageFile)
         {
             if (imageFile == null || imageFile.Length == 0)
             {
@@ -185,7 +185,7 @@ namespace HemDotNetWebApi.Controllers
             try
             {
                 var imageUrl = await _realEstateAgentRepository.UploadAgentProfilePictureAsync(dto.AgentId, imageFile);
-                return Ok(imageUrl);
+                return Ok();
             }
             catch (Exception)
             {

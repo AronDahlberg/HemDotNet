@@ -225,12 +225,12 @@ namespace HemDotNetBlazorClient.Services.Base
 
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task<string> UploadProfilePictureAsync(string agentId, FileParameter imageFile);
+        System.Threading.Tasks.Task ProfilePictureAsync(string agentId, FileParameter imageFile);
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task<string> UploadProfilePictureAsync(string agentId, FileParameter imageFile, System.Threading.CancellationToken cancellationToken);
+        System.Threading.Tasks.Task ProfilePictureAsync(string agentId, FileParameter imageFile, System.Threading.CancellationToken cancellationToken);
 
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
@@ -2104,15 +2104,15 @@ namespace HemDotNetBlazorClient.Services.Base
 
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual System.Threading.Tasks.Task<string> UploadProfilePictureAsync(string agentId, FileParameter imageFile)
+        public virtual System.Threading.Tasks.Task ProfilePictureAsync(string agentId, FileParameter imageFile)
         {
-            return UploadProfilePictureAsync(agentId, imageFile, System.Threading.CancellationToken.None);
+            return ProfilePictureAsync(agentId, imageFile, System.Threading.CancellationToken.None);
         }
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<string> UploadProfilePictureAsync(string agentId, FileParameter imageFile, System.Threading.CancellationToken cancellationToken)
+        public virtual async System.Threading.Tasks.Task ProfilePictureAsync(string agentId, FileParameter imageFile, System.Threading.CancellationToken cancellationToken)
         {
             var client_ = _httpClient;
             var disposeClient_ = false;
@@ -2143,12 +2143,11 @@ namespace HemDotNetBlazorClient.Services.Base
                     }
                     request_.Content = content_;
                     request_.Method = new System.Net.Http.HttpMethod("POST");
-                    request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("text/plain"));
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
-                    // Operation Path: "RealEstateAgent/upload-profile-picture"
-                    urlBuilder_.Append("RealEstateAgent/upload-profile-picture");
+                    // Operation Path: "RealEstateAgent/ProfilePicture"
+                    urlBuilder_.Append("RealEstateAgent/ProfilePicture");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -2175,12 +2174,7 @@ namespace HemDotNetBlazorClient.Services.Base
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 200)
                         {
-                            var objectResponse_ = await ReadObjectResponseAsync<string>(response_, headers_, cancellationToken).ConfigureAwait(false);
-                            if (objectResponse_.Object == null)
-                            {
-                                throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
-                            }
-                            return objectResponse_.Object;
+                            return;
                         }
                         else
                         {

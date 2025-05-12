@@ -1,5 +1,7 @@
 ﻿using Blazored.LocalStorage;
 using HemDotNetBlazorClient.Services.Base;
+using Microsoft.AspNetCore.Components.Forms;
+using System.Text.Json;
 
 namespace HemDotNetBlazorClient.Services
 {
@@ -105,24 +107,41 @@ namespace HemDotNetBlazorClient.Services
             return response;
         }
         // Allan
-        public async Task<Response<string>> UploadProfileImage(string userid, StreamContent fileContent)
+        public async Task<Response<string>> UploadProfileImage(string userId, StreamContent fileContent)
         {
             Response<string> response;
 
             try
             {
+                /*
+                await GetBearerToken();
+
+                // Read the stream content into a FileParameter
+                var fileName = "image" + Path.GetExtension(fileContent.Headers.ContentDisposition?.FileName ?? ".jpg");
+                var stream = await fileContent.ReadAsStreamAsync();
+                var mediaType = fileContent.Headers.ContentType?.MediaType;
+
+                var fileParameter = new FileParameter(stream, fileName, mediaType);
+                */
                 await GetBearerToken();
 
                 var formData = new MultipartFormDataContent();
 
-                formData.Add(new StringContent(userid), "MarketPropertyId");
+                formData.Add(new StringContent(userId.ToString()), "MarketPropertyId");
 
                 formData.Add(fileContent, "imageFile", "image" + Path.GetExtension(fileContent.Headers.ContentDisposition?.FileName ?? ".jpg"));
                 var fileParameter = new FileParameter(await fileContent.ReadAsStreamAsync(), "image.jpg", fileContent.Headers.ContentType?.MediaType);
-                var data = await _client.UploadProfilePictureAsync(userid, fileParameter);
+
+                Console.WriteLine("test");
+                // Call the generated client method
+                await _client.ProfilePictureAsync(userId, fileParameter);
+
+
+                Console.WriteLine("test2");
+
                 response = new Response<string>
                 {
-                    Data = data,
+                    Data = "Success",
                     Success = true
                 };
             }
@@ -133,6 +152,10 @@ namespace HemDotNetBlazorClient.Services
 
             return response;
         }
+
+
+
+
 
         // Allan
         public async Task<Response<RealEstateAgentDto>> UpdateAgentAgencyAsync(string agentId, int newAgencyId)
