@@ -1,13 +1,8 @@
-﻿@inject HttpClient httpClient
+﻿@using System.Globalization
+@inject HttpClient httpClient
 
 @* Author: Allan *@
 @* Additional css fixes/changes by Chris *@
-<style>
-    .image-container {
-        aspect-ratio: 5 / 3;
-    }
-</style>
-
 
 <style>
     .image-container {
@@ -16,6 +11,7 @@
         height: 100%;
         overflow: hidden;
         position: relative;
+        border-radius: 0.5rem 0 0 0.5rem;
     }
 
         .image-container img {
@@ -24,27 +20,80 @@
             height: 100%;
             display: block;
         }
+
+    .property-meta {
+        font-size: 0.9rem;
+        color: #6c757d;
+    }
+
+    .agency-logo {
+        max-height: 30px;
+    }
+
+    .agency-info {
+        font-size: 0.9rem;
+        color: #343a40;
+    }
+
+    .divider {
+        border-top: 1px solid #dee2e6;
+        margin-top: 1rem;
+        margin-bottom: 0.5rem;
+    }
 </style>
 
-<div class="card mb-3 w-75">
+<div class="card mb-3 shadow-sm w-100" style="max-width: 900px;">
     <div class="row g-0">
         <div class="col-md-4">
             @if (Property.Images?.Any() == true)
             {
-                <div class="image-container w-100 h-100 overflow-hidden position-relative">
-                    <img class="object-fit-cover img-fluid rounded-start d-block w-100 h-100" src="@($"{httpClient.BaseAddress}{Property.Images.First().PropertyImageUrl}")"
-                         alt="Property image">
+                <div class="image-container">
+                    <img src="@($"{httpClient.BaseAddress}{Property.Images.First().PropertyImageUrl}")" alt="Property image" />
                 </div>
             }
         </div>
-        <div class="col-md-8">
-            <div class="card-body">
-                <h5 class="card-title mb-1 text-primary">@Property.PropertyAddress, @Property.MunicipalityName</h5>
-                <p class="card-text mb-1"><strong>Pris:</strong> @Property.Price.ToString() kr</p>
-                <p class="card-text"><strong>Kategori: </strong>@GetPropertyCategoryDisplayName(Property.Category)</p>
-                <NavLink class="btn btn-primary mt-2" href="@($"/property/details/{@Property.MarketPropertyId}")">
+        <div class="col-md-8 d-flex flex-column justify-content-between p-3">
+            <div>
+                <h5 class="mb-1 text-primary">@Property.PropertyAddress, @Property.MunicipalityName</h5>
+                <div class="property-meta mb-2">
+                    <span>@Property.LivingArea.ToString("0.#") m²</span> ·
+                    <span>@Property.AmountOfRooms.ToString() rum</span> ·
+                    @if (Property.MonthlyFee > 0)
+                    {
+                        <span>@(Property.MonthlyFee.ToString("N0", customCulture)) kr/mån</span>
+                    }
+                    ·
+                    <span>
+                        @((decimal)Property.LivingArea > 0 ?
+                            Math.Round((decimal)Property.Price / (decimal)Property.LivingArea)
+                            .ToString("N0", customCulture) + " kr/m²" : "")
+                    </span>
+                </div>
+
+                <p class="mb-2"><strong>Pris:</strong> @Property.Price.ToString("N0") kr</p>
+                <p class="mb-2"><strong>Kategori:</strong> @GetPropertyCategoryDisplayName(Property.Category)</p>
+
+                @if (!string.IsNullOrWhiteSpace(Property.Description))
+                {
+                    <p class="text-muted" style="font-size: 0.9rem;">
+                        @(Property.Description.Length > 180 ? Property.Description.Substring(0, 180) + "..." : Property.Description)
+                    </p>
+                }
+            </div>
+            <div>
+                <NavLink class="btn btn-outline-primary mb-2" href="@($"/property/details/{Property.MarketPropertyId}")">
                     Mer information
                 </NavLink>
+
+                <div class="divider"></div>
+
+                <div class="d-flex justify-content-between align-items-center agency-info">
+                    <p class="mb-0">@Property.RealEstateAgencyName</p>
+                    @if (!string.IsNullOrEmpty(Property.RealEstateAgencyLogoUrl))
+                    {
+                        <img class="agency-logo" src="@($"{httpClient.BaseAddress}{Property.RealEstateAgencyLogoUrl}")" alt="Agency Logo" />
+                    }
+                </div>
             </div>
         </div>
     </div>
@@ -53,6 +102,14 @@
 @code {
     [Parameter]
     public PartialMarketPropertyDTO Property { get; set; }
+
+    private CultureInfo customCulture = (CultureInfo)CultureInfo.InvariantCulture.Clone();
+
+    // Allan
+    protected override async Task OnInitializedAsync()
+    {
+        customCulture.NumberFormat.NumberGroupSeparator = " ";
+    }
 
     // Allan
     private string GetPropertyCategoryDisplayName(PropertyCategory category)

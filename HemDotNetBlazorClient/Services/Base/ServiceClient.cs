@@ -2674,8 +2674,32 @@ namespace HemDotNetBlazorClient.Services.Base
         [Newtonsoft.Json.JsonProperty("price", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public double Price { get; set; }
 
+        [Newtonsoft.Json.JsonProperty("livingArea", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public double LivingArea { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("ancillaryArea", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public double AncillaryArea { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("lotArea", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public double LotArea { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("description", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string Description { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("amountOfRooms", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public int AmountOfRooms { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("monthlyFee", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public double MonthlyFee { get; set; }
+
         [Newtonsoft.Json.JsonProperty("propertyAddress", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string PropertyAddress { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("realEstateAgencyName", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string RealEstateAgencyName { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("realEstateAgencyLogoUrl", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string RealEstateAgencyLogoUrl { get; set; }
 
         [Newtonsoft.Json.JsonProperty("images", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.Collections.Generic.ICollection<PartialPropertyImageDTO> Images { get; set; }
