@@ -107,9 +107,9 @@ namespace HemDotNetBlazorClient.Services
             return response;
         }
         // Allan
-        public async Task<Response<string>> UploadProfileImage(string userId, StreamContent fileContent)
+        public async Task<Response<ProfileImageUrlDto>> UploadProfileImage(string userId, StreamContent fileContent)
         {
-            Response<string> response;
+            Response<ProfileImageUrlDto> response;
 
             try
             {
@@ -127,27 +127,22 @@ namespace HemDotNetBlazorClient.Services
 
                 var formData = new MultipartFormDataContent();
 
-                formData.Add(new StringContent(userId.ToString()), "MarketPropertyId");
+                formData.Add(new StringContent(userId.ToString()), "UserId");
 
                 formData.Add(fileContent, "imageFile", "image" + Path.GetExtension(fileContent.Headers.ContentDisposition?.FileName ?? ".jpg"));
                 var fileParameter = new FileParameter(await fileContent.ReadAsStreamAsync(), "image.jpg", fileContent.Headers.ContentType?.MediaType);
 
-                Console.WriteLine("test");
-                // Call the generated client method
-                await _client.ProfilePictureAsync(userId, fileParameter);
+                ProfileImageUrlDto dto = await _client.ProfilePictureAsync(userId, fileParameter);
 
-
-                Console.WriteLine("test2");
-
-                response = new Response<string>
+                response = new Response<ProfileImageUrlDto>
                 {
-                    Data = "Success",
+                    Data = dto,
                     Success = true
                 };
             }
             catch (ApiException ex)
             {
-                response = ConvertApiExceptions<string>(ex);
+                response = ConvertApiExceptions<ProfileImageUrlDto>(ex);
             }
 
             return response;

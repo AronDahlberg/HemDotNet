@@ -136,7 +136,7 @@ else
 
             if (uploadResponse?.Success == true)
             {
-                uploadedImageUrl = uploadResponse.Data;
+                uploadedImageUrl = uploadResponse.Data.ProfileImageUrl;
                 agentUpdateModel.RealEstateAgentImageUrl = uploadedImageUrl;
             }
             else
