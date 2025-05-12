@@ -148,6 +148,7 @@ namespace HemDotNetWebApi.Data
             var query = _context.MarketProperties
                 .Include(mp => mp.Municipality)
                 .Include(mp => mp.RealEstateAgent)
+                .ThenInclude(mp => mp.RealEstateAgentAgency)
                 .Include(mp => mp.Images)
                 .AsQueryable();
 
