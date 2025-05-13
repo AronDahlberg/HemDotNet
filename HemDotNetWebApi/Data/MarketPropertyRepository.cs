@@ -158,8 +158,7 @@ namespace HemDotNetWebApi.Data
             
             if (!string.IsNullOrEmpty(searchDto.Area))
             {
-                query = query.Where(mp => mp.PropertyAddress.Contains(searchDto.Area)
-                                       || mp.Municipality.MunicipalityName.Contains(searchDto.Area));
+                query = query.Where(mp => mp.Municipality.MunicipalityName.Contains(searchDto.Area));
             }
             
 

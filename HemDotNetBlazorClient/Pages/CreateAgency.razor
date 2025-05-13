@@ -202,11 +202,6 @@
     }
 
 
-    [Parameter]
-    public SearchModel SearchModel { get; set; } = new SearchModel();
-
-    [Parameter]
-    public EventCallback<SearchModel> OnSearch { get; set; }
 
     private string searchTerm;
     private List<string> suggestions = new();
