@@ -43,6 +43,8 @@ namespace HemDotNetBlazorClient
             builder.Services.AddScoped<IRealEstateAgencyService, RealEstateAgencyService>();
             builder.Services.AddScoped<IPropertyImageService, PropertyImageService>();
 
+            builder.Services.AddSingleton<ProfileService>();
+
             // Load configuration
             builder.Services.AddScoped<IConfiguration>(_ => builder.Configuration);
 

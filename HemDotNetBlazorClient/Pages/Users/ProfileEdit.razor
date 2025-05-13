@@ -1,0 +1,240 @@
+﻿@page "/users/profile/edit/{Id}"
+@inject IRealEstateAgentService realEstateAgentService
+@inject NavigationManager NavigationManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject IRealEstateAgentService realEstateAgentService
+@inject ProfileService profileService
+@inject HttpClient httpClient
+
+@*Author: Allan*@
+
+@if (isLoading)
+{
+    <div class="d-flex flex-column align-items-center justify-content-center my-5 py-5">
+        <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
+            <span class="visually-hidden">Laddar...</span>
+        </div>
+        <p class="mt-4 text-muted fs-5">Laddar dina uppgifter...</p>
+    </div>
+}
+else if (!isCurrentUser)
+{
+    <div class="alert alert-danger d-flex align-items-center" role="alert">
+        <i class="bi bi-exclamation-triangle-fill me-2 fs-4"></i>
+        <div>
+            <strong>Åtkomst nekad:</strong> Du kan endast redigera din egen profil.
+        </div>
+    </div>
+}
+else
+{
+    <div class="container w-75 mt-5">
+    <div class="card border-0 shadow-sm">
+        <div class="card-header bg-primary text-white py-3">
+            <h4 class="mb-0"><i class="bi bi-person-circle me-2"></i>Redigera din profil</h4>
+        </div>
+        <div class="card-body p-4">
+            <EditForm Model="agentUpdateModel" OnValidSubmit="HandleValidSubmit">
+                <DataAnnotationsValidator />
+
+                @if (!string.IsNullOrEmpty(errorMessage))
+                {
+                    <div class="alert alert-danger d-flex align-items-center mb-4" role="alert">
+                        <i class="bi bi-exclamation-circle-fill me-2"></i>
+                        <div>@errorMessage</div>
+                    </div>
+                }
+
+                @if (!string.IsNullOrEmpty(successMessage))
+                {
+                    <div class="alert alert-success d-flex align-items-center mb-4" role="alert">
+                        <i class="bi bi-check-circle-fill me-2"></i>
+                        <div>@successMessage</div>
+                    </div>
+                }
+
+                <div class="row">
+                    <div class="col-md-4 mb-4 text-center">
+                        <div class="profile-image-container mb-3">
+                            @if (!string.IsNullOrEmpty(uploadedImageUrl))
+                            {
+                                <img src="@($"{httpClient.BaseAddress}{uploadedImageUrl}")" alt="Profile Image" class="img-thumbnail rounded-circle shadow-sm" style="width: 180px; height: 180px; object-fit: cover;" />
+                            }
+                            else
+                            {
+                                <div class="placeholder-image rounded-circle bg-light d-flex align-items-center justify-content-center shadow-sm" style="width: 180px; height: 180px; margin: 0 auto;">
+                                    <i class="bi bi-person text-secondary" style="font-size: 4rem;"></i>
+                                </div>
+                            }
+                        </div>
+                        <div class="mb-3">
+                            <label for="profileImage" class="form-label fw-bold">Profilbild</label>
+                            <div class="input-group">
+                                <InputFile id="profileImage" OnChange="HandleImageChange" class="form-control" />
+                                <label class="input-group-text" for="profileImage">
+                                    <i class="bi bi-upload"></i>
+                                </label>
+                            </div>
+                            <div class="form-text">Rekommenderad storlek: 500x500 px</div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-8">
+                        <ValidationSummary class="text-danger mb-4" />
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Förnamn</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-person"></i></span>
+                                    <InputText class="form-control" @bind-Value="agentUpdateModel.RealEstateAgentFirstName" placeholder="Ange förnamn" />
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Efternamn</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-person"></i></span>
+                                    <InputText class="form-control" @bind-Value="agentUpdateModel.RealEstateAgentLastName" placeholder="Ange efternamn" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">E-post</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+                                <InputText class="form-control" @bind-Value="agentUpdateModel.RealEstateAgentEmail" placeholder="Ange e-postadress" />
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">Telefonnummer</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-telephone"></i></span>
+                                <InputText class="form-control" @bind-Value="agentUpdateModel.RealEstateAgentPhoneNumber" placeholder="Ange telefonnummer" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <hr class="my-4" />
+
+                <div class="d-flex justify-content-end gap-2">
+                    <button type="button" class="btn btn-outline-secondary px-4" @onclick="GoBack">
+                        <i class="bi bi-x-lg me-2"></i>Avbryt
+                    </button>
+                    <button type="submit" class="btn btn-primary px-4">
+                        <i class="bi bi-check-lg me-2"></i>Spara ändringar
+                    </button>
+                </div>
+            </EditForm>
+        </div>
+    </div>
+    </div>
+}
+
+@code {
+
+    // Author: Allan
+
+    [Parameter] public string Id { get; set; }
+
+    private RealEstateAgentUpdateDTO agentUpdateModel = new();
+    private bool isLoading = true;
+    private bool isCurrentUser = false;
+    private string successMessage;
+    private string errorMessage;
+    private string uploadedImageUrl;
+
+    private IBrowserFile profileImageFile;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        var response = await realEstateAgentService.GetAgentByIdAsync(Id);
+
+        if (response?.Success == true)
+        {
+            var agent = response.Data;
+
+            var userId = user.FindFirst("uid")?.Value;
+
+            isCurrentUser = user.Identity?.IsAuthenticated == true &&
+                            userId == agent.Id;
+
+            if (isCurrentUser)
+            {
+                agentUpdateModel = new RealEstateAgentUpdateDTO
+                    {
+                        RealEstateAgentFirstName = agent.RealEstateAgentFirstName,
+                        RealEstateAgentLastName = agent.RealEstateAgentLastName,
+                        RealEstateAgentEmail = agent.RealEstateAgentEmail,
+                        RealEstateAgentPhoneNumber = agent.RealEstateAgentPhoneNumber,
+                        RealEstateAgentImageUrl = agent.RealEstateAgentImageUrl
+                    };
+
+                uploadedImageUrl = agent.RealEstateAgentImageUrl;
+            }
+        }
+
+        isLoading = false;
+    }
+
+    private async Task HandleValidSubmit()
+    {
+        successMessage = errorMessage = string.Empty;
+
+        if (profileImageFile != null)
+        {
+
+            string extension = Path.GetExtension(profileImageFile.Name).ToLowerInvariant();
+            if (extension != ".jpg" && extension != ".jpeg" && extension != ".png")
+            {
+                errorMessage = "Endast JPG-, JPEG- och PNG-filer är tillåtna";
+                return;
+            }
+
+            var fileContent = new StreamContent(profileImageFile.OpenReadStream(5 * 1024 * 1024));
+            fileContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(profileImageFile.ContentType);
+
+            var uploadResponse = await realEstateAgentService.UploadProfileImage(Id, fileContent);
+
+            if (uploadResponse?.Success == true)
+            {
+                uploadedImageUrl = uploadResponse.Data.ProfileImageUrl;
+                agentUpdateModel.RealEstateAgentImageUrl = uploadedImageUrl;
+
+                // update state service, this will notify the navbar
+                profileService.UpdateProfilePicture(uploadedImageUrl);
+            }
+            else
+            {
+                errorMessage = uploadResponse?.Message ?? "Fel vid uppladdning av bild.";
+                return;
+            }
+        }
+
+        var result = await realEstateAgentService.EditAgentProfile(Id, agentUpdateModel);
+
+        if (result.Success)
+        {
+            successMessage = "Profilen har uppdaterats.";
+        }
+        else
+        {
+            errorMessage = result.Message ?? "Ett fel uppstod vid uppdatering.";
+        }
+    }
+
+    private void GoBack()
+    {
+        NavigationManager.NavigateTo($"/users/profile/{Id}");
+    }
+
+    private void HandleImageChange(InputFileChangeEventArgs e)
+    {
+        profileImageFile = e.File;
+    }
+}

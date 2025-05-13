@@ -146,11 +146,13 @@ else
         var user = authState.User;
         var response = await realEstateAgentService.GetAgentByIdAsync(Id);
 
+        var userId = user.FindFirst("uid")?.Value;
+
         if (response?.Success == true)
         {
             agent = response.Data;
             isCurrentUser = user.Identity?.IsAuthenticated == true &&
-                           user.Identity.Name == agent.RealEstateAgentEmail;
+                           userId == agent.Id;
 
             await LoadAgentProperties();
         }

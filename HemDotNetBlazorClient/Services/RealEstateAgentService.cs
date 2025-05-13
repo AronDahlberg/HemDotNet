@@ -1,5 +1,7 @@
 ﻿using Blazored.LocalStorage;
 using HemDotNetBlazorClient.Services.Base;
+using Microsoft.AspNetCore.Components.Forms;
+using System.Text.Json;
 
 namespace HemDotNetBlazorClient.Services
 {
@@ -77,6 +79,60 @@ namespace HemDotNetBlazorClient.Services
             catch (ApiException ex)
             {
                 response = ConvertApiExceptions<string>(ex);
+            }
+
+            return response;
+        }
+
+        // Allan
+        public async Task<Response<bool>> EditAgentProfile(string agentid, RealEstateAgentUpdateDTO dto)
+        {
+            Response<bool> response;
+
+            try
+            {
+
+                var data = await _client.RealEstateAgentPUTAsync(agentid, dto);
+                response = new Response<bool>
+                {
+                    Data = true,
+                    Success = true
+                };
+            }
+            catch (ApiException ex)
+            {
+                response = ConvertApiExceptions<bool>(ex);
+            }
+
+            return response;
+        }
+        // Allan
+        public async Task<Response<ProfileImageUrlDto>> UploadProfileImage(string userId, StreamContent fileContent)
+        {
+            Response<ProfileImageUrlDto> response;
+
+            try
+            {
+                await GetBearerToken();
+
+                var formData = new MultipartFormDataContent();
+
+                formData.Add(new StringContent(userId.ToString()), "UserId");
+
+                formData.Add(fileContent, "imageFile", "image" + Path.GetExtension(fileContent.Headers.ContentDisposition?.FileName ?? ".jpg"));
+                var fileParameter = new FileParameter(await fileContent.ReadAsStreamAsync(), "image.jpg", fileContent.Headers.ContentType?.MediaType);
+
+                ProfileImageUrlDto dto = await _client.ProfilePictureAsync(userId, fileParameter);
+
+                response = new Response<ProfileImageUrlDto>
+                {
+                    Data = dto,
+                    Success = true
+                };
+            }
+            catch (ApiException ex)
+            {
+                response = ConvertApiExceptions<ProfileImageUrlDto>(ex);
             }
 
             return response;
