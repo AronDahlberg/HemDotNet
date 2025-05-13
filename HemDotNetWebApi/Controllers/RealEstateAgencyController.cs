@@ -79,7 +79,7 @@ namespace HemDotNetWebApi.Controllers
             try
             {
                 var imageUrl = await _realEstateAgencyRepository.UploadAgencyImageAsync(agencyId, imageFile);
-                var imageUrlDto = new ProfileImageUrlDto() { profileImageUrl = imageUrl };
+                var imageUrlDto = new AgencyImageUrlDto() { AgencyImageUrl = imageUrl };
 
                 return Ok(imageUrlDto);
             }

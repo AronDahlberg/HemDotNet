@@ -37,23 +37,24 @@ namespace HemDotNetBlazorClient.Services
         }
 
         // Allan
-        public async Task<Response<bool>> CreateAgency(AgencyCreateDto dto)
+        public async Task<Response<int>> CreateAgency(AgencyCreateDto dto)
         {
-            Response<bool> response;
+            Response<int> response;
 
             try
             {
+                await GetBearerToken();
 
                 var data = await _client.CreateAgencyAsync(dto);
-                response = new Response<bool>
+                response = new Response<int>
                 {
-                    Data = true,
+                    Data = data,
                     Success = true
                 };
             }
             catch (ApiException ex)
             {
-                response = ConvertApiExceptions<bool>(ex);
+                response = ConvertApiExceptions<int>(ex);
             }
 
             return response;

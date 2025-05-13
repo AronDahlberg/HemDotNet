@@ -133,6 +133,18 @@
     {
         successMessage = errorMessage = string.Empty;
 
+        var result = await realEstateAgencyService.CreateAgency(agencyModel);
+
+        if (result?.Success == true)
+        {
+            successMessage = "Mäklarbyrån har skapats!";
+        }
+        else
+        {
+            errorMessage = result?.Message ?? "Ett fel uppstod vid skapandet.";
+            return;
+        }
+
         if (logoFile != null)
         {
             string extension = Path.GetExtension(logoFile.Name).ToLowerInvariant();
@@ -145,12 +157,11 @@
             var fileContent = new StreamContent(logoFile.OpenReadStream(5 * 1024 * 1024));
             fileContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(logoFile.ContentType);
 
-            var uploadResponse = await realEstateAgencyService.UploadAgencyImage(0, fileContent); // 0 or -1 if not yet created
+            var uploadResponse = await realEstateAgencyService.UploadAgencyImage(result.Data, fileContent);
 
             if (uploadResponse?.Success == true)
             {
-                uploadedImageUrl = uploadResponse.Data.AgencyImageUrl;
-                agencyModel.RealEstateAgencyLogoUrl = uploadedImageUrl;
+                NavigationManager.NavigateTo("/");
             }
             else
             {
@@ -159,17 +170,6 @@
             }
         }
 
-        var result = await realEstateAgencyService.CreateAgency(agencyModel);
-
-        if (result?.Success == true)
-        {
-            successMessage = "Mäklarbyrån har skapats!";
-            NavigationManager.NavigateTo("/agencies"); // or wherever the list is
-        }
-        else
-        {
-            errorMessage = result?.Message ?? "Ett fel uppstod vid skapandet.";
-        }
     }
 
     // Allan
@@ -181,6 +181,6 @@
     // Allan
     private void GoBack()
     {
-        NavigationManager.NavigateTo("/agencies"); // adjust if you have a list or dashboard
+        NavigationManager.NavigateTo("/agencies");
     }
 }
