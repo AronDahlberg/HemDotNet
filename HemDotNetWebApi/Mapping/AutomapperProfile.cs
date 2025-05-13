@@ -9,12 +9,7 @@ namespace HemDotNetWebApi.Mapping
     {
         public AutomapperProfile()
         {
-            // Allan
-            CreateMap<RealEstateAgency, AgencyDto>()
-            .ForMember(dest => dest.NumberOfAgents,
-                       opt => opt.MapFrom(src => src.RealEstateAgencyAgents != null
-                                                 ? src.RealEstateAgencyAgents.Count
-                                                 : 0));
+
 
             // Allan
             CreateMap<MarketPropertyUpdateDto, MarketProperty>()
@@ -127,9 +122,18 @@ namespace HemDotNetWebApi.Mapping
             .ForMember(dest => dest.PropertyIds,
                 opt => opt.MapFrom(src => src.RealEstateAgentProperties.Select(p => p.MarketPropertyId)));
 
-
+            // Allan
             CreateMap<RealEstateAgency, AgencyNameDto>()
                 .ForMember(dest => dest.AgencyName, opt => opt.MapFrom(src => src.RealEstateAgencyName));
+
+
+            // Allan
+            // for this to work, one must include the agents when getting the agencies in the db query
+            CreateMap<RealEstateAgency, AgencyDto>()
+            .ForMember(dest => dest.NumberOfAgents,
+                       opt => opt.MapFrom(src => src.RealEstateAgencyAgents != null
+                                                 ? src.RealEstateAgencyAgents.Count
+                                                 : 0));
         }
     }
 }

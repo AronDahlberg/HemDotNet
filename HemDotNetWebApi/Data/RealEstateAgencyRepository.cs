@@ -20,7 +20,7 @@ namespace HemDotNetWebApi.Data
         // Allan
         public async Task<IEnumerable<RealEstateAgency>> GetAllAsync()
         {
-            return await _context.RealEstateAgencies.ToListAsync();
+            return await _context.RealEstateAgencies.Include(a => a.RealEstateAgencyAgents).ToListAsync();
         }
 
         public async Task<bool> DeleteAgency(int id)
