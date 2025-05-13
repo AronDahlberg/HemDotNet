@@ -47,5 +47,18 @@ namespace HemDotNetWebApi.Controllers
 
             return Ok(agencyDtos);
         }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteAgency(int id)
+        {
+            var success = await _realEstateAgencyRepository.DeleteAgency(id);
+
+            if (!success)
+                return NotFound($"Ingen mäklarbyrå med ID {id} hittades");
+
+            return NoContent();
+        }
+
+
     }
 }

@@ -28,12 +28,12 @@ namespace HemDotNetWebApi.Data
             var agency = await _context.RealEstateAgencies.FindAsync(id);
             if (agency == null)
             {
-                return false; // Not found
+                return false;
             }
 
             _context.RealEstateAgencies.Remove(agency);
             await _context.SaveChangesAsync();
-            return true; // Successfully deleted
+            return true;
         }
     }
 }

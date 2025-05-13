@@ -6,5 +6,6 @@ namespace HemDotNetWebApi.Data
     {
         // Allan
         Task<IEnumerable<RealEstateAgency>> GetAllAsync();
+        Task<bool> DeleteAgency(int id);
     }
 }
