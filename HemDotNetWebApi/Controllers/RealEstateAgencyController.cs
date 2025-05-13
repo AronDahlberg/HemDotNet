@@ -33,5 +33,18 @@ namespace HemDotNetWebApi.Controllers
 
             return Ok(agencyDtos);
         }
+
+        [HttpGet("PartialAgencies")]
+        public async Task<ActionResult<List<AgencyNameDto>>> GetPartialAgencies()
+        {
+            //var agencies = await _realEstateAgencyRepository.GetAllAsync();
+
+            //if (agencies == null || !agencies.Any())
+            //    return NotFound("Inga mäklarbyråer hittades");
+
+            //var agencyDtos = _mapper.Map<List<AgencyNameDto>>(agencies);
+
+            //return Ok(agencyDtos);
+        }
     }
 }

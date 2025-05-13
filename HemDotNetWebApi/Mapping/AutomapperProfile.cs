@@ -10,6 +10,13 @@ namespace HemDotNetWebApi.Mapping
         public AutomapperProfile()
         {
             // Allan
+            CreateMap<RealEstateAgency, AgencyDto>()
+            .ForMember(dest => dest.NumberOfAgents,
+                       opt => opt.MapFrom(src => src.RealEstateAgencyAgents != null
+                                                 ? src.RealEstateAgencyAgents.Count
+                                                 : 0));
+
+            // Allan
             CreateMap<MarketPropertyUpdateDto, MarketProperty>()
             .ForMember(dest => dest.Municipality, opt => opt.MapFrom(src =>
                 new Municipality { MunicipalityId = src.MunicipalityId }))
