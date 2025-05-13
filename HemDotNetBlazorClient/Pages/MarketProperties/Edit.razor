@@ -2,6 +2,7 @@
 @inject IMarketPropertyService propertyService
 @inject IMunicipalityService municipalityService
 @inject NavigationManager navigationManager
+@inject ApiAuthenticationStateProvider authStateProvider
 
 @if (!string.IsNullOrEmpty(errorMessage))
 {
@@ -9,92 +10,110 @@
 }
 @if (propertyUpdateData != null)
 {
-    <div class="hero-section container-fluid col-xxl-8 bg-light text-dark py-5">
-        <div class="row justify-content-center">
-            <div class="col-md-6 col-lg-5">
-                <div class="card shadow">
-                    <div class="card-header bg-primary text-white">
-                        <h3 class="mb-0">Redigera bostad</h3>
-                    </div>
-                    <div class="card-body">
-                        <EditForm Model="@propertyUpdateData" OnValidSubmit="@HandleValidSubmit">
-                            <DataAnnotationsValidator />
-                            <ValidationSummary />
-                            <div class="d-flex gap-3">
-                                <div class="mb-3 flex-fill">
-                                    <label class="form-label">Kommun</label>
-                                    <select class="form-select shadow-sm border-primary rounded-3 fw-semibold text-dark" @bind="propertyUpdateData.MunicipalityId">
-                                        <option value="">Välj kommun</option>
-                                        @foreach (var municipality in allMunicipalities)
-                                        {
-                                            <option value="@municipality.MunicipalityId">@municipality.Name</option>
-                                        }
-                                    </select>
+    <AuthorizeView Context="authContext">
+        <Authorized>
+            @if (agentId == @propertyUpdateData.RealEstateAgentId)
+            {
+                <div class="hero-section container-fluid col-xxl-8 bg-light text-dark py-5">
+                    <div class="row justify-content-center">
+                        <div class="col-md-6 col-lg-5">
+                            <div class="card shadow">
+                                <div class="card-header bg-primary text-white">
+                                    <h3 class="mb-0">Redigera bostad</h3>
                                 </div>
+                                <div class="card-body">
+                                    <EditForm Model="@propertyUpdateData" OnValidSubmit="@HandleValidSubmit">
+                                        <DataAnnotationsValidator />
+                                        <ValidationSummary />
+                                        <div class="d-flex gap-3">
+                                            <div class="mb-3 flex-fill">
+                                                <label class="form-label">Kommun</label>
+                                                <select class="form-select shadow-sm border-primary rounded-3 fw-semibold text-dark" @bind="propertyUpdateData.MunicipalityId">
+                                                    <option value="">Välj kommun</option>
+                                                    @foreach (var municipality in allMunicipalities)
+                                                    {
+                                                        <option value="@municipality.MunicipalityId">@municipality.Name</option>
+                                                    }
+                                                </select>
+                                            </div>
 
-                                <div class="mb-3 flex-fill">
-                                    <label class="form-label">Typ av bostad</label>
-                                    <InputSelect class="form-select shadow-sm border-primary rounded-3 fw-semibold text-dark"
-                                                 @bind-Value="propertyUpdateData.Category">
-                                        @foreach (PropertyCategory category in Enum.GetValues(typeof(PropertyCategory)))
-                                        {
-                                            <option value="@category">@GetPropertyCategoryDisplayName(category)</option>
-                                        }
-                                    </InputSelect>
+                                            <div class="mb-3 flex-fill">
+                                                <label class="form-label">Typ av bostad</label>
+                                                <InputSelect class="form-select shadow-sm border-primary rounded-3 fw-semibold text-dark"
+                                                             @bind-Value="propertyUpdateData.Category">
+                                                    @foreach (PropertyCategory category in Enum.GetValues(typeof(PropertyCategory)))
+                                                    {
+                                                        <option value="@category">@GetPropertyCategoryDisplayName(category)</option>
+                                                    }
+                                                </InputSelect>
+                                            </div>
+                                        </div>
+
+                                        <div class="row mb-3">
+                                            <div class="col-md-6 mt-3">
+                                                <label class="form-label">Pris</label>
+                                                <InputNumber class="form-control shadow-sm border-primary rounded-3 fw-semibold text-dark" @bind-Value="propertyUpdateData.Price" />
+                                            </div>
+                                            <div class="col-md-6 mt-3">
+                                                <label class="form-label">Adress</label>
+                                                <InputText class="form-control shadow-sm border-primary rounded-3 fw-semibold text-dark" @bind-Value="propertyUpdateData.PropertyAddress" />
+                                            </div>
+                                            <div class="col-md-6 mt-3">
+                                                <label class="form-label">Boarea (m²)</label>
+                                                <InputNumber class="form-control shadow-sm border-primary rounded-3 fw-semibold text-dark" @bind-Value="propertyUpdateData.LivingArea" />
+                                            </div>
+                                            <div class="col-md-6 mt-3">
+                                                <label class="form-label">Tomtarea (m²)</label>
+                                                <InputNumber class="form-control shadow-sm border-primary rounded-3 fw-semibold text-dark" @bind-Value="propertyUpdateData.LotArea" />
+                                            </div>
+                                            <div class="col-md-6 mt-3">
+                                                <label class="form-label">Biarea (m²)</label>
+                                                <InputNumber class="form-control shadow-sm border-primary rounded-3 fw-semibold text-dark" @bind-Value="propertyUpdateData.AncillaryArea" />
+                                            </div>
+                                            <div class="col-md-6 mt-3">
+                                                <label class="form-label">Antal rum</label>
+                                                <InputNumber class="form-control shadow-sm border-primary rounded-3 fw-semibold text-dark" @bind-Value="propertyUpdateData.AmountOfRooms" />
+                                            </div>
+                                            <div class="col-md-6 mt-3">
+                                                <label class="form-label">Månadsavgift (kr)</label>
+                                                <InputNumber class="form-control shadow-sm border-primary rounded-3 fw-semibold text-dark" @bind-Value="propertyUpdateData.MonthlyFee" />
+                                            </div>
+                                            <div class="col-md-6 mt-3">
+                                                <label class="form-label">Årlig driftkostnad (kr)</label>
+                                                <InputNumber class="form-control shadow-sm border-primary rounded-3 fw-semibold text-dark" @bind-Value="propertyUpdateData.YearlyMaintenanceCost" />
+                                            </div>
+                                            <div class="col-md-6 mt-3">
+                                                <label class="form-label">Byggnadsår</label>
+                                                <InputNumber class="form-control shadow-sm border-primary rounded-3 fw-semibold text-dark" @bind-Value="propertyUpdateData.ConstructionYear" />
+                                            </div>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label class="form-label">Beskrivning</label>
+                                            <InputTextArea class="form-control shadow-sm border-primary rounded-3 fw-semibold text-dark" @bind-Value="propertyUpdateData.Description" />
+                                        </div>
+
+                                        <button type="submit" class="btn btn-primary w-100 mt-3">Spara ändringar</button>
+                                    </EditForm>
                                 </div>
                             </div>
-
-                            <div class="row mb-3">
-                                <div class="col-md-6 mt-3">
-                                    <label class="form-label">Pris</label>
-                                    <InputNumber class="form-control shadow-sm border-primary rounded-3 fw-semibold text-dark" @bind-Value="propertyUpdateData.Price" />
-                                </div>
-                                <div class="col-md-6 mt-3">
-                                    <label class="form-label">Adress</label>
-                                    <InputText class="form-control shadow-sm border-primary rounded-3 fw-semibold text-dark" @bind-Value="propertyUpdateData.PropertyAddress" />
-                                </div>
-                                <div class="col-md-6 mt-3">
-                                    <label class="form-label">Boarea (m²)</label>
-                                    <InputNumber class="form-control shadow-sm border-primary rounded-3 fw-semibold text-dark" @bind-Value="propertyUpdateData.LivingArea" />
-                                </div>
-                                <div class="col-md-6 mt-3">
-                                    <label class="form-label">Tomtarea (m²)</label>
-                                    <InputNumber class="form-control shadow-sm border-primary rounded-3 fw-semibold text-dark" @bind-Value="propertyUpdateData.LotArea" />
-                                </div>
-                                <div class="col-md-6 mt-3">
-                                    <label class="form-label">Biarea (m²)</label>
-                                    <InputNumber class="form-control shadow-sm border-primary rounded-3 fw-semibold text-dark" @bind-Value="propertyUpdateData.AncillaryArea" />
-                                </div>
-                                <div class="col-md-6 mt-3">
-                                    <label class="form-label">Antal rum</label>
-                                    <InputNumber class="form-control shadow-sm border-primary rounded-3 fw-semibold text-dark" @bind-Value="propertyUpdateData.AmountOfRooms" />
-                                </div>
-                                <div class="col-md-6 mt-3">
-                                    <label class="form-label">Månadsavgift (kr)</label>
-                                    <InputNumber class="form-control shadow-sm border-primary rounded-3 fw-semibold text-dark" @bind-Value="propertyUpdateData.MonthlyFee" />
-                                </div>
-                                <div class="col-md-6 mt-3">
-                                    <label class="form-label">Årlig driftkostnad (kr)</label>
-                                    <InputNumber class="form-control shadow-sm border-primary rounded-3 fw-semibold text-dark" @bind-Value="propertyUpdateData.YearlyMaintenanceCost" />
-                                </div>
-                                <div class="col-md-6 mt-3">
-                                    <label class="form-label">Byggnadsår</label>
-                                    <InputNumber class="form-control shadow-sm border-primary rounded-3 fw-semibold text-dark" @bind-Value="propertyUpdateData.ConstructionYear" />
-                                </div>
-                            </div>
-
-                            <div class="mb-3">
-                                <label class="form-label">Beskrivning</label>
-                                <InputTextArea class="form-control shadow-sm border-primary rounded-3 fw-semibold text-dark" @bind-Value="propertyUpdateData.Description" />
-                            </div>
-
-                            <button type="submit" class="btn btn-primary w-100 mt-3">Spara ändringar</button>
-                        </EditForm>
+                        </div>
                     </div>
                 </div>
+            }
+            else
+            {
+                <div class="alert alert-warning mt-4" role="alert">
+                    Du har inte behörighet att redigera denna bostad.
+                </div>
+            }
+        </Authorized>
+        <NotAuthorized>
+            <div class="alert alert-warning mt-4" role="alert">
+                Du måste vara inloggad för att se denna sida.
             </div>
-        </div>
-    </div>
+        </NotAuthorized>
+    </AuthorizeView>
 }
 else
 {
@@ -106,10 +125,17 @@ else
 
     private MarketPropertyUpdateDto propertyUpdateData;
     private List<MunicipalityDto> allMunicipalities = new();
-    private string errorMessage;
+    private string? errorMessage;
+    private string? agentId;
 
     protected override async Task OnInitializedAsync()
     {
+        var authState = await authStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        var userId = user.FindFirst("uid")?.Value;
+        agentId = userId;
+
         var municipalityResponse = await municipalityService.GetAllMunicipalities();
         if (municipalityResponse.Success && municipalityResponse.Data is not null)
         {

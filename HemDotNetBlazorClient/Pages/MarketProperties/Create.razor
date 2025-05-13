@@ -142,7 +142,7 @@
 @code {
     private List<MunicipalityDto> allMunicipalities = new();
     private MarketPropertyCreateDto NewMarketProperty = new();
-    private string errorMessage;
+    private string? errorMessage;
     private Response<int> response = new Response<int> { Success = true };
 
     protected override async Task OnInitializedAsync()
