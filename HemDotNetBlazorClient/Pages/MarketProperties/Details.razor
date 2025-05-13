@@ -193,7 +193,7 @@ else
                                         <div class="col-6">
                                             <div class="p-2">
                                                 <strong>
-                                                    <p>@marketProperty.Category</p>
+                                                    <p>@GetPropertyCategoryDisplayName(@marketProperty.Category)</p>
                                                     <p>@marketProperty.AmountOfRooms rum</p>
                                                     <p>@marketProperty.LivingArea m²</p>
                                                     <p>@marketProperty.AncillaryArea m²</p>
@@ -277,4 +277,15 @@ else
         showEmail = !showEmail;
     }
 
+    private string GetPropertyCategoryDisplayName(PropertyCategory category)
+    {
+        return category switch
+        {
+            PropertyCategory.Villa => "Villa",
+            PropertyCategory.CondominiumApartment => "Lägenhet",
+            PropertyCategory.CondominiumTownhouse => "Radhus",
+            PropertyCategory.VacationHome => "Fritidshus",
+            _ => category.ToString()
+        };
+    }
 }
