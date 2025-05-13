@@ -1,7 +1,9 @@
-﻿@page "/agencies/create"
+﻿@page "/admin/create-agency"
 @inject IRealEstateAgencyService realEstateAgencyService
 @inject NavigationManager NavigationManager
 @inject HttpClient httpClient
+
+@*Author: Allan*@
 
 @if (isLoading)
 {
@@ -99,4 +101,76 @@ else
             </div>
         </div>
     </div>
+}
+
+@code {
+    private AgencyCreateDto agencyModel = new();
+    private IBrowserFile logoFile;
+    private string uploadedImageUrl;
+    private string successMessage;
+    private string errorMessage;
+    private bool isLoading = true;
+
+    // Allan
+    protected override Task OnInitializedAsync()
+    {
+        isLoading = false;
+        return Task.CompletedTask;
+    }
+
+    // Allan
+    private async Task HandleValidSubmit()
+    {
+        successMessage = errorMessage = string.Empty;
+
+        if (logoFile != null)
+        {
+            string extension = Path.GetExtension(logoFile.Name).ToLowerInvariant();
+            if (extension != ".jpg" && extension != ".jpeg" && extension != ".png")
+            {
+                errorMessage = "Endast JPG-, JPEG- och PNG-filer är tillåtna";
+                return;
+            }
+
+            var fileContent = new StreamContent(logoFile.OpenReadStream(5 * 1024 * 1024));
+            fileContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(logoFile.ContentType);
+
+            var uploadResponse = await realEstateAgencyService.UploadAgencyImage(0, fileContent); // 0 or -1 if not yet created
+
+            if (uploadResponse?.Success == true)
+            {
+                uploadedImageUrl = uploadResponse.Data.AgencyImageUrl;
+                agencyModel.RealEstateAgencyLogoUrl = uploadedImageUrl;
+            }
+            else
+            {
+                errorMessage = uploadResponse?.Message ?? "Fel vid uppladdning av logotyp.";
+                return;
+            }
+        }
+
+        var result = await realEstateAgencyService.CreateAgency(agencyModel);
+
+        if (result?.Success == true)
+        {
+            successMessage = "Mäklarbyrån har skapats!";
+            NavigationManager.NavigateTo("/agencies"); // or wherever the list is
+        }
+        else
+        {
+            errorMessage = result?.Message ?? "Ett fel uppstod vid skapandet.";
+        }
+    }
+
+    // Allan
+    private void HandleImageChange(InputFileChangeEventArgs e)
+    {
+        logoFile = e.File;
+    }
+
+    // Allan
+    private void GoBack()
+    {
+        NavigationManager.NavigateTo("/agencies"); // adjust if you have a list or dashboard
+    }
 }
