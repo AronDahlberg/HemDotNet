@@ -38,8 +38,8 @@ namespace HemDotNetWebApi.Controllers
         }
 
         // Allan
+        [HttpPost("CreateAgency")]
         [Authorize(Roles = ApiRoles.Administrator)]
-        [HttpPost]
         public async Task<ActionResult<int>> CreateAgency([FromBody] AgencyCreateDto agencyCreateDto)
         {
             try
@@ -85,7 +85,7 @@ namespace HemDotNetWebApi.Controllers
             }
             catch (Exception)
             {
-                return StatusCode(500, "An error occurred while uploading the profile picture.");
+                return StatusCode(500, "An error occurred while uploading the picture.");
             }
         }
     }
