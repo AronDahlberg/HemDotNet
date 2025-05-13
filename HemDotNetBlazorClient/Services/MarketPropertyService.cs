@@ -137,6 +137,30 @@ namespace HemDotNetBlazorClient.Services
             return response;
         }
 
+        //Author: Johan
+        public async Task<Response<MarketPropertyDetailsDto>> UpdateMarketProperty(MarketPropertyUpdateDto updateDto)
+        {
+            Response<MarketPropertyDetailsDto> response;
+
+            try
+            {
+                //await GetBearerToken();
+
+                var marketProperty = await _client.MarketPropertyPUTAsync(updateDto);
+                response = new Response<MarketPropertyDetailsDto>
+                {
+                    Data = marketProperty,
+                    Success = true
+                };
+            }
+            catch (ApiException ex)
+            {
+                response = ConvertApiExceptions<MarketPropertyDetailsDto>(ex);
+            }
+
+            return response;
+        }
+
         //Author: Allan
         public async Task<Response<bool>> DeleteMarketPropertyById(int marketPropertyId, string agentId)
         {
