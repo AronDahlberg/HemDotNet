@@ -107,6 +107,7 @@
         if (response.Success)
         {
             agencies = response.Data
+                .Where(a => a.RealEstateAgencyName != "Wait list")
                 .OrderBy(a => a.RealEstateAgencyName)
                 .ToList();
         }
