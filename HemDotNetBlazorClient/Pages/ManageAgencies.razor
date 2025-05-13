@@ -32,7 +32,7 @@
                     <div class="agencyCard card mb-3 flex-grow-1">
                         <div class="card-body d-flex justify-content-between align-items-center gap-4">
                             <div class="agencyInfo d-flex gap-4 align-items-center col-8">
-                                <img class="img-thumbnail" style="width: 150px;"
+                                <img class="img-thumbnail" style="width: 150px; height: 150px; object-fit: contain;"
                                      src="@($"{httpClient.BaseAddress}{agency.RealEstateAgencyLogoUrl}")"
                                      alt="@($"{agency.RealEstateAgencyName} logo")" />
                                 <div class="vstack justify-content-center">
@@ -59,6 +59,14 @@
             }
         </div>
     }
+    <div class="row">
+        <div class="col-12 d-flex justify-content-center mt-3">
+            <a class="btn btn-primary" href="/admin/create-agency">
+                <img src="plusicon.svg" alt="Add" class="mx-1" style="width: 1.2em; height: 1.2em; vertical-align: middle;" />
+                Skapa en mäklarbyrå
+            </a>
+        </div>
+    </div>
 </div>
 
 @if (showNotification)
@@ -78,7 +86,7 @@
 
 <ConfirmationModalComponent IsVisible="@showDeleteConfirmation"
                             Title="Bekräfta borttagning"
-                            Message="Är du säker på att du vill radera den här mäklarbyrån? Detta kommer radera mäklare som tillhör den här byrån och deras objekt"
+                            Message="Är du säker på att du vill radera den här mäklarbyrån? Detta kommer radera alla mäklare som tillhör den här byrån och deras objekt"
                             CancelText="Avbryt"
                             ConfirmText="Ja, radera"
                             OnCancel="CancelDelete"
