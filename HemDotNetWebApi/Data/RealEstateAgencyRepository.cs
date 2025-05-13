@@ -36,9 +36,14 @@ namespace HemDotNetWebApi.Data
         // Allan
         public async Task<int> CreateAgencyAsync(AgencyCreateDto dto)
         {
-            bool exists = _context.Municipalities.Any(m => m.MunicipalityName == dto.RealEstateAgencyName);
-            if (!exists)
+            var municipality = _context.Municipalities
+                .FirstOrDefault(m => m.MunicipalityName.ToLower() == dto.RealEstateAgencyMunicipality.ToLower());
+
+            if (municipality == null)
                 throw new Exception("Kommunen finns inte i databasen");
+
+            // Assign the exact value from the DB to the DTO
+            dto.RealEstateAgencyMunicipality = municipality.MunicipalityName;
 
             var agencyToCreate = _mapper.Map<RealEstateAgency>(dto);
             _context.RealEstateAgencies.Add(agencyToCreate);

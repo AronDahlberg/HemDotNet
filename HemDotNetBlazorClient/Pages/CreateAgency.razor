@@ -3,6 +3,12 @@
 @inject NavigationManager NavigationManager
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject HttpClient httpClient
+
+@inject IMunicipalityService municipalityService
+@inject NavigationManager navigationManager
+@using System.Timers
+
+
 @attribute [Authorize(Roles = "Administrator")]
 
 @*Author: Allan*@
@@ -81,7 +87,18 @@
 
                                     <div class="mb-3">
                                         <label class="form-label fw-bold">Kommun</label>
-                                        <InputText class="form-control" @bind-Value="agencyModel.RealEstateAgencyMunicipality" placeholder="Ange kommun" />
+                                        <InputText class="form-control" @bind-Value="@searchTerm" @oninput="OnSearchTermChanged" placeholder="Ange kommun" />
+                                        @if (suggestions.Any())
+                                        {
+                                            <ul class="list-group mt-2 position-absolute" style="max-height: 300px; overflow-y: auto;">
+                                                @foreach (var suggestion in suggestions)
+                                                {
+                                                    <li class="list-group-item" @onclick="() => SelectSuggestion(suggestion)">
+                                                        @DisplayMatchedText(suggestion)
+                                                    </li>
+                                                }
+                                            </ul>
+                                        }
                                     </div>
 
                                     <div class="mb-4">
@@ -183,4 +200,96 @@
     {
         NavigationManager.NavigateTo("/agencies");
     }
+
+
+    [Parameter]
+    public SearchModel SearchModel { get; set; } = new SearchModel();
+
+    [Parameter]
+    public EventCallback<SearchModel> OnSearch { get; set; }
+
+    private string searchTerm;
+    private List<string> suggestions = new();
+    private Timer debounceTimer;
+
+    // Allan
+    protected override void OnInitialized()
+    {
+        debounceTimer = new Timer(100);
+        debounceTimer.Elapsed += async (s, e) => await InvokeAsync(PerformSearch);
+        debounceTimer.AutoReset = false;
+
+    }
+
+    // Allan
+    private void OnInputChanged()
+    {
+        debounceTimer.Stop();
+        debounceTimer.Start();
+    }
+
+    // Allan
+    private async Task PerformSearch()
+    {
+        if (string.IsNullOrWhiteSpace(searchTerm))
+        {
+            suggestions.Clear();
+        }
+        else
+        {
+            var response = await municipalityService.MunicipalitiesSearch(searchTerm);
+
+            if (response != null && response.Data != null)
+            {
+                suggestions = response.Data
+                    .Select(m => m.Name)
+                    .ToList();
+            }
+            else
+            {
+                suggestions = new List<string>();
+            }
+        }
+        await InvokeAsync(StateHasChanged);
+    }
+
+    // Allan
+    private void SelectSuggestion(string selected)
+    {
+        searchTerm = selected;
+        agencyModel.RealEstateAgencyMunicipality = selected;
+        suggestions.Clear();
+    }
+
+
+    // Allan
+    private async Task OnSearchTermChanged(ChangeEventArgs e)
+    {
+        searchTerm = e.Value?.ToString();
+        agencyModel.RealEstateAgencyMunicipality = searchTerm;
+        OnInputChanged();
+    }
+
+    // Allan
+    private string HighlightSubstring(string input, string search)
+    {
+        if (string.IsNullOrEmpty(search))
+            return input;
+
+        var index = input.IndexOf(search, StringComparison.OrdinalIgnoreCase);
+        if (index == -1)
+            return input;
+
+        return input.Substring(0, index) +
+               "<strong>" + input.Substring(index, search.Length) + "</strong>" +
+               input.Substring(index + search.Length);
+    }
+
+    // Allan
+    private MarkupString DisplayMatchedText(string suggestion)
+    {
+        var highlightedText = HighlightSubstring(suggestion, searchTerm);
+        return new MarkupString(highlightedText);
+    }
+
 }
