@@ -31,15 +31,30 @@ namespace HemDotNetWebApi.Data
                 return null;
             }
 
+            //CO-Author: Johan. Added explicit reassign of navigation property.
+
+            _context.Entry(existingProperty).CurrentValues.SetValues(marketProperty);
+
+            
+            if (marketProperty.Municipality != null)
+            {
+                var newMunicipality = await _context.Municipalities
+                    .FirstOrDefaultAsync(m => m.MunicipalityId == marketProperty.Municipality.MunicipalityId);
+
+                existingProperty.Municipality = newMunicipality;
+            }
+
             // We don't allow changing id
             marketProperty.MarketPropertyId = existingProperty.MarketPropertyId;
 
-            // we say to EF: "forget about this object"
-            _context.Entry(existingProperty).State = EntityState.Detached;
+            //Commencted out, as Detachment caused troubles updating models from the Client. /Johan
 
-            // this tells EF: here's a new object representing a row in the database. Treat all its properties as changed,
-            // and update them in the database. Generated SQL Update query for this row
-            _context.Entry(marketProperty).State = EntityState.Modified;
+            //// we say to EF: "forget about this object"
+            //_context.Entry(existingProperty).State = EntityState.Detached;
+
+            //// this tells EF: here's a new object representing a row in the database. Treat all its properties as changed,
+            //// and update them in the database. Generated SQL Update query for this row
+            //_context.Entry(marketProperty).State = EntityState.Modified;
 
             await _context.SaveChangesAsync();
 
