@@ -5,6 +5,7 @@ using HemDotNetWebApi.DTO;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace HemDotNetWebApi.Controllers
 {
@@ -49,6 +50,42 @@ namespace HemDotNetWebApi.Controllers
             catch (Exception ex)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, "Ett internt fel uppstod vid skapandet av mäklarbyrån.");
+            }
+        }
+
+        // Allan
+        [HttpPost("AgencyImage")]
+        [Consumes("multipart/form-data")]
+        [Authorize(Roles = ApiRoles.Administrator)]
+        public async Task<ActionResult<AgencyImageUrlDto>> UploadAgencyImage([FromForm] int agencyId, IFormFile imageFile)
+        {
+            if (imageFile == null || imageFile.Length == 0)
+            {
+                return BadRequest("No image file provided");
+            }
+
+            string[] allowedExtensions = { ".jpg", ".jpeg", ".png" };
+            string fileExtension = Path.GetExtension(imageFile.FileName).ToLowerInvariant();
+            if (!allowedExtensions.Contains(fileExtension))
+            {
+                return BadRequest("Invalid file type. Only jpg, jpeg and png are allowed");
+            }
+
+            if (imageFile.Length > 5 * 1024 * 1024)
+            {
+                return BadRequest("File size is larger than limit of 5MB");
+            }
+
+            try
+            {
+                var imageUrl = await _realEstateAgencyRepository.UploadAgencyImageAsync(agencyId, imageFile);
+                var imageUrlDto = new ProfileImageUrlDto() { profileImageUrl = imageUrl };
+
+                return Ok(imageUrlDto);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "An error occurred while uploading the profile picture.");
             }
         }
     }

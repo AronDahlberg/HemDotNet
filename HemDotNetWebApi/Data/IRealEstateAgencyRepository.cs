@@ -7,6 +7,7 @@ namespace HemDotNetWebApi.Data
     {
         // Allan
         Task<IEnumerable<RealEstateAgency>> GetAllAsync();
-        Task<int> CreateAgencyAsync(AgencyCreateDto dto)
+        Task<int> CreateAgencyAsync(AgencyCreateDto dto);
+        Task<string> UploadAgencyImageAsync(int agencyId, IFormFile file);
     }
 }
