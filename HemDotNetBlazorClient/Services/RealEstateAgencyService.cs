@@ -57,5 +57,26 @@ namespace HemDotNetBlazorClient.Services
 
             return response;
         }
+
+        public async Task<Response<bool>> DeleteAgency(int id)
+        {
+            Response<bool> response;
+
+            try
+            {
+                await _client.DeleteAsync(id);
+                response = new Response<bool>
+                {
+                    Data = true,
+                    Success = true
+                };
+            }
+            catch (ApiException ex)
+            {
+                response = ConvertApiExceptions<bool>(ex);
+            }
+
+            return response;
+        }
     }
 }
