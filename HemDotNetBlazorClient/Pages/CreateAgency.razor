@@ -178,13 +178,16 @@
 
             if (uploadResponse?.Success == true)
             {
-                NavigationManager.NavigateTo("/");
+                NavigationManager.NavigateTo("/#");
             }
             else
             {
                 errorMessage = uploadResponse?.Message ?? "Fel vid uppladdning av logotyp.";
                 return;
             }
+
+            NavigationManager.NavigateTo("/#");
+
         }
 
     }

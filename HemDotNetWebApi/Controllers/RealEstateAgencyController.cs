@@ -44,7 +44,7 @@ namespace HemDotNetWebApi.Controllers
         {
             try
             {
-                agencyCreateDto.RealEstateAgencyLogoUrl = "Images/DefaultAgencyImages";
+                agencyCreateDto.RealEstateAgencyLogoUrl = "Images/DefaultAgencyImage.png";
                 var createdAgencyId = await _realEstateAgencyRepository.CreateAgencyAsync(agencyCreateDto);
                 return Ok(createdAgencyId);
             }
