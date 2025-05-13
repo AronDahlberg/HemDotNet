@@ -58,5 +58,37 @@ namespace HemDotNetBlazorClient.Services
 
             return response;
         }
+
+        // Allan
+        public async Task<Response<AgencyImageUrlDto>> UploadAgencyImage(int agencyId, StreamContent fileContent)
+        {
+            Response<AgencyImageUrlDto> response;
+
+            try
+            {
+                await GetBearerToken();
+
+                var formData = new MultipartFormDataContent();
+
+                formData.Add(new StringContent(agencyId.ToString()), "AgencyId");
+
+                formData.Add(fileContent, "imageFile", "image" + Path.GetExtension(fileContent.Headers.ContentDisposition?.FileName ?? ".jpg"));
+                var fileParameter = new FileParameter(await fileContent.ReadAsStreamAsync(), "image.jpg", fileContent.Headers.ContentType?.MediaType);
+
+                AgencyImageUrlDto dto = await _client.AgencyImageAsync(agencyId, fileParameter);
+
+                response = new Response<AgencyImageUrlDto>
+                {
+                    Data = dto,
+                    Success = true
+                };
+            }
+            catch (ApiException ex)
+            {
+                response = ConvertApiExceptions<AgencyImageUrlDto>(ex);
+            }
+
+            return response;
+        }
     }
 }
