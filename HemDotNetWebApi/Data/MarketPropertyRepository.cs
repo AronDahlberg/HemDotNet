@@ -31,11 +31,14 @@ namespace HemDotNetWebApi.Data
                 return null;
             }
 
-            //CO-Author: Johan. Added explicit reassign of navigation property.
+            // We don't allow changing id
+            marketProperty.MarketPropertyId = existingProperty.MarketPropertyId;
+
+            //Co-Author: Johan. Added explicit reassign of navigation property.
 
             _context.Entry(existingProperty).CurrentValues.SetValues(marketProperty);
 
-            
+
             if (marketProperty.Municipality != null)
             {
                 var newMunicipality = await _context.Municipalities
@@ -43,9 +46,6 @@ namespace HemDotNetWebApi.Data
 
                 existingProperty.Municipality = newMunicipality;
             }
-
-            // We don't allow changing id
-            marketProperty.MarketPropertyId = existingProperty.MarketPropertyId;
 
             //Commencted out, as Detachment caused troubles updating models from the Client. /Johan
 
