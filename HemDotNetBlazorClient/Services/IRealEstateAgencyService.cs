@@ -8,6 +8,6 @@ namespace HemDotNetBlazorClient.Services
         // Allan
         Task<Response<List<AgencyNameDto>>> GetAllAgencies();
         Task<Response<List<AgencyDto>>> GetAllAgenciesPartial();
-        Task<Response<bool>> DeleteAgency(int id)
+        Task<Response<bool>> DeleteAgency(int id);
     }
 }

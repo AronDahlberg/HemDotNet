@@ -1,1 +1,176 @@
-﻿
+﻿@* Author: Allan *@
+
+@using HemDotNetBlazorClient.Components
+@using HemDotNetBlazorClient.Services
+@using Microsoft.AspNetCore.Authorization
+@page "/admin/manage-agencies"
+@inject IRealEstateAgencyService realEstateAgencyService
+@inject HttpClient httpClient
+@attribute [Authorize(Roles = "Administrator")]
+
+<div class="mx-auto" style="width:1000px; margin-bottom:5rem;">
+    <h3 class="pt-5 text-center">Hantera mäklarbyråer</h3>
+
+    @if (!response.Success)
+    {
+        <div class="alert alert-danger">
+            <h4>@response.Message</h4>
+        </div>
+    }
+    else if (agencies == null)
+    {
+        <div class="alert alert-info">
+            <h4>Loading data...</h4>
+        </div>
+    }
+    else
+    {
+        <div class="col-auto agencyCards vstack" style="gap:1rem;">
+            @foreach (var agency in agencies)
+            {
+                <div class="d-flex align-items-start justify-content-between" style="gap: 1rem;">
+                    <div class="agencyCard card mb-3 flex-grow-1">
+                        <div class="card-body d-flex justify-content-between align-items-center gap-4">
+                            <div class="agencyInfo d-flex gap-4 align-items-center col-8">
+                                <img class="img-thumbnail" style="width: 150px;"
+                                     src="@($"{httpClient.BaseAddress}{agency.RealEstateAgencyLogoUrl}")"
+                                     alt="@($"{agency.RealEstateAgencyName} logo")" />
+                                <div class="vstack justify-content-center">
+                                    <h5 class="card-title">@agency.RealEstateAgencyName</h5>
+                                    <div>@agency.RealEstateAgencyMunicipality</div>
+                                    <small class="text-muted mt-2">@((MarkupString)TruncatePresentation(agency.RealEstateAgencyPresentation, 150))</small>
+                                </div>
+                            </div>
+                            <div class="agencyStats text-center d-flex flex-column align-items-center col-3">
+                                <div class="bg-light p-3 rounded-3 w-100">
+                                    <div class="fs-4 fw-bold">@(agency.NumberOfAgents)</div>
+                                    <div class="small text-muted">Antal mäklare</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-2">
+                        <button class="btn btn-danger p-2" @onclick="() => PromptDeleteAgency(agency.RealEstateAgencyId)">
+                            <img src="trash.svg" alt="Radera mäklarbyrå" style="width: 24px; height: 24px;" />
+                        </button>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
+
+@if (showNotification)
+{
+    <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 5">
+        <div class="toast show" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header @(updateSuccess ? "bg-success text-white" : "bg-danger text-white")">
+                <strong class="me-auto">@(updateSuccess ? "Success" : "Error")</strong>
+                <button type="button" class="btn-close" @onclick="CloseNotification"></button>
+            </div>
+            <div class="toast-body">
+                @notificationMessage
+            </div>
+        </div>
+    </div>
+}
+
+<ConfirmationModalComponent IsVisible="@showDeleteConfirmation"
+                            Title="Bekräfta borttagning"
+                            Message="Är du säker på att du vill radera den här mäklarbyrån? Detta kan påverka mäklare som tillhör denna byrå."
+                            CancelText="Avbryt"
+                            ConfirmText="Ja, radera"
+                            OnCancel="CancelDelete"
+                            OnConfirm="ConfirmDeleteAgency" />
+
+@code {
+
+    // Author: Allan
+
+    private List<AgencyDto> agencies;
+    private Response<List<AgencyDto>> response = new Response<List<AgencyDto>> { Success = true };
+    private bool showNotification = false;
+    private bool updateSuccess = false;
+    private string notificationMessage = "";
+
+    private bool showDeleteConfirmation = false;
+    private int agencyIdToDelete;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadAgencies();
+    }
+
+    private async Task LoadAgencies()
+    {
+        response = await realEstateAgencyService.GetAllAgenciesPartial();
+        if (response.Success)
+        {
+            agencies = response.Data
+                .OrderBy(a => a.RealEstateAgencyName)
+                .ToList();
+        }
+    }
+
+    private string TruncatePresentation(string text, int maxLength)
+    {
+        if (string.IsNullOrEmpty(text) || text.Length <= maxLength)
+            return text;
+
+        return text.Substring(0, maxLength) + "...";
+    }
+
+    private void ShowNotification(string message, bool success)
+    {
+        notificationMessage = message;
+        updateSuccess = success;
+        showNotification = true;
+        StateHasChanged();
+
+        Task.Delay(5000).ContinueWith(_ =>
+        {
+            CloseNotification();
+            StateHasChanged();
+        });
+    }
+
+    private void CloseNotification()
+    {
+        showNotification = false;
+        StateHasChanged();
+    }
+
+    private void PromptDeleteAgency(int agencyId)
+    {
+        agencyIdToDelete = agencyId;
+        showDeleteConfirmation = true;
+    }
+
+    private void CancelDelete()
+    {
+        showDeleteConfirmation = false;
+    }
+
+    private async Task ConfirmDeleteAgency()
+    {
+        showDeleteConfirmation = false;
+
+        try
+        {
+            var deleteResponse = await realEstateAgencyService.DeleteAgency(agencyIdToDelete);
+            if (deleteResponse.Success)
+            {
+                ShowNotification("Mäklarbyrå raderad!", true);
+                await LoadAgencies();
+            }
+            else
+            {
+                ShowNotification($"Radering misslyckades: {deleteResponse.Message}", false);
+            }
+        }
+        catch (Exception ex)
+        {
+            ShowNotification($"Ett fel inträffade: {ex.Message}", false);
+        }
+    }
+}
