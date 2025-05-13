@@ -64,6 +64,8 @@ namespace HemDotNetBlazorClient.Services
 
             try
             {
+                await GetBearerToken();
+
                 await _client.DeleteAsync(id);
                 response = new Response<bool>
                 {
