@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using HemDotNetWebApi.Constants;
 using HemDotNetWebApi.Data;
 using HemDotNetWebApi.DTO;
 using HemDotNetWebApi.DTOs;
@@ -82,14 +83,12 @@ namespace HemDotNetWebApi.Controllers
             [FromQuery] string? agencyName,
             [FromQuery] string? email,
             [FromQuery] string? phonenumber
-
-
             )
         {
             var filteredAgents = await _realEstateAgentRepository.GetAllAsync();
 
             if (!string.IsNullOrWhiteSpace(municipality))
-                filteredAgents = filteredAgents.Where(a => a.RealEstateAgencyMunicipality.ToLower().Contains(municipality.ToLowerInvariant()));
+                filteredAgents = filteredAgents.Where(a => a.RealEstateAgentAgency.RealEstateAgencyMunicipality.ToLower().Contains(municipality.ToLowerInvariant()));
 
             if (!string.IsNullOrWhiteSpace(firstName))
                 filteredAgents = filteredAgents.Where(a => a.RealEstateAgentFirstName.ToLower().Contains(firstName.ToLowerInvariant()));
@@ -98,7 +97,7 @@ namespace HemDotNetWebApi.Controllers
                 filteredAgents = filteredAgents.Where(a => a.RealEstateAgentLastName.ToLower().Contains(lastName.ToLowerInvariant()));
 
             if (!string.IsNullOrWhiteSpace(agencyName))
-                filteredAgents = filteredAgents.Where(a => a.RealEstateAgentAgencyName.ToLower().Contains(agencyName.ToLowerInvariant()));
+                filteredAgents = filteredAgents.Where(a => a.RealEstateAgentAgency.RealEstateAgencyName.ToLower().Contains(agencyName.ToLowerInvariant()));
 
             if (!string.IsNullOrWhiteSpace(email))
                 filteredAgents = filteredAgents.Where(a => a.RealEstateAgentEmail.ToLower().Contains(email.ToLowerInvariant()));
@@ -107,8 +106,49 @@ namespace HemDotNetWebApi.Controllers
                 filteredAgents = filteredAgents.Where(a => a.RealEstateAgentPhoneNumber.Contains(phonenumber));
 
 
-            return Ok(filteredAgents.ToList());
+            return Ok(_mapper.Map<List<RealEstateAgentDto>>(filteredAgents.ToList()));
 
+        }
+
+        // Allan
+        [HttpPut("UpdateAgency/{agentId}/{newAgencyId}")]
+        [Authorize(Roles = ApiRoles.Administrator)]
+        public async Task<ActionResult<RealEstateAgentDto>> UpdateAgentAgency(string agentId, int newAgencyId)
+        {
+            try
+            {
+                var updatedAgent = await _realEstateAgentRepository.UpdateAgentAgencyAsync(agentId, newAgencyId);
+                var dto = _mapper.Map<RealEstateAgentDto>(updatedAgent);
+                return Ok(dto);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"An error occurred while updating the agent's agency: {ex.Message}");
+            }
+        }
+
+        // Allan
+        [HttpDelete("{agentId}")]
+        [Authorize(Roles = ApiRoles.Administrator)]
+        public async Task<IActionResult> DeleteAgent(string agentId)
+        {
+            try
+            {
+                await _realEstateAgentRepository.DeleteAsync(agentId);
+                return Ok();
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Ett fel inträffade: {ex.Message}");
+            }
         }
     }
 }

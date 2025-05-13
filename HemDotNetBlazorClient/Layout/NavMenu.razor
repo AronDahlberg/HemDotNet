@@ -39,6 +39,7 @@ Author: Allan
                     <ul class="navbar-nav">
                         @if (isAuthenticated)
                         {
+
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                     <img src="@($"{httpClient.BaseAddress}{userProfileImage}")" class="rounded-circle me-2" width="32" height="32" alt="Profile" />
@@ -51,6 +52,35 @@ Author: Allan
 
                                 </ul>
                             </li>
+
+                            @if(!isAdmin)
+                            {
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <img src="@($"{httpClient.BaseAddress}{userProfileImage}")" class="rounded-circle me-2" width="32" height="32" alt="Profile" />
+                                    </a>
+                                    <ul class="dropdown-menu dropdown-menu-end">
+                                        <li><a class="dropdown-item" href="/agent/manage-properties">Hantera objekt</a></li>
+                                        <li><a class="dropdown-item" href="@($"users/profile/{userId}")">Visa/Redigera profil</a></li>
+                                        <li><hr class="dropdown-divider"></li>
+                                        <li><button class="dropdown-item" @onclick="Logout">Logga ut</button></li>
+                                    </ul>
+                                </li>
+                            }
+                            @if(isAdmin)
+                            {
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        ADMIN
+                                    </a>
+                                    <ul class="dropdown-menu dropdown-menu-end">
+                                        <li><a class="dropdown-item" href="/admin/manage-agents">Hantera mäklare</a></li>
+                                        <li><hr class="dropdown-divider"></li>
+                                        <li><button class="dropdown-item" @onclick="Logout">Logga ut</button></li>
+                                    </ul>
+                                </li>
+                            }
+
                         }
                         else
                         {
@@ -101,6 +131,8 @@ Author: Allan
     [Inject] private NavigationManager Navigation { get; set; }
     [Inject] private IAuthenticationService AuthService { get; set;}
 
+    private bool isAdmin = false;
+
     protected override async Task OnInitializedAsync()
     {
         await LoadUserData();
@@ -138,6 +170,8 @@ Author: Allan
         {
             var response = await agentService.GetProfileImageUrl(userId);
             userProfileImage = response.Data ?? defaultProfileImage;
+
+            isAdmin = user.IsInRole("Administrator");
         }
         else
         {

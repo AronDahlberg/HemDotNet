@@ -75,6 +75,8 @@ namespace HemDotNetWebApi.Data
         {
             return await _context.MarketProperties
                 .Include(p => p.Municipality)
+                .Include (p => p.RealEstateAgent)
+                .ThenInclude(mp => mp.RealEstateAgentAgency)
                 .Include(p => p.Images)
                 .Where(p => p.RealEstateAgent.Id == agentId)
                 .Where(p => p.IsActive == true)
@@ -102,6 +104,7 @@ namespace HemDotNetWebApi.Data
         {
             return await _context.MarketProperties
                 .AnyAsync(p => p.MarketPropertyId == marketPropertyId && p.RealEstateAgent.Id == agentUserId);
+
         }
 
         // Katarina
@@ -148,6 +151,7 @@ namespace HemDotNetWebApi.Data
             var query = _context.MarketProperties
                 .Include(mp => mp.Municipality)
                 .Include(mp => mp.RealEstateAgent)
+                .ThenInclude(mp => mp.RealEstateAgentAgency)
                 .Include(mp => mp.Images)
                 .AsQueryable();
 

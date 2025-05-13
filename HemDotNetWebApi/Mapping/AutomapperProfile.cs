@@ -37,14 +37,7 @@ namespace HemDotNetWebApi.Mapping
                     opt.MapFrom(src => new MarketProperty { MarketPropertyId = src.MarketPropertyId }));
             //
 
-            //Author: Johan Ek
-            CreateMap<MarketProperty, PartialMarketPropertyDTO>()
-                .ForMember(dest => dest.Images,
-               opt => opt.MapFrom(
-                    src => src.Images))
-                .ForMember(dest => dest.MunicipalityName,
-                opt => opt.MapFrom(
-                    src => src.Municipality.MunicipalityName));
+            
             //Author: Johan Ek
             CreateMap<PropertyImage, PartialPropertyImageDTO>()
                 .ForMember(dest => dest.PropertyImageUrl,
@@ -98,10 +91,17 @@ namespace HemDotNetWebApi.Mapping
             CreateMap<Municipality, MunicipalityDto>()
             .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.MunicipalityName));
 
-            // Allan
+            // Johan
+            // Co-Author: Allan
             CreateMap<MarketProperty, PartialMarketPropertyDTO>()
-            .ForMember(dest => dest.MunicipalityName, opt => opt.MapFrom(src => src.Municipality.MunicipalityName))
-            .ForMember(dest => dest.Images, opt => opt.MapFrom(src => src.Images));
+            .ForMember(dest => dest.MunicipalityName,
+                       opt => opt.MapFrom(src => src.Municipality.MunicipalityName))
+            .ForMember(dest => dest.RealEstateAgencyName,
+                       opt => opt.MapFrom(src => src.RealEstateAgent.RealEstateAgentAgency.RealEstateAgencyName))
+            .ForMember(dest => dest.RealEstateAgencyLogoUrl,
+                       opt => opt.MapFrom(src => src.RealEstateAgent.RealEstateAgentAgency.RealEstateAgencyLogoUrl))
+            .ForMember(dest => dest.Images,
+                       opt => opt.MapFrom(src => src.Images));
 
             CreateMap<PropertyImage, PartialPropertyImageDTO>();
 
@@ -119,6 +119,10 @@ namespace HemDotNetWebApi.Mapping
                 opt => opt.MapFrom(src => src.RealEstateAgentAgency.RealEstateAgencyMunicipality))
             .ForMember(dest => dest.PropertyIds,
                 opt => opt.MapFrom(src => src.RealEstateAgentProperties.Select(p => p.MarketPropertyId)));
+
+
+            CreateMap<RealEstateAgency, AgencyNameDto>()
+                .ForMember(dest => dest.AgencyName, opt => opt.MapFrom(src => src.RealEstateAgencyName));
         }
     }
 }

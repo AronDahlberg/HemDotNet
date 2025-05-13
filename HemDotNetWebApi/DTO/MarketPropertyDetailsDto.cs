@@ -19,7 +19,7 @@ namespace HemDotNetWebApi.DTO
         public int AmountOfRooms { get; set; }
         public decimal? MonthlyFee { get; set; }
         public decimal? YearlyMaintenanceCost { get; set; }
-        public int ContructionYear { get; set; }
+        public int ConstructionYear { get; set; }
         public List<PropertyImageDto> Images { get; set; }
     }
 }
