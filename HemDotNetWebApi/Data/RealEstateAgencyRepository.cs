@@ -3,6 +3,7 @@ using HemDotNetWebApi.Constants;
 using HemDotNetWebApi.DTO;
 using HemDotNetWebApi.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Globalization;
 
 namespace HemDotNetWebApi.Data
 {
@@ -36,13 +37,19 @@ namespace HemDotNetWebApi.Data
         // Allan
         public async Task<int> CreateAgencyAsync(AgencyCreateDto dto)
         {
-            var municipality = _context.Municipalities
-                .FirstOrDefault(m => m.MunicipalityName.ToLower() == dto.RealEstateAgencyMunicipality.ToLower());
+            var swedishCulture = new CultureInfo("sv-SE");
+
+            var candidateMunicipalities = await _context.Municipalities
+                .Where(m => m.MunicipalityName.ToLower() == dto.RealEstateAgencyMunicipality.ToLower())
+                .ToListAsync();
+
+            var municipality = candidateMunicipalities
+                .FirstOrDefault(m => string.Compare(m.MunicipalityName, dto.RealEstateAgencyMunicipality,
+                                                    ignoreCase: true, culture: swedishCulture) == 0);
 
             if (municipality == null)
                 throw new Exception("Kommunen finns inte i databasen");
 
-            // Assign the exact value from the DB to the DTO
             dto.RealEstateAgencyMunicipality = municipality.MunicipalityName;
 
             var agencyToCreate = _mapper.Map<RealEstateAgency>(dto);
