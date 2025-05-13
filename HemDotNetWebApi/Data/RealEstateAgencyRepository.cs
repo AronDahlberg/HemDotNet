@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using HemDotNetWebApi.Constants;
+using HemDotNetWebApi.DTO;
 using HemDotNetWebApi.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -21,6 +22,15 @@ namespace HemDotNetWebApi.Data
         public async Task<IEnumerable<RealEstateAgency>> GetAllAsync()
         {
             return await _context.RealEstateAgencies.ToListAsync();
+        }
+
+        // Allan
+        public async Task<int> CreateAgencyAsync(AgencyCreateDto dto)
+        {
+            var agencyToCreate = _mapper.Map<RealEstateAgency>(dto);
+            _context.RealEstateAgencies.Add(agencyToCreate);
+            await _context.SaveChangesAsync();
+            return agencyToCreate.RealEstateAgencyId;
         }
     }
 }
