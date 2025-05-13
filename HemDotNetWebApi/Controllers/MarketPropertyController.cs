@@ -30,7 +30,7 @@ namespace HemDotNetWebApi.Controllers
         [HttpPut]
         [Authorize]
 
-        public async Task<ActionResult<MarketPropertyDto>> UpdateMarketProperty(MarketPropertyUpdateDto updateDto)
+        public async Task<ActionResult<MarketPropertyDetailsDto>> UpdateMarketProperty(MarketPropertyUpdateDto updateDto)
         {
             try
             {
@@ -43,7 +43,7 @@ namespace HemDotNetWebApi.Controllers
                     return NotFound($"Market property with ID {updateDto.MarketPropertyId} not found.");
                 }
 
-                var resultDto = _mapper.Map<MarketPropertyDto>(updatedProperty);
+                var resultDto = _mapper.Map<MarketPropertyDetailsDto>(updatedProperty);
 
                 return Ok(resultDto);
             }

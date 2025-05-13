@@ -14,7 +14,7 @@ namespace HemDotNetBlazorClient.Services
 
         //Author: Johan
         Task<Response<int>> CreateMarketProperty(MarketPropertyCreateDto newMarketProperty);
-        //Author: Johan
         Task<Response<MarketPropertyDetailsDto>> GetMarketPropertyById(int marketPropertyId);
+        Task<Response<MarketPropertyDetailsDto>> UpdateMarketProperty(MarketPropertyUpdateDto updateDto);
     }
 }
