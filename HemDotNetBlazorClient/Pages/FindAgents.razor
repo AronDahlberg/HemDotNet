@@ -1,23 +1,57 @@
-﻿@* Author: Chris *@
-@page "/find-agents"
-@inject IRealEstateAgentService realEstateAgentService
+﻿@*Author: original Allan, modified by Chris *@
+@* CHRISTODO: USE FORM SUBMIT *@
 @inject HttpClient httpClient
-@using System.Text.RegularExpressions
+@inject IMunicipalityService municipalityService
+@inject IRealEstateAgentService realEstateAgentService
+@* @inject NavigationManager navigationManager *@
+@using System.Timers
+@page "/find-agents"
 
-<div class="mx-auto" style="width:1000px; margin-bottom:5rem;">
 
-    <h3 class="pt-4 text-center">Hitta mäklare i ditt område</h3>
+<style>
+    .list-group-item:hover {
+    background-color: #f1f1f1;
+    cursor: pointer;
+    }
 
+    .clear-btn:hover {
+    color: #333;
+    font-weight:bold;
+    }
 
-    <select class="form-select" @onchange="SelectedMunicipalityChanged">
+</style>
 
-        <option value="">-- Alla kommuner --</option>
+<div class="container">
 
-        @foreach (var municipality in distinctMunicipalities)
-        {
-            <option value="@municipality">@municipality</option>
-        }
-    </select>
+    <!--Allan-->
+    <div class="border rounded py-3 px-3 shadow">
+        <h4 class="mb-4">Sök mäklare</h4>
+        <div class="mb-3 position-relative">
+            <label for="areaInput" class="form-label">Område</label>
+            <input type="text"
+            autocomplete="off"
+            class="form-control"
+            id="areaInput"
+            placeholder="Ange ort eller kommun"
+            value="@searchTerm"
+            @onkeydown="SearchInputKeyDown"
+            @oninput="OnSearchTermChanged" 
+            />
+            <button class="position-absolute bg-transparent border-0 clear-btn" style="font-size:24px; right:10px; top:50%;" @onclick="ClearInput">X</button>
+
+            @if (suggestions.Any())
+            {
+                <ul class="list-group mt-2 position-absolute mw-100 w-100" style="z-index:100; max-height: 300px; overflow-y: auto;">
+                    @foreach (var suggestion in suggestions)
+                    {
+                        <li class="list-group-item" @onclick="() => SelectSuggestion(suggestion)">
+                            @DisplayMatchedText(suggestion)
+                        </li>
+                    }
+                </ul>
+            }
+        </div>
+    </div>
 
     @if (!response.Success)
     {
@@ -33,79 +67,145 @@
     }
     else
     {
-
         <div class="col-auto agentCards vstack pt-2">
-            @foreach (var agent in realEstateAgents)
-            {
-                <div class="agentCard card mb-3">
-                    <div class="card-body d-flex justify-content-between align-items-center gap-4">
+            @if (realEstateAgents.Any()) { 
+                @foreach (var agent in realEstateAgents)
+                {
+                    <div class="agentCard card mb-3">
+                        <div class="card-body d-flex justify-content-between align-items-center gap-4">
 
-                        <!-- User Info Section -->
-                        <div class="userInfo d-flex gap-4 align-items-center col-6">
-                            <img class="img-thumbnail rounded-circle" style="width: 150px;"
-                                 src="@($"{httpClient.BaseAddress}{agent.RealEstateAgentImageUrl}")"
-                                 alt="@($"{agent.RealEstateAgentFirstName} profilepic")" />
+                            <!-- User Info Section -->
+                            <div class="userInfo d-flex gap-4 align-items-center col-6">
+                                <img class="img-thumbnail rounded-circle" style="width: 150px;"
+                                src="@($"{httpClient.BaseAddress}{agent.RealEstateAgentImageUrl}")"
+                                alt="@($"{agent.RealEstateAgentFirstName} profilepic")" />
 
-                            <div class="vstack justify-content-center">
-                                <h5 class="card-title"><a href="@($"{"users/"}{"profile/"}{@agent.Id}")"> @agent.RealEstateAgentFirstName @agent.RealEstateAgentLastName</a></h5>
-                                <div>@agent.RealEstateAgencyMunicipality</div>
-                                <small>@agent.RealEstateAgentEmail</small>
-                                <small>@agent.RealEstateAgentPhoneNumber</small>                                
+                                <div class="vstack justify-content-center">
+                                    <h5 class="card-title"><a href="@($"{"users/"}{"profile/"}{@agent.Id}")"> @agent.RealEstateAgentFirstName @agent.RealEstateAgentLastName</a></h5>
+                                    <div>@agent.RealEstateAgencyMunicipality</div>
+                                    <small>@agent.RealEstateAgentEmail</small>
+                                    <small>@agent.RealEstateAgentPhoneNumber</small>
 
+                                </div>
+                            </div>
+
+                            <!-- Agency Info Section -->
+                            <div class="agencyInfo text-center d-flex flex-column align-items-center col-4">
+                                <img class="img" style="width: 100px;"
+                                src="@($"{httpClient.BaseAddress}{agent.RealEstateAgencyLogoUrl}")"
+                                alt="@($"{agent.RealEstateAgentAgencyName} logo")" />
+                                <div class="font-weight-bold">@agent.RealEstateAgentAgencyName</div>
                             </div>
                         </div>
-
-                        <!-- Agency Info Section -->
-                        <div class="agencyInfo text-center d-flex flex-column align-items-center col-4">
-                            <img class="img" style="width: 100px;"
-                                 src="@($"{httpClient.BaseAddress}{agent.RealEstateAgencyLogoUrl}")"
-                                 alt="@($"{agent.RealEstateAgentAgencyName} logo")" />
-                            <div class="font-weight-bold">@agent.RealEstateAgentAgencyName</div>
-                        </div>
                     </div>
-                </div>
+                }
+            } 
+
+            else {
+                <div class="card p-4 alert alert-info">Hittade inga mäklare i den orten</div>
             }
         </div>
     }
 </div>
-
 @code {
-
-    private IEnumerable<RealEstateAgentDto> realEstateAgents;
     private Response<IEnumerable<RealEstateAgentDto>> response = new Response<IEnumerable<RealEstateAgentDto>> { Success = true };
+    private IEnumerable<RealEstateAgentDto> realEstateAgents;
 
-    private List<string> distinctMunicipalities = new();
+    private string searchTerm;
+    private List<string> suggestions = new();
+    private Timer debounceTimer;
 
-
+    // Allan, Chris
     protected override async Task OnInitializedAsync()
     {
+        debounceTimer = new Timer(100);
+        debounceTimer.Elapsed += async (s, e) => await InvokeAsync(PerformSearch);
+        debounceTimer.AutoReset = false;
 
-        response = await realEstateAgentService.GetAgentsAsync("", "", "", "", "", "");
-        if (response.Success)
+        await GetAgents();
+    }
+
+    // Allan
+    private void OnInputChanged()
+    {
+        debounceTimer.Stop();
+        debounceTimer.Start();
+    }
+
+    // Allan
+    private async Task PerformSearch()
+    {
+        if (string.IsNullOrWhiteSpace(searchTerm))
         {
-            realEstateAgents = response.Data;
+            suggestions.Clear();
+        }
+        else
+        {
+            var municipalityResponse = await municipalityService.MunicipalitiesSearch(searchTerm);
 
-            distinctMunicipalities = realEstateAgents
-               .GroupBy(p => p.RealEstateAgencyMunicipality)
-               .OrderByDescending(p => p.Count())
-               .Select(g => $"{g.Key} ({g.Count()})")
-               .ToList();
+            if (municipalityResponse != null && municipalityResponse.Data != null)
+            {
+                suggestions = municipalityResponse.Data
+                    .Select(m => m.Name)
+                    .ToList();
+            }
+            else
+            {
+                suggestions = new List<string>();
+            }
+        }
+        await InvokeAsync(StateHasChanged);
+    }
+
+    // Allan, Chris
+    private async Task SelectSuggestion(string selected)
+    {
+        searchTerm = selected;
+        suggestions.Clear();
+
+        await GetAgents();
+    }
+
+    // Allan, Chris
+    private async Task OnSearchTermChanged(ChangeEventArgs e)
+    {
+        searchTerm = e.Value?.ToString();
+        OnInputChanged();
+
+        if (searchTerm == "")
+        {
+            await GetAgents();
         }
     }
 
-    private async Task SelectedMunicipalityChanged(ChangeEventArgs e)
+    // Allan
+    private string HighlightSubstring(string input, string search)
     {
-        string selectedMunicipalityWithCount = "";
+        if (string.IsNullOrEmpty(search))
+            return input;
 
-        if (e.Value is not null)
-        {
-            selectedMunicipalityWithCount = (string)e.Value;
-        }
+        var index = input.IndexOf(search, StringComparison.OrdinalIgnoreCase);
+        if (index == -1)
+            return input;
 
-        string selectedMunicipality = Regex.Replace(selectedMunicipalityWithCount, @"\s?\(\d+\)", "");
+        return input.Substring(0, index) +
+               "<strong>" + input.Substring(index, search.Length) + "</strong>" +
+               input.Substring(index + search.Length);
+    }
 
-        response = await realEstateAgentService.GetAgentsAsync(
-            selectedMunicipality,
+    // Allan
+    private MarkupString DisplayMatchedText(string suggestion)
+    {
+        var highlightedText = HighlightSubstring(suggestion, searchTerm);
+        return new MarkupString(highlightedText);
+    }
+
+    // Chris
+    private async Task GetAgents()
+    {
+
+        var response = await realEstateAgentService.GetAgentsAsync(
+            searchTerm,
             "",
             "",
             "",
@@ -113,10 +213,34 @@
             "");
         if (response.Success)
         {
-            realEstateAgents = response.Data;
+            realEstateAgents = response.Data.Where(agent => !agent.RealEstateAgentAgencyName.Contains("Wait",StringComparison.OrdinalIgnoreCase));            
         }
-
-
     }
 
+    // Chris
+    private async Task ClearInput()
+    {
+        searchTerm = "";
+        suggestions.Clear();
+
+        await GetAgents();
+    }
+
+    // Chris
+    private async Task SearchInputKeyDown(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter")
+        {
+            if (suggestions.Any())
+            {
+                searchTerm = suggestions.FirstOrDefault();
+                await GetAgents();
+                suggestions.Clear();
+            }
+        }
+        else if (e.Key == "Escape")
+        {
+            await ClearInput();
+        }
+    }
 }

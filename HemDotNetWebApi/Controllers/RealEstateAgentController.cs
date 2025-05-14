@@ -89,22 +89,22 @@ namespace HemDotNetWebApi.Controllers
             var filteredAgents = await _realEstateAgentRepository.GetAllAsync();
 
             if (!string.IsNullOrWhiteSpace(municipality))
-                filteredAgents = filteredAgents.Where(a => a.RealEstateAgentAgency.RealEstateAgencyMunicipality.ToLower().Contains(municipality, StringComparison.OrdinalIgnoreCase));
+                filteredAgents = filteredAgents.Where(a => string.Equals(a.RealEstateAgentAgency.RealEstateAgencyMunicipality, municipality, StringComparison.OrdinalIgnoreCase));
 
             if (!string.IsNullOrWhiteSpace(firstName))
-                filteredAgents = filteredAgents.Where(a => a.RealEstateAgentFirstName.ToLower().Contains(firstName, StringComparison.OrdinalIgnoreCase));
+                filteredAgents = filteredAgents.Where(a => string.Equals(a.RealEstateAgentFirstName, firstName, StringComparison.OrdinalIgnoreCase));
 
             if (!string.IsNullOrWhiteSpace(lastName))
-                filteredAgents = filteredAgents.Where(a => a.RealEstateAgentLastName.ToLower().Contains(lastName, StringComparison.OrdinalIgnoreCase));
+                filteredAgents = filteredAgents.Where(a => string.Equals(a.RealEstateAgentLastName, lastName, StringComparison.OrdinalIgnoreCase));
 
             if (!string.IsNullOrWhiteSpace(agencyName))
-                filteredAgents = filteredAgents.Where(a => a.RealEstateAgentAgency.RealEstateAgencyName.ToLower().Contains(agencyName, StringComparison.OrdinalIgnoreCase));
+                filteredAgents = filteredAgents.Where(a => string.Equals(a.RealEstateAgentAgency.RealEstateAgencyName, agencyName, StringComparison.OrdinalIgnoreCase));
 
             if (!string.IsNullOrWhiteSpace(email))
-                filteredAgents = filteredAgents.Where(a => a.RealEstateAgentEmail.ToLower().Contains(email, StringComparison.OrdinalIgnoreCase));
+                filteredAgents = filteredAgents.Where(a => string.Equals(a.Email, email, StringComparison.OrdinalIgnoreCase));
 
             if (!string.IsNullOrWhiteSpace(phonenumber))
-                filteredAgents = filteredAgents.Where(a => a.RealEstateAgentPhoneNumber.Contains(phonenumber));
+                filteredAgents = filteredAgents.Where(a => string.Equals(a.PhoneNumber, phonenumber, StringComparison.OrdinalIgnoreCase));
 
 
             return Ok(_mapper.Map<List<RealEstateAgentDto>>(filteredAgents.ToList()));
