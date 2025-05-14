@@ -100,7 +100,7 @@
                     </div>
                 }
             } 
-            
+
             else {
                 <div class="card p-4 alert alert-info">Hittade inga mäklare i den orten</div>
             }
@@ -235,6 +235,7 @@
             {
                 searchTerm = suggestions.FirstOrDefault();
                 await GetAgents();
+                suggestions.Clear();
             }
         }
         else if (e.Key == "Escape")
