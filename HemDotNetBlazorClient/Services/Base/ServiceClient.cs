@@ -171,21 +171,37 @@ namespace HemDotNetBlazorClient.Services.Base
 
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
+
+        System.Threading.Tasks.Task<int> CreateAgencyAsync(AgencyCreateDto body);
+
         System.Threading.Tasks.Task<System.Collections.Generic.ICollection<AgencyDto>> PartialAgenciesAsync();
+
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
+
+        System.Threading.Tasks.Task<int> CreateAgencyAsync(AgencyCreateDto body, System.Threading.CancellationToken cancellationToken);
+
+        /// <returns>OK</returns>
+        /// <exception cref="ApiException">A server side error occurred.</exception>
+        System.Threading.Tasks.Task<AgencyImageUrlDto> AgencyImageAsync(int? agencyId, FileParameter imageFile);
+
         System.Threading.Tasks.Task<System.Collections.Generic.ICollection<AgencyDto>> PartialAgenciesAsync(System.Threading.CancellationToken cancellationToken);
 
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
         System.Threading.Tasks.Task DeleteAsync(int id);
 
+
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
+
+        System.Threading.Tasks.Task<AgencyImageUrlDto> AgencyImageAsync(int? agencyId, FileParameter imageFile, System.Threading.CancellationToken cancellationToken);
+
         System.Threading.Tasks.Task DeleteAsync(int id, System.Threading.CancellationToken cancellationToken);
+
 
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
@@ -1604,15 +1620,25 @@ namespace HemDotNetBlazorClient.Services.Base
 
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
+
+        public virtual System.Threading.Tasks.Task<int> CreateAgencyAsync(AgencyCreateDto body)
+        {
+            return CreateAgencyAsync(body, System.Threading.CancellationToken.None);
+
         public virtual System.Threading.Tasks.Task<System.Collections.Generic.ICollection<AgencyDto>> PartialAgenciesAsync()
         {
             return PartialAgenciesAsync(System.Threading.CancellationToken.None);
+
         }
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
+
+        public virtual async System.Threading.Tasks.Task<int> CreateAgencyAsync(AgencyCreateDto body, System.Threading.CancellationToken cancellationToken)
+
         public virtual async System.Threading.Tasks.Task<System.Collections.Generic.ICollection<AgencyDto>> PartialAgenciesAsync(System.Threading.CancellationToken cancellationToken)
+
         {
             var client_ = _httpClient;
             var disposeClient_ = false;
@@ -1620,13 +1646,20 @@ namespace HemDotNetBlazorClient.Services.Base
             {
                 using (var request_ = new System.Net.Http.HttpRequestMessage())
                 {
-                    request_.Method = new System.Net.Http.HttpMethod("GET");
+
+                    var json_ = Newtonsoft.Json.JsonConvert.SerializeObject(body, JsonSerializerSettings);
+                    var content_ = new System.Net.Http.StringContent(json_);
+                    content_.Headers.ContentType = System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json");
+                    request_.Content = content_;
+                    request_.Method = new System.Net.Http.HttpMethod("POST");
+
                     request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("text/plain"));
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
-                    // Operation Path: "RealEstateAgency/PartialAgencies"
-                    urlBuilder_.Append("RealEstateAgency/PartialAgencies");
+                    // Operation Path: "api/RealEstateAgency/CreateAgency"
+                    urlBuilder_.Append("api/RealEstateAgency/CreateAgency");
+
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -1653,7 +1686,9 @@ namespace HemDotNetBlazorClient.Services.Base
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 200)
                         {
+
                             var objectResponse_ = await ReadObjectResponseAsync<System.Collections.Generic.ICollection<AgencyDto>>(response_, headers_, cancellationToken).ConfigureAwait(false);
+
                             if (objectResponse_.Object == null)
                             {
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
@@ -1682,18 +1717,29 @@ namespace HemDotNetBlazorClient.Services.Base
 
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
+
+        public virtual System.Threading.Tasks.Task<AgencyImageUrlDto> AgencyImageAsync(int? agencyId, FileParameter imageFile)
+        {
+            return AgencyImageAsync(agencyId, imageFile, System.Threading.CancellationToken.None);
+
         public virtual System.Threading.Tasks.Task DeleteAsync(int id)
         {
             return DeleteAsync(id, System.Threading.CancellationToken.None);
+
         }
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
+
+        public virtual async System.Threading.Tasks.Task<AgencyImageUrlDto> AgencyImageAsync(int? agencyId, FileParameter imageFile, System.Threading.CancellationToken cancellationToken)
+        {
+
         public virtual async System.Threading.Tasks.Task DeleteAsync(int id, System.Threading.CancellationToken cancellationToken)
         {
             if (id == null)
                 throw new System.ArgumentNullException("id");
+
 
             var client_ = _httpClient;
             var disposeClient_ = false;
@@ -1701,6 +1747,37 @@ namespace HemDotNetBlazorClient.Services.Base
             {
                 using (var request_ = new System.Net.Http.HttpRequestMessage())
                 {
+
+                    var boundary_ = System.Guid.NewGuid().ToString();
+                    var content_ = new System.Net.Http.MultipartFormDataContent(boundary_);
+                    content_.Headers.Remove("Content-Type");
+                    content_.Headers.TryAddWithoutValidation("Content-Type", "multipart/form-data; boundary=" + boundary_);
+
+                    if (agencyId == null)
+                        throw new System.ArgumentNullException("agencyId");
+                    else
+                    {
+                        content_.Add(new System.Net.Http.StringContent(ConvertToString(agencyId, System.Globalization.CultureInfo.InvariantCulture)), "agencyId");
+                    }
+
+                    if (imageFile == null)
+                        throw new System.ArgumentNullException("imageFile");
+                    else
+                    {
+                        var content_imageFile_ = new System.Net.Http.StreamContent(imageFile.Data);
+                        if (!string.IsNullOrEmpty(imageFile.ContentType))
+                            content_imageFile_.Headers.ContentType = System.Net.Http.Headers.MediaTypeHeaderValue.Parse(imageFile.ContentType);
+                        content_.Add(content_imageFile_, "imageFile", imageFile.FileName ?? "imageFile");
+                    }
+                    request_.Content = content_;
+                    request_.Method = new System.Net.Http.HttpMethod("POST");
+                    request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("text/plain"));
+
+                    var urlBuilder_ = new System.Text.StringBuilder();
+                
+                    // Operation Path: "api/RealEstateAgency/AgencyImage"
+                    urlBuilder_.Append("api/RealEstateAgency/AgencyImage");
+
                     request_.Method = new System.Net.Http.HttpMethod("DELETE");
 
                     var urlBuilder_ = new System.Text.StringBuilder();
@@ -1708,6 +1785,7 @@ namespace HemDotNetBlazorClient.Services.Base
                     // Operation Path: "RealEstateAgency/delete/{id}"
                     urlBuilder_.Append("RealEstateAgency/delete/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
+
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -1734,8 +1812,7 @@ namespace HemDotNetBlazorClient.Services.Base
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 200)
                         {
-                            return;
-                        }
+                    }
                         else
                         {
                             var responseData_ = response_.Content == null ? null : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
@@ -2564,6 +2641,13 @@ namespace HemDotNetBlazorClient.Services.Base
         }
     }
 
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class AgencyCreateDto
+    {
+        [Newtonsoft.Json.JsonProperty("realEstateAgencyName", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.ComponentModel.DataAnnotations.StringLength(100)]
+
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
     public partial class AgencyDto
     {
@@ -2571,6 +2655,7 @@ namespace HemDotNetBlazorClient.Services.Base
         public int RealEstateAgencyId { get; set; }
 
         [Newtonsoft.Json.JsonProperty("realEstateAgencyName", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+
         public string RealEstateAgencyName { get; set; }
 
         [Newtonsoft.Json.JsonProperty("realEstateAgencyPresentation", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
@@ -2581,6 +2666,14 @@ namespace HemDotNetBlazorClient.Services.Base
 
         [Newtonsoft.Json.JsonProperty("realEstateAgencyMunicipality", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string RealEstateAgencyMunicipality { get; set; }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class AgencyImageUrlDto
+    {
+        [Newtonsoft.Json.JsonProperty("agencyImageUrl", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string AgencyImageUrl { get; set; }
 
         [Newtonsoft.Json.JsonProperty("numberOfAgents", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public int NumberOfAgents { get; set; }
