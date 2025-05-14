@@ -1,4 +1,4 @@
-﻿using HemDotNetWebApi.DTO;
+using HemDotNetWebApi.DTO;
 using HemDotNetWebApi.Models;
 
 namespace HemDotNetWebApi.Data
@@ -9,5 +9,6 @@ namespace HemDotNetWebApi.Data
         Task<IEnumerable<RealEstateAgency>> GetAllAsync();
         Task<int> CreateAgencyAsync(AgencyCreateDto dto);
         Task<string> UploadAgencyImageAsync(int agencyId, IFormFile file);
+        Task<bool> DeleteAgency(int id);
     }
 }

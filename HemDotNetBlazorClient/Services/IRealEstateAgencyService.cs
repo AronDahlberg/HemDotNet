@@ -1,4 +1,4 @@
-﻿using HemDotNetBlazorClient.Services.Base;
+using HemDotNetBlazorClient.Services.Base;
 
 namespace HemDotNetBlazorClient.Services
 {
@@ -9,5 +9,8 @@ namespace HemDotNetBlazorClient.Services
         Task<Response<List<AgencyNameDto>>> GetAllAgencies();
         Task<Response<int>> CreateAgency(AgencyCreateDto dto);
         Task<Response<AgencyImageUrlDto>> UploadAgencyImage(int agencyId, StreamContent fileContent);
+        Task<Response<List<AgencyDto>>> GetAllAgenciesPartial();
+        Task<Response<bool>> DeleteAgency(int id);
+
     }
 }
