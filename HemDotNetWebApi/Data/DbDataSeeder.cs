@@ -267,7 +267,7 @@ namespace HemDotNetWebApi.Data
                     {
                         RealEstateAgencyName = "Wait list",
                         RealEstateAgencyPresentation = "Vänta tills administrationen godkänner ditt konto.",
-                        RealEstateAgencyLogoUrl = "Images/PlaceholderLogo.png",
+                        RealEstateAgencyLogoUrl = "Images/PlaceholderLogo2.png",
                         RealEstateAgencyMunicipality = "Stockholm"
                     },
                     new RealEstateAgency
