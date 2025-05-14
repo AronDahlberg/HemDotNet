@@ -13,6 +13,42 @@
 
 @*Author: Allan*@
 
+<style>
+    .list-group-item:hover {
+        background-color: #f1f1f1;
+        cursor: pointer;
+    }
+
+    .position-absolute {
+        position: absolute;
+        background-color: white;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        width: auto;
+        min-width: 100%;
+        max-width: none;
+        left: 0;
+        z-index: 100;
+    }
+
+    .autocomplete-container {
+        position: relative;
+    }
+
+    .autocomplete-dropdown {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background-color: white;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        z-index: 100;
+    }
+</style>
+
 <AuthorizeView Roles="Administrator">
     <Authorized Context="auth">
         @if (isLoading)
@@ -85,12 +121,13 @@
                                         <InputText class="form-control" @bind-Value="agencyModel.RealEstateAgencyName" placeholder="Ange namn på byrån" />
                                     </div>
 
-                                    <div class="mb-3">
+                                    <div class="autocomplete-container mb-3">
                                         <label class="form-label fw-bold">Kommun</label>
                                         <InputText class="form-control" @bind-Value="@searchTerm" @oninput="OnSearchTermChanged" placeholder="Ange kommun" />
+
                                         @if (suggestions.Any())
                                         {
-                                            <ul class="list-group mt-2 position-absolute" style="max-height: 300px; overflow-y: auto;">
+                                            <ul class="list-group mt-2 autocomplete-dropdown">
                                                 @foreach (var suggestion in suggestions)
                                                 {
                                                     <li class="list-group-item" @onclick="() => SelectSuggestion(suggestion)">
