@@ -6,7 +6,9 @@
 
 @if (!string.IsNullOrEmpty(errorMessage))
 {
-    <div class="alert alert-danger">@errorMessage</div>
+    <div class="container mt-3">
+        <div class="alert alert-danger">@errorMessage</div>
+    </div>
 }
 @if (propertyUpdateData != null)
 {
