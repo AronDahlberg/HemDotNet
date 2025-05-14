@@ -14,30 +14,6 @@
     cursor: pointer;
     }
 
-    .position-absolute {
-    /* position: absolute; */
-    /* background-color: white; */
-    /* border: 1px solid #ccc; */
-    /* border-radius: 4px; */
-    /* box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); */
-    /* width: 100%; */
-    /* max-width: 100%; */
-    /* left: 0; */
-    /* right: 0; */
-    /* z-index: 100; */
-    }
-
-    /* .clear-btn { */
-    /* position: absolute; */
-    /* right: 10px; */
-    /* top: 50%; */
-    /* background: transparent; */
-    /* border: none; */
-    /* font-size: 24px; */
-    /* color: #000; */
-    /* cursor: pointer; */
-    /* } */
-
     .clear-btn:hover {
     color: #333;
     font-weight:bold;
@@ -58,14 +34,14 @@
             id="areaInput"
             placeholder="Ange ort eller kommun"
             value="@searchTerm"
-            @onkeydown="UserEnter"
+            @onkeydown="SearchInputKeyDown"
             @oninput="OnSearchTermChanged" 
             />
             <button class="position-absolute bg-transparent border-0 clear-btn" style="font-size:24px; right:10px; top:50%;" @onclick="ClearInput">X</button>
 
             @if (suggestions.Any())
             {
-                <ul class="list-group mt-2 position-absolute mw-100" style="z-index:100; max-height: 300px; overflow-y: auto;">
+                <ul class="list-group mt-2 position-absolute mw-100 w-100" style="z-index:100; max-height: 300px; overflow-y: auto;">
                     @foreach (var suggestion in suggestions)
                     {
                         <li class="list-group-item" @onclick="() => SelectSuggestion(suggestion)">
@@ -91,8 +67,6 @@
     }
     else
     {
-
-
         <div class="col-auto agentCards vstack pt-2">
             @if (realEstateAgents.Any()) { 
                 @foreach (var agent in realEstateAgents)
@@ -125,8 +99,10 @@
                         </div>
                     </div>
                 }
-            } else {
-                <p>inga agenter i den orten</p>
+            } 
+            
+            else {
+                <div class="card p-4 alert alert-info">Hittade inga mäklare i den orten</div>
             }
         </div>
     }
@@ -237,28 +213,33 @@
             "");
         if (response.Success)
         {
-            realEstateAgents = response.Data.Where(agent => !agent.RealEstateAgentAgencyName.Contains("Wait",StringComparison.OrdinalIgnoreCase));
-            
+            realEstateAgents = response.Data.Where(agent => !agent.RealEstateAgentAgencyName.Contains("Wait",StringComparison.OrdinalIgnoreCase));            
         }
     }
 
     // Chris
-    private async Task ClearInput(MouseEventArgs args)
+    private async Task ClearInput()
     {
-
         searchTerm = "";
         suggestions.Clear();
 
         await GetAgents();
-
     }
 
     // Chris
-    private async Task UserEnter(KeyboardEventArgs e)
+    private async Task SearchInputKeyDown(KeyboardEventArgs e)
     {
         if (e.Key == "Enter")
         {
-            await GetAgents();
+            if (suggestions.Any())
+            {
+                searchTerm = suggestions.FirstOrDefault();
+                await GetAgents();
+            }
+        }
+        else if (e.Key == "Escape")
+        {
+            await ClearInput();
         }
     }
 }
