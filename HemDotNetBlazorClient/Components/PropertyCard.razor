@@ -42,17 +42,21 @@
     }
 </style>
 
-<div class="card mb-3 shadow-sm w-100" style="max-width: 900px;">
+<div class="card mb-3 shadow-sm w-100" style="max-width: 1000px;">
     <div class="row g-0">
-        <div class="col-md-4">
+        <div class="col-md-5 d-flex justify-content-center align-items-center bg-light">
             @if (Property.Images?.Any() == true)
             {
-                <div class="image-container">
-                    <img src="@($"{httpClient.BaseAddress}{Property.Images.First().PropertyImageUrl}")" alt="Property image" />
+                <div class="image-container w-100">
+                    <img src="@($"{httpClient.BaseAddress}{Property.Images.First().PropertyImageUrl}")" alt="Property image" class="img-fluid rounded-start w-100" />
                 </div>
             }
+            else
+            {
+                <p class="text-center text-muted m-0">Inga bilder tillgängliga ännu</p>
+            }
         </div>
-        <div class="col-md-8 d-flex flex-column justify-content-between p-3">
+        <div class="col-md-7 d-flex flex-column justify-content-between p-3">
             <div>
                 <h5 class="mb-1 text-primary">@Property.PropertyAddress, @Property.MunicipalityName</h5>
                 <div class="property-meta mb-2">

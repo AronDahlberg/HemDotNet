@@ -148,19 +148,7 @@
     // Allan
     private async Task HandleValidSubmit()
     {
-        successMessage = errorMessage = string.Empty;
-
-        var result = await realEstateAgencyService.CreateAgency(agencyModel);
-
-        if (result?.Success == true)
-        {
-            successMessage = "Mäklarbyrån har skapats!";
-        }
-        else
-        {
-            errorMessage = result?.Message ?? "Ett fel uppstod vid skapandet.";
-            return;
-        }
+        errorMessage = string.Empty;
 
         if (logoFile != null)
         {
@@ -170,27 +158,32 @@
                 errorMessage = "Endast JPG-, JPEG- och PNG-filer är tillåtna";
                 return;
             }
+        }
 
+        var result = await realEstateAgencyService.CreateAgency(agencyModel);
+
+        if (result?.Success != true)
+        {
+            errorMessage = result?.Message ?? "Ett fel uppstod vid skapandet.";
+            return;
+        }
+
+        if (logoFile != null)
+        {
             var fileContent = new StreamContent(logoFile.OpenReadStream(5 * 1024 * 1024));
             fileContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(logoFile.ContentType);
 
             var uploadResponse = await realEstateAgencyService.UploadAgencyImage(result.Data, fileContent);
 
-            if (uploadResponse?.Success == true)
-            {
-                NavigationManager.NavigateTo("/#");
-            }
-            else
+            if (uploadResponse?.Success != true)
             {
                 errorMessage = uploadResponse?.Message ?? "Fel vid uppladdning av logotyp.";
-                return;
             }
-
-            NavigationManager.NavigateTo("/#");
-
         }
 
+        NavigationManager.NavigateTo("/admin/manage-agencies");
     }
+
 
     // Allan
     private void HandleImageChange(InputFileChangeEventArgs e)
