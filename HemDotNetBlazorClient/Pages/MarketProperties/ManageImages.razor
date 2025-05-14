@@ -105,7 +105,7 @@
     </div>
 
     <div class="mt-3">
-        <button class="btn btn-secondary" @onclick="GoBack">Tillbaka</button>
+        <button class="btn btn-secondary" @onclick="GoBack">Visa objektet</button>
     </div>
 </div>
 
@@ -268,7 +268,7 @@
     // Allan
     private void GoBack()
     {
-        NavigationManager.NavigateTo($"/MarketProperty/{MarketPropertyId}");
+        NavigationManager.NavigateTo($"/property/details/{MarketPropertyId}");
     }
 
     // Allan
