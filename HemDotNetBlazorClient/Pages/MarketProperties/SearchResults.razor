@@ -17,7 +17,7 @@
 else if (!searchResults.Any())
 {
     <div class="container pt-5">
-        <p class="text-center text-info"> Inga bostäder matchar ditt sök</p>
+        <p class="text-center"> Inga bostäder matchar ditt sök</p>
     </div>
 }
 else
@@ -61,9 +61,8 @@ else
 
         var response = await marketPropertyService.SearchMarketProperties(searchDto);
 
-        if (response.Success)
-        {
-            searchResults = response.Data;
-        }
+        searchResults = response.Success && response.Data != null
+            ? response.Data
+            : new List<PartialMarketPropertyDTO>();
     }
 }

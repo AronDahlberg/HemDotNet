@@ -7,227 +7,256 @@
 @inject HttpClient httpClient
 
 @* Author: Johan *@
+@* Co-Author: Allan (change up the design a bit) *@
+
 
 <style>
-    .carousel-wrapper {
-        display: flex;
-        justify-content: center;
-    }
-
-    .carousel {
-        width: 100%;
-        max-width: none;
-        height: auto;
-        aspect-ratio: 4 / 3;
-        border-radius: 8px;
+    .property-carousel {
+        aspect-ratio: 16 / 9;
         overflow: hidden;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        background-color: #f8f9fa;
-        position: relative;
+        border-radius: 0.5rem;
     }
 
-    .carousel-inner,
-    .carousel-item {
+    .property-carousel .carousel-item img {
         height: 100%;
+        width: 100%;
+        object-fit: cover;
     }
 
-        .carousel-item img {
-            height: 100%;
-            width: 100%;
-            object-fit: cover;
-        }
-
-    .contact-info {
-        padding: 15px;
-        border-radius: 8px;
+    .agent-image {
+        width: 5rem;
+        height: 5rem;
+        object-fit: cover;
     }
 
-        .contact-info p {
-            margin: 0.25rem;
-            margin-bottom: 0.25rem;
-        }
-
-    .summary-wrapper {
-        display: flex;
-        justify-content: center;
-        margin-bottom: 30px;
+    .property-specs dt {
+        color: #6c757d;
+        font-weight: normal;
     }
 
-    .property-summary {
-        padding: 15px;
-        border-radius: 8px;
+    .property-specs dd {
+        font-weight: 600;
     }
-
 </style>
+
 
 @if (!string.IsNullOrEmpty(successMessage))
 {
-    <div class="container mt-3">
-        <div class="alert alert-success">
-            @successMessage
+    <div class="toast-container position-fixed top-0 end-0 p-3">
+        <div class="toast show" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header bg-success text-white">
+                <strong class="me-auto">Success</strong>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body">
+                @successMessage
+            </div>
         </div>
     </div>
 }
+
 @if (errorMessage != null)
 {
-    <div class="alert alert-danger">
-        <h4>@errorMessage</h4>
+    <div class="alert alert-danger shadow-sm mb-4">
+        <div class="d-flex align-items-center">
+            <i class="bi bi-exclamation-triangle-fill me-2"></i>
+            <h5 class="mb-0">@errorMessage</h5>
+        </div>
     </div>
 }
+
 @if (marketProperty == null)
 {
-    <div class="container mt-3">
-        <p>Loading property details...</p>
+    <div class="container py-5 text-center">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading property details...</span>
+        </div>
+        <p class="mt-3">Loading property details...</p>
     </div>
 }
 else
 {
-    <div class="property-details-container">
-        <div class="container mt-4">
-            <div class="row justify-content-center">
-                <div class="col-md-12">
-                    <div class="row gx-3">
-                        @* Left: Image Carousel *@
-                        <div class="col-md-6 offset-md-1 mb-3">
-                            <div class="carousel-wrapper">
-                                <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
-                                    <div class="carousel-inner">
-                                        @for (int i = 0; i < images.Count; i++)
-                                        {
-                                            <div class="carousel-item @(i == 0 ? "active" : "")">
-                                                <img src="@($"{httpClient.BaseAddress}{images[i].ImageUrl}")" class="d-block w-100" alt="Property image">
-                                            </div>
-                                        }
-                                        @if (images.Count <= 0)
-                                        {
-                                            <div class="d-flex justify-content-center align-items-center w-100 h-100">
-                                                <p class="text-center text-muted m-0">Inga bilder tillgängliga ännu</p>
-                                            </div>
-                                        }
+    <div class="container w-75 py-5">
+        <div class="row g-4">
+            <div class="col-lg-8">
+                <div class="card shadow-sm mb-4">
+                    <div class="card-body p-0">
+                        <div id="propertyCarousel" class="carousel slide" data-bs-ride="carousel">
+                            <div class="carousel-inner rounded-top">
+                                @for (int i = 0; i < images.Count; i++)
+                                {
+                                    <div class="carousel-item @(i == 0 ? "active" : "")" style="aspect-ratio: 16/9;">
+                                        <img src="@($"{httpClient.BaseAddress}{images[i].ImageUrl}")" class="d-block w-100 h-100 object-fit-cover" alt="Property image">
                                     </div>
-                                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
-                                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                        <span class="visually-hidden">Previous</span>
-                                    </button>
-                                    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
-                                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                        <span class="visually-hidden">Next</span>
-                                    </button>
-                                </div>
+                                }
+                                @if (images.Count <= 0)
+                                {
+                                    <div class="carousel-item active bg-light d-flex justify-content-center align-items-center" style="aspect-ratio: 16/9;">
+                                        <div class="text-center">
+                                            <i class="bi bi-image fs-1 text-muted"></i>
+                                            <p class="mt-2 text-muted">Inga bilder tillgängliga</p>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                            <button class="carousel-control-prev" type="button" data-bs-target="#propertyCarousel" data-bs-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Previous</span>
+                            </button>
+                            <button class="carousel-control-next" type="button" data-bs-target="#propertyCarousel" data-bs-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Next</span>
+                            </button>
+                            <div class="carousel-indicators">
+                                @for (int i = 0; i < images.Count; i++)
+                                {
+                                    <button type="button" data-bs-target="#propertyCarousel" data-bs-slide-to="@i" class="@(i == 0 ? "active" : "")" aria-current="@(i == 0 ? "true" : "false")" aria-label="Slide @(i+1)"></button>
+                                }
                             </div>
                         </div>
-                        @* Right: Broker Info *@
-                        <div class="col-md-4 mb-4">
-                            <div class="contact-info d-flex align-items-start">
-                                <div class="flex-grow-1 me-3" style="min-width: 0;">
-                                    <div class="text-primary">
-                                        <h4><strong>Kontakta mäklaren</strong></h4>
-                                        <NavLink href="@($"/users/profile/{marketProperty.RealEstateAgentId}")">
-                                            <a><strong><u>@marketProperty.RealEstateAgentFullName</u></strong></a>
-                                        </NavLink>
-                                    </div>
-                                    <p>@realEstateAgent.RealEstateAgentAgencyName</p>
-                                    <p>@realEstateAgent.RealEstateAgencyMunicipality</p>
-                                </div>
-                                <div class="d-flex align-items-center justify-content-center" style="flex-shrink: 0;">
-                                    <img src="@($"{httpClient.BaseAddress}{realEstateAgent.RealEstateAgentImageUrl}")"
-                                         class="img-fluid rounded-circle mt-2"
-                                         alt="Agent image"
-                                         style="width: 6.5em; height: 6.5em; object-fit: cover;" />
-                                </div>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <div>
+                        <h1 class="fs-2 fw-bold mb-0">@marketProperty.PropertyAddress</h1>
+                        <p class="text-muted mb-0">@marketProperty.MunicipalityName</p>
+                    </div>
+                    <div class="text-end">
+                        <h2 class="fs-3 fw-bold text-primary mb-0">@marketProperty.Price.ToString("C0")</h2>
+                    </div>
+                </div>
+
+                <div class="d-flex gap-2 mb-4">
+                    <NavLink class="btn btn-primary" target="_blank"
+                             href="@($"/property/details/images/{MarketPropertyId}?PropertyAddress={Uri.EscapeDataString(marketProperty.PropertyAddress)}")">
+                        <i class="bi bi-images me-2"></i>Visa alla bilder
+                    </NavLink>
+
+                    <a class="text-primary mb-1 mt-1 mx-2"
+                       href="@($"https://www.google.com/maps/place/{marketProperty.MunicipalityName}")"
+                       target="_blank"
+                       rel="noopener noreferrer">
+                        <strong><u>Visa på karta</u></strong>
+                    </a>
+                </div>
+
+
+                <div class="row mb-4">
+
+                    <div class="col-md-6 mb-3 mb-md-0">
+                        <div class="card shadow-sm h-100">
+                            <div class="card-header bg-white">
+                                <h3 class="fs-5 fw-bold mb-0">Om bostaden</h3>
                             </div>
-                            <div class="d-flex flex-column gap-2 mt-3">
-                                <button class="btn btn-primary w-100 mt-1" @onclick="TogglePhone">
-                                    📞 @(showPhone ? realEstateAgent.RealEstateAgentPhoneNumber : "Visa telefonnummer")
-                                </button>
-                                <button class="btn btn-primary w-100 mt-1" @onclick="ToggleEmail">
-                                    ✉️ @(showEmail ? realEstateAgent.RealEstateAgentEmail : "Visa e-post")
-                                </button>
-                                @if (agentId == marketProperty.RealEstateAgentId)
-                                {
-                                    <NavLink class="btn btn-primary w-100 mt-1" href="@($"/property/manage-images/{MarketPropertyId}")">
-                                        Lägg till/Ta bort bilder
-                                    </NavLink>
-                                    <NavLink class="btn btn-primary w-100 mt-1" href="@($"/property/edit/{MarketPropertyId}")">
-                                        Redigera bostad
-                                    </NavLink>
-                                }
-                                <NavLink class="mt-1 d-inline align-self-start" href="@($"/SearchResults?area={marketProperty.MunicipalityName}&showAllTypes=true&newProduction=false")">
-                                    <strong>Till salu i samma kommun</strong>
+                            <div class="card-body">
+                                <p>@marketProperty.Description</p>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="col-md-6">
+                        <div class="card shadow-sm h-100">
+                            <div class="card-header bg-white">
+                                <h3 class="fs-5 fw-bold mb-0">Specifikationer</h3>
+                            </div>
+                            <div class="card-body">
+                                <dl class="row mb-0">
+                                    <dt class="col-6 text-muted fw-normal">Bostadstyp</dt>
+                                    <dd class="col-6 fw-semibold">@GetPropertyCategoryDisplayName(@marketProperty.Category)</dd>
+
+                                    <dt class="col-6 text-muted fw-normal">Antal rum</dt>
+                                    <dd class="col-6 fw-semibold">@marketProperty.AmountOfRooms rum</dd>
+
+                                    <dt class="col-6 text-muted fw-normal">Boarea</dt>
+                                    <dd class="col-6 fw-semibold">@marketProperty.LivingArea m²</dd>
+
+                                    <dt class="col-6 text-muted fw-normal">Biarea</dt>
+                                    <dd class="col-6 fw-semibold">@marketProperty.AncillaryArea m²</dd>
+
+                                    <dt class="col-6 text-muted fw-normal">Tomtarea</dt>
+                                    <dd class="col-6 fw-semibold">@marketProperty.LotArea m²</dd>
+
+                                    <dt class="col-6 text-muted fw-normal">Byggår</dt>
+                                    <dd class="col-6 fw-semibold">@marketProperty.ConstructionYear</dd>
+
+                                    <dt class="col-6 text-muted fw-normal">Driftkostnad</dt>
+                                    <dd class="col-6 fw-semibold">@marketProperty.YearlyMaintenanceCost kr/år</dd>
+                                </dl>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="col-lg-4">
+
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header bg-white">
+                        <h3 class="fs-5 fw-bold mb-0">Kontakta mäklaren</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="me-auto">
+                                <NavLink href="@($"/users/profile/{marketProperty.RealEstateAgentId}")">
+                                    <h4 class="fs-5 fw-bold mb-1">@marketProperty.RealEstateAgentFullName</h4>
+                                </NavLink>
+                                <p class="mb-0 text-muted">@realEstateAgent.RealEstateAgentAgencyName</p>
+                                <p class="mb-0 text-muted small">@realEstateAgent.RealEstateAgencyMunicipality</p>
+                            </div>
+
+                            <img src="@($"{httpClient.BaseAddress}{realEstateAgent.RealEstateAgentImageUrl}")"
+                                 class="rounded-circle ms-3"
+                                 alt="@marketProperty.RealEstateAgentFullName"
+                                 style="width: 5rem; height: 5rem; object-fit: cover;" />
+                        </div>
+                        <div class="d-grid gap-2">
+                            <button class="btn btn-primary d-flex justify-content-center align-items-center" @onclick="TogglePhone">
+                                📞 @(showPhone ? realEstateAgent.RealEstateAgentPhoneNumber : "Visa telefonnummer")
+                            </button>
+
+                            <button class="btn btn-primary d-flex justify-content-center align-items-center" @onclick="ToggleEmail">
+                                ✉️ @(showEmail ? realEstateAgent.RealEstateAgentEmail : "Visa e-post")
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+
+                @if (agentId == marketProperty.RealEstateAgentId)
+                {
+                    <div class="card shadow-sm mb-4">
+                        <div class="card-header bg-white">
+                            <h3 class="fs-5 fw-bold mb-0">Hantera annons</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="d-grid gap-2">
+
+                                <NavLink class="btn btn-primary" href="@($"/property/manage-images/{MarketPropertyId}")">
+                                    <i class="bi bi-images me-2"></i>Hantera bilder
+                                </NavLink>
+
+                                <NavLink class="btn btn-primary" href="@($"/property/edit/{MarketPropertyId}")">
+                                    <i class="bi bi-pencil-square me-2"></i>Redigera bostad
                                 </NavLink>
                             </div>
                         </div>
-                        <div class="col-md-1">
-                            @* Empty column on right side to center content. *@
-                        </div>
                     </div>
-                    <div class="row gx-3">
-                        <div class="col-md-6 offset-md-1 mb-4">
-                            @* Left: Property Info *@
-                            <NavLink class="btn btn-primary w-20 mt-0 mb-1" target="_blank"
-                                     href="@($"/property/details/images/{MarketPropertyId}?PropertyAddress={Uri.EscapeDataString(marketProperty.PropertyAddress)}")">
-                                Visa alla bilder
+                }
+
+
+                <div class="card shadow-sm">
+                    <div class="card-header bg-white">
+                        <h3 class="fs-5 fw-bold mb-0">Utforska mer</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-grid">
+
+                            <NavLink class="btn btn-primary" href="@($"/SearchResults?area={marketProperty.MunicipalityName}&showAllTypes=true&newProduction=false")">
+                                <i class="bi bi-houses me-2"></i>Till salu i @marketProperty.MunicipalityName
                             </NavLink>
-                            <div class="property-summary">
-                                <div class="d-flex justify-content-between">
-                                    <span>
-                                        <div class="text-primary mb-1 mt-1">
-                                            <h2><strong>@marketProperty.PropertyAddress</strong></h2>
-                                        </div>
-                                    </span>
-                                    <span>
-                                        <h3>@marketProperty.Price.ToString("C0")</h3>
-                                    </span>
-                                </div>
-                                <p class="mb-1 mt-1">@marketProperty.MunicipalityName</p>
-                                <a class="text-primary mb-1 mt-1"
-                                   href="@($"https://www.google.com/maps/place/{marketProperty.MunicipalityName}")"
-                                   target="_blank"
-                                   rel="noopener noreferrer">
-                                    <strong><u>Visa på karta</u></strong>
-                                </a>
-                            </div>
-                            <div class="row gx-0">
-                                <div class="col-7">
-                                    <div class="p-2">
-                                        <p>@marketProperty.Description</p>
-                                    </div>
-                                </div>
-                                <div class="col-5">
-                                    <div class="row gx-0">
-                                        <div class="col-6">
-                                            <div class="p-2">
-                                                <p>Bostadstyp</p>
-                                                <p>Antal rum</p>
-                                                <p>Boarea</p>
-                                                <p>Biarea</p>
-                                                <p>Tomtarea</p>
-                                                <p>Byggår</p>
-                                                <p>Driftkostnad</p>
-                                            </div>
-                                        </div>
-                                        <div class="col-6">
-                                            <div class="p-2">
-                                                <strong>
-                                                    <p>@GetPropertyCategoryDisplayName(@marketProperty.Category)</p>
-                                                    <p>@marketProperty.AmountOfRooms rum</p>
-                                                    <p>@marketProperty.LivingArea m²</p>
-                                                    <p>@marketProperty.AncillaryArea m²</p>
-                                                    <p>@marketProperty.LotArea m²</p>
-                                                    <p>@marketProperty.ConstructionYear</p>
-                                                    <p>@marketProperty.YearlyMaintenanceCost kr/år</p>
-                                                </strong>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        @* Right: Optional Column *@
-                        <div class="col-md-4 mb-4">
-                        </div>
-                        <div class="col-md-1">
-                            @* Empty column on right side to center content. *@
                         </div>
                     </div>
                 </div>
