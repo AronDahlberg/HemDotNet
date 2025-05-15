@@ -7,8 +7,7 @@
 @inject ApiAuthenticationStateProvider authStateProvider
 
 @* Author: Allan *@
-
-@* Co-Author: Johan. Added AuthorizeView checks. *@
+@* Co-Author: Johan. Added AuthorizeView check. *@
 
 <style>
     .image-container {
@@ -316,7 +315,7 @@
             agentId = user.FindFirst("uid")?.Value;
         }
     }
-
+    // Co-Author: Johan
     private async Task GetMarketProperty()
     {
         var response = await propertyService.GetMarketPropertyById(MarketPropertyId);
