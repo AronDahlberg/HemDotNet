@@ -4,6 +4,8 @@
 @inject NavigationManager navigationManager
 @inject ApiAuthenticationStateProvider authStateProvider
 
+@* Author: Johan *@
+
 @if (!string.IsNullOrEmpty(errorMessage))
 {
     <div class="alert alert-danger">@errorMessage</div>
@@ -198,4 +200,6 @@ else
             _ => category.ToString()
         };
     }
+
+
 }
