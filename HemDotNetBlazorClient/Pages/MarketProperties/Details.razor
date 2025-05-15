@@ -68,6 +68,12 @@
         </div>
     </div>
 }
+@if (errorMessage != null)
+{
+    <div class="alert alert-danger">
+        <h4>@errorMessage</h4>
+    </div>
+}
 @if (marketProperty == null)
 {
     <div class="container mt-3">
@@ -232,12 +238,9 @@ else
 
 @code {
     [Parameter] public int MarketPropertyId { get; set; }
-    private Response<MarketPropertyDetailsDto>? responseProperty;
     private MarketPropertyDetailsDto marketProperty;
-    private Response<List<PropertyImageDto>>? responseImages;
     private List<PropertyImageDto> images;
     private RealEstateAgentDto realEstateAgent;
-    private Response<RealEstateAgentDto>? responseAgent;
     private string? agentId;
     private string? successMessage;
     private string? errorMessage;
@@ -246,20 +249,13 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        responseProperty = await propertyService.GetMarketPropertyById(MarketPropertyId);
-        marketProperty = responseProperty.Data;
+        await GetLoggedInAgentId();
 
-        responseImages = await propertyImageService.GetPropertyImages(MarketPropertyId);
-        images = responseImages.Data;
+        await GetMarketProperty();
 
-        responseAgent = await realEstateAgentService.GetAgentByIdAsync(marketProperty.RealEstateAgentId);
-        realEstateAgent = responseAgent.Data;
+        await GetImages();
 
-        var authState = await authStateProvider.GetAuthenticationStateAsync();
-        var user = authState.User;
-
-        var userId = user.FindFirst("uid")?.Value;
-        agentId = userId;
+        await GetRealEstateAgent();
 
         HandleSuccessMessage();
     }
@@ -297,5 +293,56 @@ else
             PropertyCategory.VacationHome => "Fritidshus",
             _ => category.ToString()
         };
+    }
+
+    private async Task GetLoggedInAgentId()
+    {
+        var authState = await authStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        if (user.Identity.IsAuthenticated)
+        {
+            var userId = user.FindFirst("uid")?.Value;
+            agentId = userId;
+        }
+    }
+
+    private async Task GetMarketProperty()
+    {
+        var response = await propertyService.GetMarketPropertyById(MarketPropertyId);
+        if (response.Success)
+        {
+            marketProperty = response.Data;
+        }
+        else
+        {
+            errorMessage = response.Message;
+        }
+    }
+
+    private async Task GetImages()
+    {
+        var response = await propertyImageService.GetPropertyImages(MarketPropertyId);
+        if (response.Success)
+        {
+            images = response.Data;
+        }
+        else
+        {
+            errorMessage = response.Message;
+        }
+    }
+
+    private async Task GetRealEstateAgent()
+    {
+        var response = await realEstateAgentService.GetAgentByIdAsync(marketProperty.RealEstateAgentId);
+        if (response.Success)
+        {
+            realEstateAgent = response.Data;
+        }
+        else
+        {
+            errorMessage = response.Message;
+        }
     }
 }

@@ -34,6 +34,10 @@ namespace HemDotNetWebApi.Data
             // We don't allow changing id
             marketProperty.MarketPropertyId = existingProperty.MarketPropertyId;
 
+            //We keep the original creation date intact.
+
+            marketProperty.CreationDate = existingProperty.CreationDate;
+
             //Co-Author: Johan. Added explicit reassign of navigation property.
 
             _context.Entry(existingProperty).CurrentValues.SetValues(marketProperty);
