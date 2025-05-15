@@ -1,5 +1,6 @@
 ﻿@*Made by Chris*@
 @*Co-author: Allan (edit, delete, add, sold buttons, their functionality and styling, delete confirmation message)*@
+@* Co-Author: Johan. Added AuthorizeView checks. *@
 @using HemDotNetBlazorClient.Components
 @using HemDotNetBlazorClient.Providers
 @using HemDotNetBlazorClient.Services
@@ -9,60 +10,68 @@
 @inject HttpClient httpClient
 @inject IJSRuntime JSRuntime
 
-<h3 class="py-4 text-center">Lägg till, redigera eller ta bort objekt</h3>
-@if (!response.Success)
-{
-    <div class="alert alert-danger">
-        <h4>@response.Message</h4>
-    </div>
-}
-else if (marketProperties == null)
-{
-    <div class="alert alert-info">
-        <h4>Loading data...</h4>
-    </div>
-}
-else
-{
-    <div class="container py-5">
-        <div class="row">
-            @foreach (var property in marketProperties)
-            {
-                <div class="col-12 d-flex flex-column align-items-center mb-5">
-                    <PropertyCard Property="property" />
-                    <div class="mt-2 d-flex gap-2">
-                        <a class="btn btn-primary text-white" href="/property/edit/@property.MarketPropertyId">
-                            Redigera
+<AuthorizeView Context="authContext">
+    <Authorized>
+        <h3 class="py-4 text-center">Lägg till, redigera eller ta bort objekt</h3>
+        @if (!response.Success)
+        {
+            <div class="alert alert-danger">
+                <h4>@response.Message</h4>
+            </div>
+        }
+        else if (marketProperties == null)
+        {
+            <div class="alert alert-info">
+                <h4>Loading data...</h4>
+            </div>
+        }
+        else
+        {
+            <div class="container py-5">
+                <div class="row">
+                    @foreach (var property in marketProperties)
+                    {
+                        <div class="col-12 d-flex flex-column align-items-center mb-5">
+                            <PropertyCard Property="property" />
+                            <div class="mt-2 d-flex gap-2">
+                                <a class="btn btn-primary text-white" href="/property/edit/@property.MarketPropertyId">
+                                    Redigera
+                                </a>
+                                <a class="btn btn-primary text-white" href="/property/manage-images/@property.MarketPropertyId">
+                                    Lägg till eller ta bort bilder
+                                </a>
+                                <button class="btn btn-danger text-white" @onclick="() => ShowDeleteConfirmation(property.MarketPropertyId)">Radera</button>
+                                <button class="btn btn-outline-success">Markera som såld</button>
+                            </div>
+                        </div>
+                    }
+                </div>
+
+                <div class="row">
+                    <div class="col-12 d-flex justify-content-center mt-3">
+                        <a class="btn btn-primary" href="/MarketProperty/Create">
+                            <img src="plusicon.svg" alt="Add" class="mx-1" style="width: 1.2em; height: 1.2em; vertical-align: middle;" />
+                            Lägg till ett nytt objekt
                         </a>
-                        <a class="btn btn-primary text-white" href="/property/manage-images/@property.MarketPropertyId">
-                            Lägg till eller ta bort bilder
-                        </a>
-                        <button class="btn btn-danger text-white" @onclick="() => ShowDeleteConfirmation(property.MarketPropertyId)">Radera</button>
-                        <button class="btn btn-outline-success">Markera som såld</button>
                     </div>
                 </div>
-            }
-        </div>
-
-        <div class="row">
-            <div class="col-12 d-flex justify-content-center mt-3">
-                <a class="btn btn-primary" href="/MarketProperty/Create">
-                    <img src="plusicon.svg" alt="Add" class="mx-1" style="width: 1.2em; height: 1.2em; vertical-align: middle;" />
-                    Lägg till ett nytt objekt
-                </a>
             </div>
+        }
+    </Authorized>
+    <NotAuthorized>
+        <div class="alert alert-warning mt-4" role="alert">
+            Du måste vara inloggad för att se denna sida.
         </div>
-    </div>
-}
+    </NotAuthorized>
+</AuthorizeView>
 
-<ConfirmationModalComponent 
-    IsVisible="showDeleteModal"
-    Title="Bekräfta borttagning"
-    Message="Är du säker på att du vill radera detta objekt? Denna åtgärd kan inte ångras."
-    CancelText="Avbryt"
-    ConfirmText="Ja, radera"
-    OnCancel="CancelDelete"
-    OnConfirm="ConfirmDelete" />
+<ConfirmationModalComponent IsVisible="showDeleteModal"
+                            Title="Bekräfta borttagning"
+                            Message="Är du säker på att du vill radera detta objekt? Denna åtgärd kan inte ångras."
+                            CancelText="Avbryt"
+                            ConfirmText="Ja, radera"
+                            OnCancel="CancelDelete"
+                            OnConfirm="ConfirmDelete" />
 
 @code {
     [Parameter]
@@ -108,7 +117,7 @@ else
             var user = authState.User;
             var userId = user.FindFirst("uid")?.Value;
 
-            var result = await marketPropertyService.DeleteMarketPropertyById((int) propertyIdToDelete, userId);
+            var result = await marketPropertyService.DeleteMarketPropertyById((int)propertyIdToDelete, userId);
 
             showDeleteModal = false;
 
