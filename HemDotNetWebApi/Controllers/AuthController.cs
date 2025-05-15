@@ -90,9 +90,15 @@ namespace HemDotNetWebApi.Controllers
             try
             {
                 var user = await _userManager.FindByEmailAsync(userDto.Email);
+
                 var passwordValid = await _userManager.CheckPasswordAsync(user, userDto.Password);
 
-                if (user == null && passwordValid == false)
+                if (user == null)
+                {
+                    return Unauthorized();
+                }
+
+                if(passwordValid == false)
                 {
                     return Unauthorized();
                 }
