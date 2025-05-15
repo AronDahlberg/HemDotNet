@@ -1,113 +1,134 @@
-﻿@page "/MarketProperty/{MarketPropertyId:int}/Images"
+﻿@page "/property/manage-images/{MarketPropertyId:int}"
 @using System.IO
 @inject IPropertyImageService PropertyImageService
 @inject HttpClient httpClient
 @inject NavigationManager NavigationManager
+@inject IMarketPropertyService propertyService
+@inject ApiAuthenticationStateProvider authStateProvider
 
 @* Author: Allan *@
 
+@* Co-Author: Johan. Added AuthorizeView checks. *@
+
 <style>
     .image-container {
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    margin-bottom: 15px;
-    position: relative;
-    height: 200px;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        margin-bottom: 15px;
+        position: relative;
+        height: 200px;
     }
 
     .property-image {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 0.3s ease;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.3s ease;
     }
 
     .image-container:hover .property-image {
-    transform: scale(1.02);
+        transform: scale(1.02);
     }
 
     .image-delete-btn {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    opacity: 0.7;
-    transition: opacity 0.3s ease;
-    border-radius: 10%;
-    width: 32px;
-    height: 32px;
-    padding: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        opacity: 0.7;
+        transition: opacity 0.3s ease;
+        border-radius: 10%;
+        width: 32px;
+        height: 32px;
+        padding: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 
-    .image-delete-btn:hover {
-    opacity: 1;
-    }
+        .image-delete-btn:hover {
+            opacity: 1;
+        }
 
     .trash-icon {
-    width: 16px;
-    height: 16px;
+        width: 16px;
+        height: 16px;
     }
 </style>
 
-<div class="container my-4">
-    <h3>Lägg till eller ta bort bilder.</h3>
-    <div id="notificationArea" style="min-height: 60px;">
-        @if (!string.IsNullOrEmpty(notificationMessage))
+<AuthorizeView Context="authContext">
+    <Authorized>
+        @if (agentId == @marketProperty.RealEstateAgentId)
         {
-            <div class="alert @notificationClass alert-dismissible fade show" role="alert">
-                @notificationMessage
-            </div>
-        }
-    </div>
+            <div class="container my-4">
+                <h3>Lägg till eller ta bort bilder.</h3>
+                <div id="notificationArea" style="min-height: 60px;">
+                    @if (!string.IsNullOrEmpty(notificationMessage))
+                    {
+                        <div class="alert @notificationClass alert-dismissible fade show" role="alert">
+                            @notificationMessage
+                        </div>
+                    }
+                </div>
 
-    @if (loading)
-    {
-        <div class="text-center">
-            <div class="spinner-border" role="status">
-            </div>
-        </div>
-    }
-    else if (errorMessage != null)
-    {
-        <div class="alert alert-danger">@errorMessage</div>
-    }
-    else
-    {
-        @if (images != null && images.Any())
-        {
-            <div class="row g-3">
-                @foreach (var image in images)
+                @if (loading)
                 {
-                    <div class="col-md-4 col-lg-3">
-                        <div class="image-container">
-                            <img src="@($"{httpClient.BaseAddress}{image.ImageUrl}")" class="property-image" alt="Property image" />
-                            <button class="btn btn-sm btn-danger image-delete-btn" @onclick="() => DeleteImage(image.PropertyImageId)">
-                                <img src="trash.svg" alt="Delete" class="trash-icon" />
-                            </button>
+                    <div class="text-center">
+                        <div class="spinner-border" role="status">
                         </div>
                     </div>
                 }
+                else if (errorMessage != null)
+                {
+                    <div class="alert alert-danger">@errorMessage</div>
+                }
+                else
+                {
+                    @if (images != null && images.Any())
+                    {
+                        <div class="row g-3">
+                            @foreach (var image in images)
+                            {
+                                <div class="col-md-4 col-lg-3">
+                                    <div class="image-container">
+                                        <img src="@($"{httpClient.BaseAddress}{image.ImageUrl}")" class="property-image" alt="Property image" />
+                                        <button class="btn btn-sm btn-danger image-delete-btn" @onclick="() => DeleteImage(image.PropertyImageId)">
+                                            <img src="trash.svg" alt="Delete" class="trash-icon" />
+                                        </button>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="alert alert-info">Det här objektet saknar bilder</div>
+                    }
+                }
+
+                <div class="mt-4">
+                    <ImageUploadComponent IsLoading="@uploadLoading"
+                                          OnFileSelected="@OnInputFileChange" />
+                </div>
+
+                <div class="mt-3">
+                    <button class="btn btn-secondary" @onclick="GoBack">Visa objektet</button>
+                </div>
             </div>
         }
         else
         {
-            <div class="alert alert-info">Det här objektet saknar bilder</div>
+            <div class="alert alert-warning mt-4" role="alert">
+                Du har inte behörighet att redigera dessa bilder.
+            </div>
         }
-    }
-
-    <div class="mt-4">
-        <ImageUploadComponent 
-        IsLoading="@uploadLoading" 
-        OnFileSelected="@OnInputFileChange" />
-    </div>
-
-    <div class="mt-3">
-        <button class="btn btn-secondary" @onclick="GoBack">Visa objektet</button>
-    </div>
-</div>
+    </Authorized>
+    <NotAuthorized>
+        <div class="alert alert-warning mt-4" role="alert">
+            Du måste vara inloggad för att se denna sida.
+        </div>
+    </NotAuthorized>
+</AuthorizeView>
 
 @code {
     [Parameter]
@@ -118,6 +139,9 @@
     private bool uploadLoading = false;
     private string errorMessage;
 
+    private MarketPropertyDetailsDto marketProperty;
+    private string agentId;
+
     // Notification properties
     private string notificationMessage;
     private string notificationClass;
@@ -126,6 +150,10 @@
     // Allan
     protected override async Task OnInitializedAsync()
     {
+        await GetLoggedInAgentId();
+
+        await GetMarketProperty();
+
         await LoadImages();
     }
 
@@ -275,5 +303,30 @@
     public void Dispose()
     {
         notificationTimer?.Dispose();
+    }
+
+    // Co-Author: Johan
+    private async Task GetLoggedInAgentId()
+    {
+        var authState = await authStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        if (user.Identity.IsAuthenticated)
+        {
+            agentId = user.FindFirst("uid")?.Value;
+        }
+    }
+
+    private async Task GetMarketProperty()
+    {
+        var response = await propertyService.GetMarketPropertyById(MarketPropertyId);
+        if (response.Success)
+        {
+            marketProperty = response.Data;
+        }
+        else
+        {
+            errorMessage = response.Message;
+        }
     }
 }
