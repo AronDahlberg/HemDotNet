@@ -132,48 +132,11 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        var authState = await authStateProvider.GetAuthenticationStateAsync();
-        var user = authState.User;
+        await GetAuthState();
 
-        var userId = user.FindFirst("uid")?.Value;
-        agentId = userId;
+        await GetMunicipalities();
 
-        var municipalityResponse = await municipalityService.GetAllMunicipalities();
-        if (municipalityResponse.Success && municipalityResponse.Data is not null)
-        {
-            allMunicipalities = municipalityResponse.Data;
-        }
-
-        var propertyResponse = await propertyService.GetMarketPropertyById(MarketPropertyId);
-        if (propertyResponse.Success && propertyResponse.Data is not null)
-        {
-            var data = propertyResponse.Data;
-
-            var matchedMunicipality = allMunicipalities.FirstOrDefault(m =>
-        string.Equals(m.Name.Trim(), data.MunicipalityName.Trim(), StringComparison.OrdinalIgnoreCase));
-
-            propertyUpdateData = new MarketPropertyUpdateDto
-                {
-                    MarketPropertyId = data.MarketPropertyId,
-                    MunicipalityId = matchedMunicipality?.MunicipalityId ?? 0,
-                    Category = data.Category,
-                    Price = data.Price,
-                    LivingArea = data.LivingArea,
-                    AncillaryArea = data.AncillaryArea,
-                    LotArea = data.LotArea,
-                    PropertyAddress = data.PropertyAddress,
-                    Description = data.Description,
-                    AmountOfRooms = data.AmountOfRooms,
-                    MonthlyFee = data.MonthlyFee,
-                    YearlyMaintenanceCost = data.YearlyMaintenanceCost,
-                    ConstructionYear = data.ConstructionYear,
-                    RealEstateAgentId = data.RealEstateAgentId
-                };
-        }
-        else
-        {
-            errorMessage = propertyResponse.Message ?? "Kunde inte hämta bostadsdata.";
-        }
+        await GetExistingMarketProperty();
     }
 
     private async Task HandleValidSubmit()
@@ -201,5 +164,62 @@ else
         };
     }
 
+    private async Task GetAuthState()
+    {
+        var authState = await authStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        if (user.Identity.IsAuthenticated)
+        {
+            agentId = user.FindFirst("uid")?.Value;
+        }
+    }
+
+    private async Task GetMunicipalities()
+    {
+        var result = await municipalityService.GetAllMunicipalities();
+        if (result.Success && result.Data is not null)
+        {
+            allMunicipalities = result.Data;
+        }
+        else
+        {
+            errorMessage = result.Message;
+        }
+    }
+
+    private async Task GetExistingMarketProperty()
+    {
+        var response = await propertyService.GetMarketPropertyById(MarketPropertyId);
+        if (response.Success && response.Data is not null)
+        {
+            var data = response.Data;
+
+            var matchedMunicipality = allMunicipalities.FirstOrDefault(m =>
+        string.Equals(m.Name.Trim(), data.MunicipalityName.Trim(), StringComparison.OrdinalIgnoreCase));
+
+            propertyUpdateData = new MarketPropertyUpdateDto
+                {
+                    MarketPropertyId = data.MarketPropertyId,
+                    MunicipalityId = matchedMunicipality?.MunicipalityId ?? 0,
+                    Category = data.Category,
+                    Price = data.Price,
+                    LivingArea = data.LivingArea,
+                    AncillaryArea = data.AncillaryArea,
+                    LotArea = data.LotArea,
+                    PropertyAddress = data.PropertyAddress,
+                    Description = data.Description,
+                    AmountOfRooms = data.AmountOfRooms,
+                    MonthlyFee = data.MonthlyFee,
+                    YearlyMaintenanceCost = data.YearlyMaintenanceCost,
+                    ConstructionYear = data.ConstructionYear,
+                    RealEstateAgentId = data.RealEstateAgentId
+                };
+        }
+        else
+        {
+            errorMessage = response.Message ?? "Kunde inte hämta bostadsdata.";
+        }
+    }
 
 }
