@@ -119,9 +119,9 @@
 
     protected override async Task OnInitializedAsync()
     {
-        await GetMunicipalities();
-
         await GetLoggedInAgentId();
+
+        await GetMunicipalities();
     }
 
     private string GetPropertyCategoryDisplayName(PropertyCategory category) =>
