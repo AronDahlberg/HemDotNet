@@ -29,7 +29,6 @@ namespace HemDotNetWebApi.Controllers
         // Allan
         [HttpPut]
         [Authorize]
-
         public async Task<ActionResult<MarketPropertyDetailsDto>> UpdateMarketProperty(MarketPropertyUpdateDto updateDto)
         {
             try

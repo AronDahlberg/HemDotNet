@@ -56,8 +56,17 @@ namespace HemDotNetWebApi.Controllers
         // Chris
         // PUT: RealEstateAgent/5
         [HttpPut("{agentId}")]
+        [Authorize]
         public async Task<ActionResult<RealEstateAgentUpdateDTO>> Update(string agentId, RealEstateAgentUpdateDTO agentUpdateDto)
         {
+
+            var userId = User.FindFirstValue(CustomClaimTypes.Uid);
+
+            if (agentId != userId)
+            {
+                return Forbid("You can only update your own profile.");
+            }
+
             var agentToUpdate = await _realEstateAgentRepository.GetAsync(agentId);
 
             if (agentToUpdate == null)

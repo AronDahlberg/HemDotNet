@@ -27,7 +27,6 @@ namespace HemDotNetWebApi.Controllers
 
         // Allan
         [HttpGet("{marketPropertyId}")]
-        //[Authorize]
         public async Task<ActionResult<IEnumerable<PropertyImageDto>>> GetPropertyImages(int marketPropertyId)
         {
             if (!await _repository.PropertyExistsAsync(marketPropertyId))
