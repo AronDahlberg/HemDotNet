@@ -119,14 +119,9 @@
 
     protected override async Task OnInitializedAsync()
     {
-        var result = await municipalityService.GetAllMunicipalities();
-        allMunicipalities = result.Data ?? new List<MunicipalityDto>();
+        await GetMunicipalities();
 
-        var authState = await authStateProvider.GetAuthenticationStateAsync();
-        var user = authState.User;
-
-        var userId = user.FindFirst("uid")?.Value;
-        NewMarketProperty.RealEstateAgentId = userId;
+        await GetLoggedInAgentId();
     }
 
     private string GetPropertyCategoryDisplayName(PropertyCategory category) =>
@@ -160,6 +155,31 @@
         {
             errorMessage = $"Ett fel inträffade: {ex.StatusCode} - {ex.Message}";
             Console.WriteLine(errorMessage);
+        }
+    }
+
+    private async Task GetMunicipalities()
+    {
+        var result = await municipalityService.GetAllMunicipalities();
+        if (result.Success && result.Data is not null)
+        {
+            allMunicipalities = result.Data ?? new List<MunicipalityDto>();
+        }
+        else
+        {
+            errorMessage = result.Message;
+        }
+    }
+
+    private async Task GetLoggedInAgentId()
+        {
+        var authState = await authStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        if (user.Identity.IsAuthenticated)
+        {
+            var userId = user.FindFirst("uid")?.Value;
+            NewMarketProperty.RealEstateAgentId = userId;
         }
     }
 }

@@ -132,7 +132,7 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        await GetAuthState();
+        await GetLoggedInAgentId();
 
         await GetMunicipalities();
 
@@ -164,7 +164,7 @@ else
         };
     }
 
-    private async Task GetAuthState()
+    private async Task GetLoggedInAgentId()
     {
         var authState = await authStateProvider.GetAuthenticationStateAsync();
         var user = authState.User;
