@@ -62,13 +62,17 @@
 
 @if (!string.IsNullOrEmpty(successMessage))
 {
-    <div class="alert alert-success">
-        @successMessage
+    <div class="container mt-3">
+        <div class="alert alert-success">
+            @successMessage
+        </div>
     </div>
 }
 @if (marketProperty == null)
 {
-    <p>Loading property details...</p>
+    <div class="container mt-3">
+        <p>Loading property details...</p>
+    </div>
 }
 else
 {
@@ -86,6 +90,12 @@ else
                                         {
                                             <div class="carousel-item @(i == 0 ? "active" : "")">
                                                 <img src="@($"{httpClient.BaseAddress}{images[i].ImageUrl}")" class="d-block w-100" alt="Property image">
+                                            </div>
+                                        }
+                                        @if (images.Count <= 0)
+                                        {
+                                            <div class="d-flex justify-content-center align-items-center w-100 h-100">
+                                                <p class="text-center text-muted m-0">Inga bilder tillgängliga ännu</p>
                                             </div>
                                         }
                                     </div>

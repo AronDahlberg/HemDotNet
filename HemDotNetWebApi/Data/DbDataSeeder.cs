@@ -77,15 +77,15 @@ namespace HemDotNetWebApi.Data
                 {
                     new RealEstateAgent
                     {
-                        Email = "admin@hemdotnet.se",
-                        NormalizedEmail = "ADMIN@HEMDOTNET.SE",
-                        UserName = "admin@hemdotnet.se",
-                        NormalizedUserName = "ADMIN@HEMDOTNET.SE",
+                        Email = "admin@hem.net",
+                        NormalizedEmail = "ADMIN@HEM.NET",
+                        UserName = "admin@hem.net",
+                        NormalizedUserName = "ADMIN@HEM.NET",
                         RealEstateAgentFirstName = "Admin",
-                        RealEstateAgentLastName = "Adminsson",
+                        RealEstateAgentLastName = "Admin",
                         PasswordHash = hasher.HashPassword(null, "password"),
                         EmailConfirmed = true,
-                        RealEstateAgentEmail = "admin@hemdotnet.se",
+                        RealEstateAgentEmail = "admin@hem.net",
                         RealEstateAgentPhoneNumber = "+46 70 123 45 67",
                         RealEstateAgentImageUrl = "Images/RealEstateAgentMan.jpg",
                         RealEstateAgentAgency = nordhsMaklarbyra
@@ -107,45 +107,45 @@ namespace HemDotNetWebApi.Data
                     },
                     new RealEstateAgent
                     {
-                        Email = "mikael@nordichomes.se",
-                        NormalizedEmail = "MIKAEL@NORDICHOMES.SE",
-                        UserName = "mikael@nordichomes.se",
-                        NormalizedUserName = "MIKAEL@NORDICHOMES.SE",
+                        Email = "mikael@tryggatak.se",
+                        NormalizedEmail = "MIKAEL@TRYGGATAK.SE",
+                        UserName = "mikael@tryggatak.se",
+                        NormalizedUserName = "MIKAEL@TRYGGATAK.SE",
                         RealEstateAgentFirstName = "Mikael",
                         RealEstateAgentLastName = "Strand",
                         PasswordHash = hasher.HashPassword(null, "password"),
                         EmailConfirmed = true,
-                        RealEstateAgentEmail = "mikael@nordichomes.se",
+                        RealEstateAgentEmail = "mikael@tryggatak.se",
                         RealEstateAgentPhoneNumber = "+46 70 123 45 67",
                         RealEstateAgentImageUrl = "Images/RealEstateAgentMan3.png",
-                        RealEstateAgentAgency = nordhsMaklarbyra
+                        RealEstateAgentAgency = agency6
                     },
                     new RealEstateAgent
                     {
-                        Email = "maria@nordichomes.se",
-                        NormalizedEmail = "MARIA@NORDICHOMES.SE",
-                        UserName = "maria@nordichomes.se",
-                        NormalizedUserName = "MARIA@NORDICHOMES.SE",
+                        Email = "maria@ogf.se",
+                        NormalizedEmail = "MARIA@OGF.SE",
+                        UserName = "maria@ogf.se",
+                        NormalizedUserName = "MARIA@OGF.SE",
                         RealEstateAgentFirstName = "Maria",
                         RealEstateAgentLastName = "Olsson",
                         PasswordHash = hasher.HashPassword(null, "password"),
                         EmailConfirmed = true,
-                        RealEstateAgentEmail = "maria@nordichomes.se",
+                        RealEstateAgentEmail = "maria@ogf.se",
                         RealEstateAgentPhoneNumber = "+46 70 123 45 67",
                         RealEstateAgentImageUrl = "Images/RealEstateAgentWoman4.png",
                         RealEstateAgentAgency = agency4
                     },
                     new RealEstateAgent
                     {
-                        Email = "lars@nordhsmaklarbyra.com",
-                        NormalizedEmail = "LARS@NORDHSMAKLARBYRA.COM",
-                        UserName = "lars@nordhsmaklarbyra.com",
-                        NormalizedUserName = "LARS@NORDHSMAKLARBYRA.COM",
+                        Email = "lars@norrmaklare.se",
+                        NormalizedEmail = "LARS@NORRMAKLARE.SE",
+                        UserName = "lars@norrmaklare.se",
+                        NormalizedUserName = "LARS@NORRMAKLARE.SE",
                         RealEstateAgentFirstName = "Lars",
                         RealEstateAgentLastName = "Olofsson",
                         PasswordHash = hasher.HashPassword(null, "password"),
                         EmailConfirmed = true,
-                        RealEstateAgentEmail = "lars@nordhsmaklarbyra.com",
+                        RealEstateAgentEmail = "lars@norrmaklare.se",
                         RealEstateAgentPhoneNumber = "+46 70 123 45 67",
                         RealEstateAgentImageUrl = "Images/RealEstateAgentMan2.png",
                         RealEstateAgentAgency = agency5
@@ -163,34 +163,34 @@ namespace HemDotNetWebApi.Data
                         RealEstateAgentEmail = "vendela@nordhsmaklarbyra.com",
                         RealEstateAgentPhoneNumber = "+46 70 123 45 67",
                         RealEstateAgentImageUrl = "Images/RealEstateAgentWoman3.png",
-                        RealEstateAgentAgency = agency6
+                        RealEstateAgentAgency = nordhsMaklarbyra
                     },
                     new RealEstateAgent
                     {
-                        Email = "erik@nordhsmaklarbyra.com",
-                        NormalizedEmail = "ERIK@NORDHSMAKLARBYRA.COM",
-                        UserName = "erik@nordhsmaklarbyra.com",
-                        NormalizedUserName = "ERIK@NORDHSMAKLARBYRA.COM",
+                        Email = "erik@svenskahem.se",
+                        NormalizedEmail = "ERIK@SVENSKAHEM.SE",
+                        UserName = "erik@svenskahem.se",
+                        NormalizedUserName = "ERIK@SVENSKAHEM.SE",
                         RealEstateAgentFirstName = "Erik",
                         RealEstateAgentLastName = "Åberg",
                         PasswordHash = hasher.HashPassword(null, "password"),
                         EmailConfirmed = true,
-                        RealEstateAgentEmail = "erik@nordhsmaklarbyra.com",
+                        RealEstateAgentEmail = "erik@svenskahem.se",
                         RealEstateAgentPhoneNumber = "+46 70 123 45 67",
                         RealEstateAgentImageUrl = "Images/RealEstateAgentMan6.png",
                         RealEstateAgentAgency = agency7
                     },
                     new RealEstateAgent
                     {
-                        Email = "lisa@nordhsmaklarbyra.com",
-                        NormalizedEmail = "LISA@NORDHSMAKLARBYRA.COM",
-                        UserName = "lisa@nordhsmaklarbyra.com",
-                        NormalizedUserName = "LISA@NORDHSMAKLARBYRA.COM",
+                        Email = "lisa@vastkustmaklarna.se",
+                        NormalizedEmail = "LISA@VASTKUSTMAKLARNA.SE",
+                        UserName = "lisa@vastkustmaklarna.se",
+                        NormalizedUserName = "LISA@VASTKUSTMAKLARNA.SE",
                         RealEstateAgentFirstName = "Lisa",
                         RealEstateAgentLastName = "Karlsson",
                         PasswordHash = hasher.HashPassword(null, "password"),
                         EmailConfirmed = true,
-                        RealEstateAgentEmail = "lisa@nordhsmaklarbyra.com",
+                        RealEstateAgentEmail = "lisa@vastkustmaklarna.se",
                         RealEstateAgentPhoneNumber = "+46 70 123 45 67",
                         RealEstateAgentImageUrl = "Images/RealEstateAgentWoman.jpg",
                         RealEstateAgentAgency = agency3
@@ -209,10 +209,10 @@ namespace HemDotNetWebApi.Data
                 userRoles.Add(new IdentityUserRole<string>
                 {
                     RoleId = adminRoleId,
-                    UserId = agents.First(a => a.Email == "admin@hemdotnet.se").Id
+                    UserId = agents.First(a => a.Email == "admin@hem.net").Id
                 });
 
-                foreach (var agent in agents.Where(a => a.Email != "admin@hemdotnet.se"))
+                foreach (var agent in agents.Where(a => a.Email != "admin@hem.net"))
                 {
                     userRoles.Add(new IdentityUserRole<string>
                     {
@@ -267,7 +267,7 @@ namespace HemDotNetWebApi.Data
                     {
                         RealEstateAgencyName = "Wait list",
                         RealEstateAgencyPresentation = "Vänta tills administrationen godkänner ditt konto.",
-                        RealEstateAgencyLogoUrl = "Images/PlaceholderLogo.png",
+                        RealEstateAgencyLogoUrl = "Images/PlaceholderLogo2.png",
                         RealEstateAgencyMunicipality = "Stockholm"
                     },
                     new RealEstateAgency
@@ -341,11 +341,11 @@ namespace HemDotNetWebApi.Data
 
                 var agents = await context.RealEstateAgents.Include(a => a.RealEstateAgentAgency).ToListAsync();
                 var agent1 = agents.First(a => a.RealEstateAgentEmail == "anna@nordichomes.se");
-                var agent2 = agents.First(a => a.RealEstateAgentEmail == "mikael@nordichomes.se");
-                var agent3 = agents.First(a => a.RealEstateAgentEmail == "maria@nordichomes.se");
-                var agent4 = agents.First(a => a.RealEstateAgentEmail == "lars@nordhsmaklarbyra.com");
+                var agent2 = agents.First(a => a.RealEstateAgentEmail == "mikael@tryggatak.se");
+                var agent3 = agents.First(a => a.RealEstateAgentEmail == "maria@ogf.se");
+                var agent4 = agents.First(a => a.RealEstateAgentEmail == "lars@norrmaklare.se");
                 var agent5 = agents.First(a => a.RealEstateAgentEmail == "vendela@nordhsmaklarbyra.com");
-                var agent6 = agents.First(a => a.RealEstateAgentEmail == "erik@nordhsmaklarbyra.com");
+                var agent6 = agents.First(a => a.RealEstateAgentEmail == "erik@svenskahem.se");
 
                 var properties = new List<MarketProperty>
             {

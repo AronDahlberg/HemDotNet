@@ -84,6 +84,12 @@ namespace HemDotNetWebApi.Controllers
                 return Forbid("You do not own this property.");
             }
 
+            var currentImageCount = await _repository.GetImageCountForPropertyAsync(dto.MarketPropertyId);
+            if (currentImageCount >= 40)
+            {
+                return BadRequest("Maximum number of images (40) reached for this property.");
+            }
+
             try
             {
                 var newImage = new PropertyImage

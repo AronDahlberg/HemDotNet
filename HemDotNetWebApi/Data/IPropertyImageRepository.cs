@@ -14,5 +14,6 @@ namespace HemDotNetWebApi.Data
         Task<bool> PropertyExistsAsync(int marketPropertyId);
         Task<bool> IsPropertyOwnedByAgentAsync(int marketPropertyId, string agentUserId);
         Task<int?> GetPropertyIdByImageIdAsync(int imageId);
+        Task<int> GetImageCountForPropertyAsync(int marketPropertyId);
     }
 }

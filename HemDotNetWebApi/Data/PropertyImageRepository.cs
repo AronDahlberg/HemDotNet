@@ -105,5 +105,12 @@ namespace HemDotNetWebApi.Data
 
             return image?.MarketPropertyId;
         }
+
+        // Allan
+        public async Task<int> GetImageCountForPropertyAsync(int marketPropertyId)
+        {
+            return await _context.PropertyImages
+                .CountAsync(img => img.MarketPropertyId == marketPropertyId);
+        }
     }
 }
