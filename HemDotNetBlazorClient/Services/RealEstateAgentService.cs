@@ -68,6 +68,7 @@ namespace HemDotNetBlazorClient.Services
 
             try
             {
+                await GetBearerToken();
 
                 var data = await _client.GetProfileAsync(agentId);
                 response = new Response<string>
