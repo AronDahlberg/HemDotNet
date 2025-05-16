@@ -93,7 +93,12 @@
 
                             <div class="mb-3">
                                 <label class="form-label">Beskrivning</label>
-                                <InputTextArea class="form-control shadow-sm border-primary rounded-3 fw-semibold text-dark" @bind-Value="NewMarketProperty.Description" />
+                                <InputTextArea class="form-control shadow-sm border-primary rounded-3 fw-semibold text-dark" @bind-Value="NewMarketProperty.Description"
+                                                   maxlength="500"
+                                                   @oninput="UpdateDescriptionLength" />
+                                    <div class="text-end small text-muted mt-1">
+                                        @descriptionLength / 500 tecken
+                                    </div>
                             </div>
 
                             <button type="submit" class="btn btn-primary w-100 mt-3">Spara bostad</button>
@@ -116,6 +121,7 @@
     private MarketPropertyCreateDto NewMarketProperty = new();
     private string? errorMessage;
     private Response<int> response = new Response<int> { Success = true };
+    private int descriptionLength = 0;
 
     protected override async Task OnInitializedAsync()
     {
@@ -181,5 +187,10 @@
             var userId = user.FindFirst("uid")?.Value;
             NewMarketProperty.RealEstateAgentId = userId;
         }
+    }
+
+    private void UpdateDescriptionLength(ChangeEventArgs e)
+    {
+        descriptionLength = e.Value?.ToString()?.Length ?? 0;
     }
 }

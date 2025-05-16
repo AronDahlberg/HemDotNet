@@ -94,7 +94,12 @@
 
                                         <div class="mb-3">
                                             <label class="form-label">Beskrivning</label>
-                                            <InputTextArea class="form-control shadow-sm border-primary rounded-3 fw-semibold text-dark" @bind-Value="propertyUpdateData.Description" />
+                                            <InputTextArea class="form-control shadow-sm border-primary rounded-3 fw-semibold text-dark" @bind-Value="propertyUpdateData.Description"
+                                                           maxlength="500"
+                                                           @oninput="UpdateDescriptionLength" />
+                                            <div class="text-end small text-muted mt-1">
+                                                @descriptionLength / 500 tecken
+                                            </div>
                                         </div>
 
                                         <button type="submit" class="btn btn-primary w-100 mt-3">Spara ändringar</button>
@@ -131,6 +136,7 @@ else
     private List<MunicipalityDto> allMunicipalities = new();
     private string? errorMessage;
     private string? agentId;
+    private int descriptionLength = 0;
 
     protected override async Task OnInitializedAsync()
     {
@@ -222,6 +228,11 @@ else
         {
             errorMessage = response.Message ?? "Kunde inte hämta bostadsdata.";
         }
+    }
+
+    private void UpdateDescriptionLength(ChangeEventArgs e)
+    {
+        descriptionLength = e.Value?.ToString()?.Length ?? 0;
     }
 
 }
