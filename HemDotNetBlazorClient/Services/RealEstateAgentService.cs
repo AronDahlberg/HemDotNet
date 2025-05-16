@@ -20,7 +20,6 @@ namespace HemDotNetBlazorClient.Services
         {
             Response<RealEstateAgentDto> response;
 
-
             try
             {
                 var data = await _client.GetProfileAsync(agentId);
@@ -93,6 +92,8 @@ namespace HemDotNetBlazorClient.Services
             try
             {
 
+                await GetBearerToken();
+
                 var data = await _client.RealEstateAgentPUTAsync(agentid, dto);
                 response = new Response<bool>
                 {
@@ -147,8 +148,6 @@ namespace HemDotNetBlazorClient.Services
             try
             {
                 
-                // I was forgetting this... Since the endpoint used has authorization
-                // for admin, we need this line to tell it we're logged in and admin
                 await GetBearerToken();
 
                 var data = await _client.UpdateAgencyAsync(agentId, newAgencyId);
