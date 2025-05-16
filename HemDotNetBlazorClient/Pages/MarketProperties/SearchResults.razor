@@ -36,6 +36,9 @@ else
                 <PropertyCard Property="property" />
             }
         </div>
+        <div class="text-center">
+            <button class="btn btn-primary" @onclick="GoBack">Tillbaka till start</button>
+        </div>
     </div>
 }
 
@@ -64,5 +67,10 @@ else
         searchResults = response.Success && response.Data != null
             ? response.Data
             : new List<PartialMarketPropertyDTO>();
+    }
+
+    private void GoBack()
+    {
+        NavigationManager.NavigateTo("/");
     }
 }
