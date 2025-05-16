@@ -95,7 +95,7 @@ namespace HemDotNetBlazorClient.Services
             Response<int> response;
             try
             {
-                //await GetBearerToken();
+                await GetBearerToken();
 
                 var marketPropertyId = await _client.MarketPropertyPOSTAsync(newMarketProperty);
                 response = new Response<int>
@@ -119,7 +119,6 @@ namespace HemDotNetBlazorClient.Services
 
             try
             {
-                //await GetBearerToken();
 
                 var marketProperty = await _client.MarketPropertyGETAsync(marketPropertyId);
                 response = new Response<MarketPropertyDetailsDto>
@@ -144,7 +143,7 @@ namespace HemDotNetBlazorClient.Services
 
             try
             {
-                //await GetBearerToken();
+                await GetBearerToken();
 
                 var marketProperty = await _client.MarketPropertyPUTAsync(updateDto);
                 response = new Response<MarketPropertyDetailsDto>
