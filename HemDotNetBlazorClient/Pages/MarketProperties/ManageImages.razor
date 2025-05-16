@@ -57,7 +57,26 @@
 
 <AuthorizeView Context="authContext">
     <Authorized>
-        @if (agentId == @marketProperty.RealEstateAgentId)
+        @if (loading)
+        {
+            <div class="text-center">
+                <div class="spinner-border" role="status">
+                </div>
+            </div>
+        }
+        else if (errorMessage != null)
+        {
+            <div class="alert alert-danger">@errorMessage</div>
+        }
+        else if (marketProperty == null)
+        {
+            <div class="alert alert-warning">Laddar fastighetsinformation...</div>
+        }
+        else if (string.IsNullOrEmpty(agentId))
+        {
+            <div class="alert alert-warning">Kunde inte hämta användarinformation.</div>
+        }
+        else if (agentId == marketProperty.RealEstateAgentId)
         {
             <div class="container my-4">
                 <h3>Lägg till eller ta bort bilder.</h3>
@@ -70,39 +89,25 @@
                     }
                 </div>
 
-                @if (loading)
+                @if (images != null && images.Any())
                 {
-                    <div class="text-center">
-                        <div class="spinner-border" role="status">
-                        </div>
+                    <div class="row g-3">
+                        @foreach (var image in images)
+                        {
+                            <div class="col-md-4 col-lg-3">
+                                <div class="image-container">
+                                    <img src="@($"{httpClient.BaseAddress}{image.ImageUrl}")" class="property-image" alt="Property image" />
+                                    <button class="btn btn-sm btn-danger image-delete-btn" @onclick="() => DeleteImage(image.PropertyImageId)">
+                                        <img src="trash.svg" alt="Delete" class="trash-icon" />
+                                    </button>
+                                </div>
+                            </div>
+                        }
                     </div>
-                }
-                else if (errorMessage != null)
-                {
-                    <div class="alert alert-danger">@errorMessage</div>
                 }
                 else
                 {
-                    @if (images != null && images.Any())
-                    {
-                        <div class="row g-3">
-                            @foreach (var image in images)
-                            {
-                                <div class="col-md-4 col-lg-3">
-                                    <div class="image-container">
-                                        <img src="@($"{httpClient.BaseAddress}{image.ImageUrl}")" class="property-image" alt="Property image" />
-                                        <button class="btn btn-sm btn-danger image-delete-btn" @onclick="() => DeleteImage(image.PropertyImageId)">
-                                            <img src="trash.svg" alt="Delete" class="trash-icon" />
-                                        </button>
-                                    </div>
-                                </div>
-                            }
-                        </div>
-                    }
-                    else
-                    {
-                        <div class="alert alert-info">Det här objektet saknar bilder</div>
-                    }
+                    <div class="alert alert-info">Det här objektet saknar bilder</div>
                 }
 
                 <div class="mt-4">
@@ -149,11 +154,17 @@
     // Allan
     protected override async Task OnInitializedAsync()
     {
-        await GetLoggedInAgentId();
-
-        await GetMarketProperty();
-
-        await LoadImages();
+        try
+        {
+            await GetLoggedInAgentId();
+            await GetMarketProperty();
+            await LoadImages();
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Ett fel uppstod: {ex.Message}";
+            loading = false;
+        }
     }
 
     // Allan
@@ -164,6 +175,12 @@
 
         try
         {
+            if (MarketPropertyId <= 0)
+            {
+                errorMessage = "Ogiltigt fastighets-ID.";
+                return;
+            }
+
             var response = await PropertyImageService.GetPropertyImages(MarketPropertyId);
 
             if (response.Success)
@@ -172,8 +189,7 @@
             }
             else
             {
-                //errorMessage = response.Message;
-                errorMessage = "Bara inloggade användare som har tillgång till objektet får lägga till eller ta bort bilder.";
+                errorMessage = response.Message ?? "Kunde inte ladda bilder.";
             }
         }
         catch (Exception ex)
@@ -307,25 +323,46 @@
     // Co-Author: Johan
     private async Task GetLoggedInAgentId()
     {
-        var authState = await authStateProvider.GetAuthenticationStateAsync();
-        var user = authState.User;
-
-        if (user.Identity.IsAuthenticated)
+        try
         {
-            agentId = user.FindFirst("uid")?.Value;
+            var authState = await authStateProvider.GetAuthenticationStateAsync();
+            var user = authState.User;
+
+            if (user.Identity.IsAuthenticated)
+            {
+                agentId = user.FindFirst("uid")?.Value;
+            }
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Fel vid hämtning av användarinformation: {ex.Message}";
         }
     }
+
     // Co-Author: Johan
     private async Task GetMarketProperty()
     {
-        var response = await propertyService.GetMarketPropertyById(MarketPropertyId);
-        if (response.Success)
+        try
         {
-            marketProperty = response.Data;
+            if (MarketPropertyId <= 0)
+            {
+                errorMessage = "Ogiltigt fastighets-ID.";
+                return;
+            }
+
+            var response = await propertyService.GetMarketPropertyById(MarketPropertyId);
+            if (response.Success)
+            {
+                marketProperty = response.Data;
+            }
+            else
+            {
+                errorMessage = response.Message ?? "Kunde inte hämta fastighetsinformation.";
+            }
         }
-        else
+        catch (Exception ex)
         {
-            errorMessage = response.Message;
+            errorMessage = $"Fel vid hämtning av fastighetsinformation: {ex.Message}";
         }
     }
 }

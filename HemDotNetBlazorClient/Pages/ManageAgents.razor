@@ -10,7 +10,7 @@
 @attribute [Authorize(Roles = "Administrator")]
 
 <div class="mx-auto" style="width:1000px; margin-bottom:5rem;">
-    <h3 class="pt-5 text-center">Hantera mäklare</h3>
+    <h3 class="py-5 text-center">Hantera mäklare</h3>
 
     @if (!response.Success)
     {
@@ -30,7 +30,7 @@
             @foreach (var agent in realEstateAgents)
             {
                 <div class="d-flex align-items-start justify-content-between" style="gap: 1rem;">
-                    <div class="agentCard card mb-3 flex-grow-1">
+                    <div class="agentCard card shadow mb-3 flex-grow-1">
                         <div class="card-body d-flex justify-content-between align-items-center gap-4">
                             <div class="userInfo d-flex gap-4 align-items-center col-6">
                                 <img class="img-thumbnail rounded-circle" style="width: 150px; height: 150px;"

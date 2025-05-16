@@ -11,17 +11,6 @@
 @*Author: Allan *@
 
 
-@*Navigate to this page from another with the right id through:
-
-string id = "";
-var escapedId = Uri.EscapeDataString(id);
-NavigationManager.NavigateTo($"/users/profile/{escapedId}");
-
-The id is "escaped" beforehand because it will contain "-"
-*@
-
-
-
 @if (agent == null)
 {
     <div class="d-flex justify-content-center align-items-center" style="height: 300px;">
@@ -33,7 +22,7 @@ The id is "escaped" beforehand because it will contain "-"
 }
 else
 {
-    <div class="container my-5 py-4">
+    <div @key="Id" class="container my-5 py-4">
         <div class="card border-0 shadow-sm mb-4">
             <div class="card-body p-0">
                 <div class="row g-0">
@@ -140,7 +129,8 @@ else
     private bool isCurrentUser = false;
     private bool isLoadingProperties = true;
 
-    protected override async Task OnInitializedAsync()
+    // Allan
+    protected override async Task OnParametersSetAsync()
     {
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         var user = authState.User;
@@ -158,6 +148,7 @@ else
         }
     }
 
+    // Allan
     private async Task LoadAgentProperties()
     {
         isLoadingProperties = true;
