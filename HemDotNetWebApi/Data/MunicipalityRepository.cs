@@ -20,7 +20,9 @@ namespace HemDotNetWebApi.Data
         // Allan
         public async Task<IEnumerable<Municipality>> GetAllMunicipalities()
         {
-            return await _context.Municipalities.ToListAsync();
+            return await _context.Municipalities
+                            .OrderBy(m => m.MunicipalityName)
+                            .ToListAsync();
         }
 
         // Allan
