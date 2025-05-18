@@ -14,10 +14,10 @@ Author: Allan
 <CascadingAuthenticationState>
     @if (!isLoading)
     {
-        <nav class="navbar navbar-expand-lg bg-primary w-100 shadow-sm align-text-baseline align-items-baseline" data-bs-theme="dark">
+        <nav class="navbar navbar-expand-lg bg-primary w-100 shadow-sm align-text-baseline align-items-baseline py-0" data-bs-theme="dark">
             <div class="container">
                 <a class="navbar-brand d-flex align-items-baseline" href="#">
-                    <img src="logo.svg" alt="Logo" style="height: 36px; padding-bottom: 2px;" />
+                    <img src="logo.svg" alt="Logo" style="height: 36px;" />
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain"
                 aria-controls="navbarMain" aria-expanded="false" aria-label="Toggle navigation">
@@ -44,7 +44,7 @@ Author: Allan
                             {
                                 <li class="nav-item dropdown">
                                     <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                        <img src="@($"{httpClient.BaseAddress}{profileService.CurrentUserProfilePicture}")" class="rounded-circle me-2" width="32" height="32" alt="Profile" />
+                                        <img src="@($"{httpClient.BaseAddress}{profileService.CurrentUserProfilePicture}")" class="rounded-circle me-2" width="48" height="48" alt="Profile" />
                                     </a>
                                     <ul class="dropdown-menu dropdown-menu-end">
                                         <li><a class="dropdown-item" href="/agent/manage-properties">Hantera objekt</a></li>
